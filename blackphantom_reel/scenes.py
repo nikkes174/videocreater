@@ -22,53 +22,123 @@ P = dict(cyan=CYAN, violet=VIOLET, magenta=MAGENTA, amber=AMBER, white=WHITE,
 
 # ------------------------------------------------------------------- locale
 RU = dict(
-    hook=["ЦИФРА, КОТОРАЯ", "ДВИГАЕТ", "БИЗНЕС"],
-    hook_sub="ЦИФРОВАЯ ТРАНСФОРМАЦИЯ ДЛЯ БИЗНЕСА",
-    stack_label="ОБЪЁМ РАБОТ",
-    stack=[("01", "АЙДЕНТИКА", "ЗНАК · СЕТКА · ЯЗЫК"),
-           ("02", "МОТИОН-ДИЗАЙН", "ТИТРЫ · 2D / 3D"),
-           ("03", "3D И VХФ", "ЧАСТИЦЫ · СВЕТ"),
-           ("04", "ЗВУК И САУНД", "МУЗЫКА · ЭФФЕКТЫ")],
-    mont_a=["ЦИФРОВОЙ", "ПРОДУКТ"],
-    mont_a_sub="ИНТЕРФЕЙСЫ И МИКРОВЗАИМОДЕЙСТВИЯ",
-    mont_b=["ЧАСТИЦЫ", "2400 УЗЛОВ"],
-    mont_c=["ИДЕЯ", "ДИЗАЙН", "ДВИЖЕНИЕ"],
-    mont_c_sub="ТРИ СЛОВА, КОТОРЫЕ ДВИГАЮТ РЫНОК",
-    statement=["КАЖДЫЙ КАДР", "ЭТО КОД"],
-    statement_sub="BLACKPHANTOM · MOTION DESIGN",
-    studio="MOTION DESIGN STUDIO",
-    credits="РЕЖИССУРА · ДИЗАЙН · 3D · КОМПОЗИТ · ЗВУК",
-    cta="blackphantom.studio",
-    made_for="ДЛЯ AXION · CLOUD & DATA",
-    outro="ШОУРИЛ 2026",
-    hud_brand="BLACKPHANTOM",
-    tag="MOTION / BRAND / 3D",
-)
+    hook=[
+        "ИДЕЯ",
+        "СТАНОВИТСЯ",
+        "ПРОДУКТОМ",
+    ],
 
+    hook_sub="ПРОЕКТИРУЕМ · РАЗРАБАТЫВАЕМ · ЗАПУСКАЕМ",
+
+    stack_label="ЧТО МЫ ДЕЛАЕМ",
+
+    stack=[
+        ("01", "WEB PRODUCTS", "САЙТЫ · СЕРВИСЫ · ЛИЧНЫЕ КАБИНЕТЫ"),
+        ("02", "BUSINESS SYSTEMS", "CRM · ПАНЕЛИ · ВНУТРЕННИЕ СЕРВИСЫ"),
+        ("03", "BACKEND", "API · ИНТЕГРАЦИИ · АВТОМАТИЗАЦИЯ"),
+        ("04", "AI & DATA", "AI-ФУНКЦИИ · ДАННЫЕ · АНАЛИТИКА"),
+    ],
+
+    mont_a=[
+        "ПОНЯТНЫЙ",
+        "ИНТЕРФЕЙС",
+    ],
+
+    mont_a_sub="БЕЗ ЛИШНЕГО. ВСЁ РАБОТАЕТ ТАМ, ГДЕ НУЖНО.",
+
+    mont_b=[
+        "СИСТЕМА",
+        "ПОД КАПОТОМ",
+    ],
+
+    mont_c=[
+        "ЗАДАЧА",
+        "РЕШЕНИЕ",
+        "ЗАПУСК",
+    ],
+
+    mont_c_sub="ОТ ПЕРВОЙ СХЕМЫ ДО РАБОТАЮЩЕГО ПРОДУКТА",
+
+    statement=[
+        "НЕ ПРОСТО",
+        "ПИШЕМ КОД",
+    ],
+
+    statement_sub="МЫ СОБИРАЕМ ПРОДУКТ ЦЕЛИКОМ",
+
+    studio="РАЗРАБОТКА ЦИФРОВЫХ ПРОДУКТОВ",
+
+    credits="АНАЛИТИКА · ДИЗАЙН · РАЗРАБОТКА · ИНТЕГРАЦИИ · ПОДДЕРЖКА",
+
+    cta="blackphantom.studio",
+
+    made_for="WEB · BACKEND · SYSTEMS · AI",
+
+    outro="BLACKPHANTOM",
+
+    hud_brand="BLACKPHANTOM",
+
+    tag="DESIGN / DEVELOPMENT / PRODUCT",
+)
 EN = dict(
-    hook=["DIGITAL THAT", "MOVES", "BUSINESS"],
-    hook_sub="DIGITAL TRANSFORMATION FOR COMPANIES",
-    stack_label="SCOPE OF WORK",
-    stack=[("01", "BRAND IDENTITY", "MARK · GRID · VOICE"),
-           ("02", "MOTION DESIGN", "TITLES · 2D / 3D"),
-           ("03", "3D AND VFX", "PARTICLES · LIGHT"),
-           ("04", "SOUND DESIGN", "MUSIC · SFX")],
-    mont_a=["DIGITAL", "PRODUCT"],
-    mont_a_sub="INTERFACES AND MICROINTERACTIONS",
-    mont_b=["PARTICLES", "2400 NODES"],
-    mont_c=["IDEA", "DESIGN", "MOTION"],
-    mont_c_sub="THREE WORDS THAT MOVE MARKETS",
-    statement=["EVERY FRAME", "IS CODE"],
-    statement_sub="BLACKPHANTOM · MOTION DESIGN",
-    studio="MOTION DESIGN STUDIO",
-    credits="DIRECTION · DESIGN · 3D · COMPOSITING · SOUND",
-    cta="blackphantom.studio",
-    made_for="FOR AXION · CLOUD & DATA",
-    outro="SHOWREEL 2026",
-    hud_brand="BLACKPHANTOM",
-    tag="MOTION / BRAND / 3D",
-)
+    hook=[
+        "IDEAS",
+        "BECOME",
+        "PRODUCTS",
+    ],
 
+    hook_sub="WE DESIGN · BUILD · LAUNCH",
+
+    stack_label="WHAT WE BUILD",
+
+    stack=[
+        ("01", "WEB PRODUCTS", "WEBSITES · SERVICES · CLIENT PORTALS"),
+        ("02", "BUSINESS SYSTEMS", "CRM · DASHBOARDS · INTERNAL TOOLS"),
+        ("03", "BACKEND", "API · INTEGRATIONS · AUTOMATION"),
+        ("04", "AI & DATA", "AI FEATURES · DATA · ANALYTICS"),
+    ],
+
+    mont_a=[
+        "CLEAR",
+        "INTERFACES",
+    ],
+
+    mont_a_sub="NO CLUTTER. EVERYTHING WHERE IT SHOULD BE.",
+
+    mont_b=[
+        "SYSTEMS",
+        "UNDER THE HOOD",
+    ],
+
+    mont_c=[
+        "CHALLENGE",
+        "SOLUTION",
+        "LAUNCH",
+    ],
+
+    mont_c_sub="FROM THE FIRST SKETCH TO A WORKING PRODUCT",
+
+    statement=[
+        "MORE THAN",
+        "JUST CODE",
+    ],
+
+    statement_sub="WE BUILD THE WHOLE PRODUCT",
+
+    studio="DIGITAL PRODUCT DEVELOPMENT",
+
+    credits="STRATEGY · DESIGN · DEVELOPMENT · INTEGRATIONS · SUPPORT",
+
+    cta="blackphantom.studio",
+
+    made_for="WEB · BACKEND · SYSTEMS · AI",
+
+    outro="BLACKPHANTOM",
+
+    hud_brand="BLACKPHANTOM",
+
+    tag="DESIGN / DEVELOPMENT / PRODUCT",
+)
 # --------------------------------------------------------------------- type
 T_HUGE = Type("black", 250, 6)
 T_BIG = Type("black", 134, 1)
@@ -363,9 +433,7 @@ def sc_ignition(t, L, shot):
     place_c(m, wm, W * 0.5, H * 0.5 + 108, WHITE, wp)
     img += blur(m, 16)[..., None] * CYAN * 0.8 * wp
 
-    sub = T_TECH_S.mask("MOTION DESIGN SHOWREEL")
-    place_c(img, sub, W * 0.5, H * 0.5 + 262, mix(WHITE, CYAN, 0.45),
-            0.9 * span(t, 1.55, 2.0))
+    # NOTE: "MOTION DESIGN SHOWREEL" removed (showreel marking cleanup).
     # NOTE: technical label "SIGNAL ACQUIRED" removed (edge HUD-style markup).
 
     return img
@@ -906,9 +974,7 @@ def sc_outro(t, L, shot):
     img += blur(ring, 1.4)[..., None] * mix(CYAN, WHITE, 0.25) * 1.2
     img += blur(wing, 1.8)[..., None] * WHITE * 1.3
     img += blur(wing, 18)[..., None] * CYAN * 0.9
-    tr = lerp(90, 34, ease_out_expo(span(t, 0.1, 0.6)))
-    place(img, T_TECH_S.mask(L["outro"], tr), W * 0.5, cy + 96, mix(CYAN, WHITE, 0.5),
-          0.9 * span(t, 0.2, 0.7))
+    # NOTE: L["outro"] (ШОУРИЛ 2026 / SHOWREEL 2026) removed (showreel marking cleanup).
     place(img, T_MONO_XS.mask(BRAND + "  /  " + L["cta"]), W * 0.5 - T_MONO_XS.width(BRAND + "  /  " + L["cta"]) / 2,
           cy + 150, DIM, 0.85 * span(t, 0.4, 0.9))
     # closing dot
