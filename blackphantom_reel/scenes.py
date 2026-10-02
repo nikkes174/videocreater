@@ -274,26 +274,12 @@ def stroke_text(T, text, tr=None, weight=0.012):
 
 
 # ================================================================== HUD
+# NOTE: HUD disabled by design cleanup — technical edge labels
+# (SHOWREEL / 15 SEC, AXION — BRAND FILM 2026, timecode, edge brand)
+# are no longer rendered. Function signatures kept so render.py
+# (grade -> hud_for) keeps working; output is intentionally blank.
 def hud(t, op=1.0, show_brand=True, tc=True, brand=None):
-    img = black()
-    if op <= 0.005:
-        return img
-    a = op
-    pad = 76
-    up_y, dn_y = pad, H - pad + 10
-    brand = brand or BRAND
-    if show_brand:
-        place(img, T_TECH_XS.mask(brand), pad, up_y, mix(CYAN, WHITE, 0.3), 0.9 * a)
-        tw_ = T_TECH_XS.width(brand)
-        m = blank()
-        draw_poly(m, [(pad + tw_ + 26, up_y + 9), (pad + tw_ + 26 + 130, up_y + 9)], 2.0, 1.0)
-        add(img, P["dim"], m, 1.0 * a)
-    lab = "SHOWREEL / 15 SEC"
-    place_r(img, T_TECH_XS.mask(lab), W - pad, up_y, mix(DIM, WHITE, 0.2), 1.0 * a)
-    place(img, T_MONO_XS.mask("AXION — BRAND FILM 2026"), pad, dn_y, DIM, 1.0 * a)
-    if tc:
-        place_r(img, T_MONO_XS.mask(timecode(t)), W - pad, dn_y, DIM, 1.0 * a)
-    return img
+    return black()
 
 
 def hud_for(name, t):
@@ -380,7 +366,7 @@ def sc_ignition(t, L, shot):
     sub = T_TECH_S.mask("MOTION DESIGN SHOWREEL")
     place_c(img, sub, W * 0.5, H * 0.5 + 262, mix(WHITE, CYAN, 0.45),
             0.9 * span(t, 1.55, 2.0))
-    place(img, T_MONO_XS.mask("SIGNAL  ACQUIRED"), 76, 80, CYAN, 0.9 * span(t, 1.6, 2.0))
+    # NOTE: technical label "SIGNAL ACQUIRED" removed (edge HUD-style markup).
 
     return img
 
@@ -429,7 +415,8 @@ def sc_hook(t, L, shot):
         img += m[..., None] * CYAN * 2.0
         img += blur(m, 22)[..., None] * CYAN * 1.0
 
-    # right column: vertical ladder, current beat highlighted
+    # right column: vertical ladder (decorative lines only;
+    # technical index labels 01-04 removed).
     for i in range(4):
         yy = 300 + i * 128
         act = (i == 1)
@@ -439,9 +426,6 @@ def sc_hook(t, L, shot):
                   4.0 if act else 3.0, 1.0)
         img += m[..., None] * (mix(CYAN, WHITE, 0.4) if act else mix(DIM, WHITE, 0.2)) * \
             (1.1 if act else 0.8)
-        lab = ["01", "02", "03", "04"][i]
-        place_r(img, T_MONO_XS.mask(lab), W - 150, yy + 16,
-                (mix(CYAN, WHITE, 0.5) if act else mix(DIM, WHITE, 0.1)), 1.0 * q)
 
     place(img, T_TECH_XS.mask("AXION"), 140, 176, mix(CYAN, WHITE, 0.3), 1.0)
     m = blank()
@@ -653,11 +637,7 @@ def sc_mont_a(t, L, shot):
         _place_panel(img, pan, lerp(px + 520 + depth * 300, px, e), py, sc_ * lerp(0.88, 1.0, e),
                      1.0, lerp(10, 0, e) * depth + lerp(2, 0, e))
 
-    # fps counter, bottom right
-    fps_n = int(lerp(0, 60, ease_out_expo(span(t, 0.08, 0.85))))
-    cq = span(t, 0.08, 0.5)
-    place(img, T_MONO_S.mask("%02d FPS" % fps_n), W - 100 - T_MONO_S.width("%02d FPS" % fps_n),
-          H - 168, mix(CYAN, WHITE, 0.35), 1.0 * cq)
+    # NOTE: technical "FPS" counter removed (debug-style HUD markup).
     return img
 
 
@@ -739,9 +719,7 @@ def sc_mont_b(t, L, shot):
         clip = wipe_x(e * (m.shape[1] + 260), m.shape[1], 40)
         place_r(img, (m * clip, ox2, oy2), W - 120, 300 + i * 186,
                WHITE if i == 0 else mix(WHITE, CYAN, 0.85), 1.05 * smoothstep(0, 0.3, q))
-    nodes = int(lerp(0, 2400, ease_out_expo(span(t, 0.1, 1.0))))
-    place_r(img, T_MONO_XS.mask("NODES %04d" % nodes), W - 120, 300 + 2 * 186 - 30,
-           mix(DIM, WHITE, 0.3), 1.0 * span(t, 0.4, 0.8))
+    # NOTE: technical "NODES xxxx" counter removed (debug-style HUD markup).
     return img
 
 
@@ -772,8 +750,7 @@ def sc_mont_c(t, L, shot):
         m2 = blank()
         place(m2, (m * lead, ox, oy), x, yy, col, 1.0, blur_px=sm * 0.4)
         img += blur(m2, 24)[..., None] * mix(CYAN, MAGENTA, i / 2.0) * 0.55
-        place(img, T_MONO_S.mask("0%d" % (i + 1)), 100, yy + mh - 40,
-              mix(DIM, col, 0.45), 1.0 * min(1.0, q / 0.2) * (1 - e_out))
+        # NOTE: technical index labels "01/02/03" removed (interface markup).
     place(img, T_MONO_XS.mask(L["mont_c_sub"]), 100, H - 224, mix(DIM, WHITE, 0.2),
           1.0 * span(t, 0.6, 0.95))
     return img
