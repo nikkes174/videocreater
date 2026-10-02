@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import math
+import os
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
@@ -70,7 +71,7 @@ RU = dict(
 
     credits="АНАЛИТИКА · ДИЗАЙН · РАЗРАБОТКА · ИНТЕГРАЦИИ · ПОДДЕРЖКА",
 
-    cta="blackphantom.studio",
+    cta="blackphantom.ru",
 
     made_for="WEB · BACKEND · SYSTEMS · AI",
 
@@ -129,7 +130,7 @@ EN = dict(
 
     credits="STRATEGY · DESIGN · DEVELOPMENT · INTEGRATIONS · SUPPORT",
 
-    cta="blackphantom.studio",
+    cta="blackphantom.ru",
 
     made_for="WEB · BACKEND · SYSTEMS · AI",
 
@@ -877,6 +878,73 @@ def sc_statement(t, L, shot):
     return img
 
 
+# ================================================= brand logo (external PNG)
+# Expected real file (not committed as a placeholder):
+#   blackphantom_reel/assets/logo.png  (RGBA PNG with transparency)
+# Logo is fitted into a 220x220 box at 1920x1080 (longer side <= 220 px),
+# scaled by C.SCALE at other resolutions; aspect ratio is preserved.
+_LOGO_CACHE = {}
+_LOGO_TARGET_W = 220.0
+_LOGO_TARGET_H = 220.0
+
+
+def brand_logo_path():
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "logo.png")
+
+
+def load_brand_logo(path=None, target_w=None, target_h=None):
+    """Load external brand logo as (rgb, alpha) float32; fit into target box.
+
+    Keeps aspect ratio (no stretch), caches per path/size/SCALE so per-frame
+    calls in sc_endcard() don't re-read the PNG.
+    """
+    p = path or brand_logo_path()
+    tw_ = float(target_w or _LOGO_TARGET_W)
+    th_ = float(target_h or _LOGO_TARGET_H)
+    key = (p, tw_, th_, round(float(C.SCALE), 4))
+    hit = _LOGO_CACHE.get(key)
+    if hit is not None:
+        return hit
+    if not os.path.exists(p):
+        raise FileNotFoundError(
+            "Brand logo not found: expected RGBA PNG at %s "
+            "(place the real file at blackphantom_reel/assets/logo.png)." % p)
+    im = Image.open(p).convert("RGBA")
+    s = min((tw_ * C.SCALE) / max(1, im.width), (th_ * C.SCALE) / max(1, im.height))
+    nw, nh = max(1, int(im.width * s)), max(1, int(im.height * s))
+    if (nw, nh) != im.size:
+        im = im.resize((nw, nh), Image.LANCZOS)
+    a = np.asarray(im, np.float32) / 255.0
+    out = (a[..., :3].copy(), a[..., 3].copy())
+    _LOGO_CACHE[key] = out
+    return out
+
+
+def place_logo(dst, cx, cy, gain=1.0, glow=0.55, path=None):
+    """Alpha-composite the external logo centred at (cx, cy) with cyan/white glow."""
+    if gain <= 0.001:
+        return dst
+    rgb, alpha = load_brand_logo(path)
+    h, w = alpha.shape[:2]
+    x = cx - w * 0.5
+    y = cy - h * 0.5
+    if glow > 0.001:
+        gm = blank()
+        place(gm, (blur(alpha, 18.0), 0, 0), x, y, WHITE, 1.0)
+        dst += gm[..., None] * mix(CYAN, WHITE, 0.35) * (glow * gain)
+        gm2 = blank()
+        place(gm2, (blur(alpha, 2.0), 0, 0), x, y, WHITE, 1.0)
+        dst += gm2[..., None] * WHITE * (0.35 * glow * gain)
+    X, Y = int(round(x)), int(round(y))
+    xs0, xs1 = max(0, X), min(W, X + w)
+    ys0, ys1 = max(0, Y), min(H, Y + h)
+    if xs0 < xs1 and ys0 < ys1:
+        sub_rgb = rgb[ys0 - Y:ys1 - Y, xs0 - X:xs1 - X]
+        sub_a = (alpha[ys0 - Y:ys1 - Y, xs0 - X:xs1 - X] * gain)[..., None]
+        dst[ys0:ys1, xs0:xs1] = dst[ys0:ys1, xs0:xs1] * (1.0 - sub_a) + sub_rgb * sub_a
+    return dst
+
+
 # ================================================================= scene 08
 def sc_endcard(t, L, shot):
     dur = shot[1] - shot[0]
@@ -885,12 +953,9 @@ def sc_endcard(t, L, shot):
     img += dust(t, 200, 8, 0.45, 0.32, spread=(0.25, 0.75))[..., None] * mix(WHITE, CYAN, 0.5)
     cx, cy = W * 0.5, 352.0
 
-    # rotating halo + mark
-    ring_p = ease_in_out_cubic(span(t, 0.05, 0.6))
-    wl = ease_out_back(span(t, 0.18, 0.7))
-    wr = ease_out_back(span(t, 0.24, 0.78))
+    # rotating halo + external brand logo (programmatic mark removed)
+    logo_q = ease_out_cubic(span(t, 0.05, 0.6))
     pulse_glow = 1.0 + 0.22 * math.sin(t * 2.0)
-    ring, wing = mark_parts(cx, cy, 132.0, ring_p, wl, wr)
     halo = draw((W, H), lambda d, q: d.ellipse(
         [(cx - 172) * q, (cy - 172) * q, (cx + 172) * q, (cy + 172) * q],
         outline=255, width=max(1, int(2 * q))), quality=0.4) * 0.4
@@ -899,9 +964,7 @@ def sc_endcard(t, L, shot):
         arc = draw((W, H), lambda d, q, a0=a0: _arc(d, q, cx, cy, 172, a0, 58, 255), quality=0.4)
         img += arc[..., None] * mix(CYAN, WHITE, i / 3.0) * 0.95
     img += halo[..., None] * CYAN * 0.4
-    img += blur(ring, 1.4)[..., None] * mix(CYAN, WHITE, 0.2) * 1.5
-    img += blur(wing, 1.8)[..., None] * WHITE * 1.25
-    img += blur(wing, 20)[..., None] * CYAN * 1.1 * pulse_glow
+    place_logo(img, cx, cy, gain=logo_q, glow=0.55 * pulse_glow)
 
     # wordmark with tracking settle
     tr = lerp(210, 30, ease_out_expo(span(t, 0.15, 0.95)))
