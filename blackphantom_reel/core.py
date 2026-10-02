@@ -617,7 +617,12 @@ def blocks_glitch(rgb, t, seed=3, strength=1.0, y_bias=0.0):
         rows.append((y, hgt))
         y += hgt
     for (y, hgt) in rows:
-        r = noise1(np.array([t * 9.0 + y * 0.03], np.float32), seed + y % 13)
+        r = float(
+            noise1(
+                np.array([t * 9.0 + y * 0.03], np.float32),
+                seed + y % 13,
+            )[0]
+        )
         if r < 0.72 - 0.25 * strength:
             continue
         dx = int((r - 0.6) * 260 * strength)
