@@ -1,4 +1,4 @@
-"""Render the BlackPhantom 23s showreel to an H.264/AAC mp4."""
+"""Render the BlackPhantom 30s showreel to an H.264/AAC mp4."""
 from __future__ import annotations
 
 import argparse
@@ -17,19 +17,19 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from blackphantom_reel import core as C
 from blackphantom_reel import scenes as S
 
-DURATION = 23.0
+DURATION = 30.0
 
 # (name, t0, t1, fn)
 TIMELINE = [
-    ("ignition", 0.0, 2.5, S.sc_ignition),
-    ("hook", 2.5, 5.5, S.sc_hook),
-    ("stack", 5.5, 9.5, S.sc_stack),
-    ("mont_a", 9.5, 11.5, S.sc_mont_a),
-    ("mont_b", 11.5, 13.5, S.sc_mont_b),
-    ("mont_c", 13.5, 15.5, S.sc_mont_c),
-    ("statement", 15.5, 18.5, S.sc_statement),
-    ("endcard", 18.5, 21.5, S.sc_endcard),
-    ("outro", 21.5, 23.0, S.sc_outro),
+    ("ignition", 0.0, 3.0, S.sc_ignition),
+    ("hook", 3.0, 7.5, S.sc_hook),
+    ("stack", 7.5, 13.0, S.sc_stack),
+    ("mont_a", 13.0, 16.0, S.sc_mont_a),
+    ("mont_b", 16.0, 19.0, S.sc_mont_b),
+    ("mont_c", 19.0, 22.0, S.sc_mont_c),
+    ("statement", 22.0, 26.0, S.sc_statement),
+    ("endcard", 26.0, 28.5, S.sc_endcard),
+    ("outro", 28.5, 30.0, S.sc_outro),
 ]
 CUTS = [t for _, t, _, _ in TIMELINE][1:]
 
@@ -66,7 +66,7 @@ CAMERA = {  # per-scene slow push / drift
     "outro": dict(zoom=(1.00, 1.05), dx=(0, 0), dy=(0, 0)),
 }
 
-GLITCH_AT = [15.43, 15.57, 16.82, 16.92, 17.56, 17.71]
+GLITCH_AT = [21.85, 22.00, 23.30, 23.42, 24.10, 24.25]
 
 
 def shot_at(t):
@@ -120,13 +120,13 @@ def grade(img, t, name, lang):
     for gt in GLITCH_AT:
         d = abs(t - gt)
         g = max(g, max(0.0, 1.0 - d / 0.14))
-    img = C.ca(img, 0.9 + 13.0 * g + 2.5 * C.pulse(t, 1.60, 0.25))
+    img = C.ca(img, 0.9 + 13.0 * g + 2.5 * C.pulse(t, 22.00, 0.25))
     img = C.ca_axis(img, 2.0 * g)
 
     # --- flash / light leak
     if flash > 0.001:
         img += (flash * 0.85) * C.mix(C.WHITE, S.CYAN, 0.35)
-    leak = max(0.0, 1.0 - abs(t - 1.60) / 0.65) * max(0.0, 1.0 - abs(t - 15.55) / 0.4)
+    leak = max(0.0, 1.0 - abs(t - 2.00) / 0.75) * max(0.0, 1.0 - abs(t - 22.05) / 0.4)
     if leak > 0.002:
         m = C._radial(0.86, 0.12, 0.7, 0.9) * leak * 0.5
         img += m[..., None] * C.mix(C.MAGENTA, C.AMBER, 0.5)

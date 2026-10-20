@@ -920,12 +920,30 @@ def load_brand_logo(path=None, target_w=None, target_h=None):
     return out
 
 
-def place_logo(dst, cx, cy, gain=1.0, glow=0.55, path=None):
+def place_logo(dst, cx, cy, gain=1.0, glow=0.55, path=None,
+               target_w=None, target_h=None):
     """Alpha-composite the external logo centred at (cx, cy) with cyan/white glow."""
     if gain <= 0.001:
         return dst
-    rgb, alpha = load_brand_logo(path)
+    rgb, alpha = load_brand_logo(path, target_w=target_w, target_h=target_h)
     h, w = alpha.shape[:2]
+    x = cx - w * 0.5
+    y = cy - h * 0.5
+    if glow > 0.001:
+        gm = blank()
+        place(gm, (blur(alpha, 18.0), 0, 0), x, y, WHITE, 1.0)
+        dst += gm[..., None] * mix(CYAN, WHITE, 0.35) * (glow * gain)
+        gm2 = blank()
+        place(gm2, (blur(alpha, 2.0), 0, 0), x, y, WHITE, 1.0)
+        dst += gm2[..., None] * WHITE * (0.35 * glow * gain)
+    X, Y = int(round(x)), int(round(y))
+    xs0, xs1 = max(0, X), min(W, X + w)
+    ys0, ys1 = max(0, Y), min(H, Y + h)
+    if xs0 < xs1 and ys0 < ys1:
+        sub_rgb = rgb[ys0 - Y:ys1 - Y, xs0 - X:xs1 - X]
+        sub_a = (alpha[ys0 - Y:ys1 - Y, xs0 - X:xs1 - X] * gain)[..., None]
+        dst[ys0:ys1, xs0:xs1] = dst[ys0:ys1, xs0:xs1] * (1.0 - sub_a) + sub_rgb * sub_a
+    return dst
     x = cx - w * 0.5
     y = cy - h * 0.5
     if glow > 0.001:
@@ -1032,11 +1050,10 @@ def sc_outro(t, L, shot):
     img += grid_mask(t * 0.4, 0.35, 1.0, 0.18)[..., None] * CYAN * 0.3
     img += dust(t, 120, 6, 0.3, 0.22, spread=(0.3, 0.7))[..., None] * WHITE
     cx, cy = W * 0.5, H * 0.5 - 30
-    size = lerp(70, 54, ease_in_out_cubic(span(t, 0.0, 1.0)))
-    ring, wing = mark_parts(cx, cy, size, 1.0, 1.0, 1.0)
-    img += blur(ring, 1.4)[..., None] * mix(CYAN, WHITE, 0.25) * 1.2
-    img += blur(wing, 1.8)[..., None] * WHITE * 1.3
-    img += blur(wing, 18)[..., None] * CYAN * 0.9
+    # external brand logo replaces the old procedural mark (unified helper)
+    logo_q = ease_out_cubic(span(t, 0.0, 0.6))
+    place_logo(img, cx, cy, gain=logo_q, glow=0.9 * (1.0 + 0.22 * math.sin(t * 2.0)),
+              target_w=150.0, target_h=150.0)
     # NOTE: L["outro"] (ШОУРИЛ 2026 / SHOWREEL 2026) removed (showreel marking cleanup).
     place(img, T_MONO_XS.mask(BRAND + "  /  " + L["cta"]), W * 0.5 - T_MONO_XS.width(BRAND + "  /  " + L["cta"]) / 2,
           cy + 150, DIM, 0.85 * span(t, 0.4, 0.9))
