@@ -1,4 +1,4 @@
-"""Render the BlackPhantom 15s showreel to an H.264/AAC mp4."""
+"""Render the BlackPhantom 23s showreel to an H.264/AAC mp4."""
 from __future__ import annotations
 
 import argparse
@@ -7,6 +7,7 @@ import os
 import subprocess
 import sys
 import time
+import wave
 
 import numpy as np
 from PIL import Image
@@ -16,21 +17,42 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from blackphantom_reel import core as C
 from blackphantom_reel import scenes as S
 
-DURATION = 15.0
+DURATION = 23.0
 
 # (name, t0, t1, fn)
 TIMELINE = [
-    ("ignition", 0.0, 2.0, S.sc_ignition),
-    ("hook", 2.0, 4.0, S.sc_hook),
-    ("stack", 4.0, 6.0, S.sc_stack),
-    ("mont_a", 6.0, 7.0, S.sc_mont_a),
-    ("mont_b", 7.0, 8.0, S.sc_mont_b),
-    ("mont_c", 8.0, 9.0, S.sc_mont_c),
-    ("statement", 9.0, 11.5, S.sc_statement),
-    ("endcard", 11.5, 14.0, S.sc_endcard),
-    ("outro", 14.0, 15.0, S.sc_outro),
+    ("ignition", 0.0, 2.5, S.sc_ignition),
+    ("hook", 2.5, 5.5, S.sc_hook),
+    ("stack", 5.5, 9.5, S.sc_stack),
+    ("mont_a", 9.5, 11.5, S.sc_mont_a),
+    ("mont_b", 11.5, 13.5, S.sc_mont_b),
+    ("mont_c", 13.5, 15.5, S.sc_mont_c),
+    ("statement", 15.5, 18.5, S.sc_statement),
+    ("endcard", 18.5, 21.5, S.sc_endcard),
+    ("outro", 21.5, 23.0, S.sc_outro),
 ]
 CUTS = [t for _, t, _, _ in TIMELINE][1:]
+
+# Original design durations the scenes were directed for (old 15s cut).
+# render_frame() maps real scene-local time back onto these so the whole
+# choreography (spans, pulses, easings) plays slower but reaches the same
+# final states at each scene end.
+DESIGN_DURATIONS = {
+    "ignition": 2.0,
+    "hook": 2.0,
+    "stack": 2.0,
+    "mont_a": 1.0,
+    "mont_b": 1.0,
+    "mont_c": 1.0,
+    "statement": 2.5,
+    "endcard": 2.5,
+    "outro": 1.0,
+}
+
+# Scene start times, used to style transitions without hardcoding seconds.
+_T0 = {name: t0 for name, t0, _, _ in TIMELINE}
+STRONG_CUTS = {_T0["mont_a"], _T0["mont_c"], _T0["statement"]}
+FLASH_CUT = _T0["statement"]
 
 CAMERA = {  # per-scene slow push / drift
     "ignition": dict(zoom=(1.00, 1.05), dx=(0, 0), dy=(0, -18)),
@@ -44,7 +66,7 @@ CAMERA = {  # per-scene slow push / drift
     "outro": dict(zoom=(1.00, 1.05), dx=(0, 0), dy=(0, 0)),
 }
 
-GLITCH_AT = [8.94, 9.06, 10.10, 10.18, 10.72, 10.86]
+GLITCH_AT = [15.43, 15.57, 16.82, 16.92, 17.56, 17.71]
 
 
 def shot_at(t):
@@ -74,14 +96,14 @@ def grade(img, t, name, lang):
     dx = C.lerp(*cam["dx"], e)
     dy = C.lerp(*cam["dy"], e)
 
-    # --- cut transitions
+    # --- cut transitions (styles keyed off scene starts, not seconds)
     flash, whip, punch = 0.0, 0.0, 0.0
     for cut in CUTS:
         dt = t - cut
         if -0.02 < dt < 0.30:
             f = max(0.0, 1.0 - dt / 0.22) ** 2.2
-            flash = max(flash, f * (0.55 if abs(cut - 9.0) < 0.01 else 0.30))
-            whip = max(whip, f * (34.0 if cut in (6.0, 8.0, 9.0) else 16.0))
+            flash = max(flash, f * (0.55 if abs(cut - FLASH_CUT) < 0.01 else 0.30))
+            whip = max(whip, f * (34.0 if cut in STRONG_CUTS else 16.0))
             punch = max(punch, f * 0.05)
     zoom += punch
     if whip > 0.5:
@@ -98,13 +120,13 @@ def grade(img, t, name, lang):
     for gt in GLITCH_AT:
         d = abs(t - gt)
         g = max(g, max(0.0, 1.0 - d / 0.14))
-    img = C.ca(img, 0.9 + 13.0 * g + 2.5 * C.pulse(t, 1.28, 0.2))
+    img = C.ca(img, 0.9 + 13.0 * g + 2.5 * C.pulse(t, 1.60, 0.25))
     img = C.ca_axis(img, 2.0 * g)
 
     # --- flash / light leak
     if flash > 0.001:
         img += (flash * 0.85) * C.mix(C.WHITE, S.CYAN, 0.35)
-    leak = max(0.0, 1.0 - abs(t - 1.30) / 0.55) * max(0.0, 1.0 - abs(t - 9.05) / 0.4)
+    leak = max(0.0, 1.0 - abs(t - 1.60) / 0.65) * max(0.0, 1.0 - abs(t - 15.55) / 0.4)
     if leak > 0.002:
         m = C._radial(0.86, 0.12, 0.7, 0.9) * leak * 0.5
         img += m[..., None] * C.mix(C.MAGENTA, C.AMBER, 0.5)
@@ -119,13 +141,17 @@ def grade(img, t, name, lang):
     img = np.clip(img, 0.0, 1.0)
 
     # --- global fades
-    fin = C.sstep(0.0, 0.18, t) * (1.0 - C.sstep(14.55, 15.0, t))
+    fin = C.sstep(0.0, 0.18, t) * (1.0 - C.sstep(DURATION - 0.45, DURATION, t))
     return img * fin
 
 
 def render_frame(t, lang):
     name, t0, t1, fn = shot_at(t)
-    img = fn(t - t0, lang, (t0, t1))
+    real_local = t - t0
+    real_duration = t1 - t0
+    design_duration = DESIGN_DURATIONS[name]
+    local_t = real_local * design_duration / real_duration
+    img = fn(local_t, lang, (0.0, design_duration))
     return grade(img, t, name, lang)
 
 
@@ -208,6 +234,23 @@ def assemble(args, parts, out):
         os.remove(p)
 
 
+def wav_duration(path):
+    """Duration of an existing WAV in seconds, or None if unreadable."""
+    try:
+        with wave.open(path, "rb") as w:
+            return w.getnframes() / float(w.getframerate() or 1)
+    except (wave.Error, OSError):
+        return None
+
+
+def track_is_stale(path):
+    """True when the cached track is missing or doesn't match DURATION."""
+    if not os.path.exists(path):
+        return True
+    dur = wav_duration(path)
+    return dur is None or abs(dur - DURATION) > 0.1
+
+
 def run_ff(args_list):
     r = subprocess.run(["ffmpeg", "-y", "-hide_banner", "-loglevel", "error"] + args_list)
     if r.returncode != 0:
@@ -243,7 +286,7 @@ def main():
     os.makedirs(outdir, exist_ok=True)
     out = args.out or os.path.join(outdir, f"blackphantom_showreel_{args.lang}.mp4")
 
-    if not args.no_audio and not os.path.exists(os.path.join(outdir, f"track_{args.lang}.wav")):
+    if not args.no_audio and track_is_stale(os.path.join(outdir, f"track_{args.lang}.wav")):
         from blackphantom_reel import audio as A
         A.render_track(os.path.join(outdir, f"track_{args.lang}.wav"), DURATION)
 

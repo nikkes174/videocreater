@@ -10,7 +10,7 @@ from scipy.signal import lfilter
 SR = 48000
 BPM = 120.0
 BEAT = 60.0 / BPM
-CUTS = [2.0, 4.0, 6.0, 7.0, 8.0, 9.0, 11.5, 14.0]
+CUTS = [2.5, 5.5, 9.5, 11.5, 13.5, 15.5, 18.5, 21.5]
 
 
 # ----------------------------------------------------------------- helpers
@@ -182,7 +182,7 @@ def reverb(x, room=0.86, wet=0.32):
 
 
 # ------------------------------------------------------------------- track
-def build(duration=15.0, seed=0):
+def build(duration=23.0, seed=0):
     rs = np.random.RandomState(seed)
     np.random.seed(seed)
     n = int(duration * SR) + SR
@@ -192,31 +192,31 @@ def build(duration=15.0, seed=0):
     sfx = np.zeros(n, np.float32)
 
     # --- intro riser
-    _at(sfx, riser(2.0, 0.55, seed=2), 0.02)
-    _at(sfx, whoosh(0.5, True, 3), 1.70)
-    _at(sfx, impact(0.85), 2.0)
+    _at(sfx, riser(2.5, 0.55, seed=2), 0.02)
+    _at(sfx, whoosh(0.5, True, 3), 2.20)
+    _at(sfx, impact(0.85), 2.5)
 
     # --- drums: 4 on the floor, clap on 2 & 4
     for b in range(int(duration / BEAT)):
         t0 = b * BEAT
-        if t0 >= 9.0:
+        if t0 >= 15.5:
             break
-        strong = 1.0 if t0 < 6.0 else 0.92
+        strong = 1.0 if t0 < 9.5 else 0.92
         _at(drums, kick(0.95 * strong), t0)
         if int(round(t0 / BEAT)) % 2 == 1:
             _at(drums, snare(0.42), t0)
-        _at(drums, hat(0.30 if t0 < 6.0 else 0.24), t0)
-        if 6.0 <= t0 < 9.0:
+        _at(drums, hat(0.30 if t0 < 9.5 else 0.24), t0)
+        if 9.5 <= t0 < 15.5:
             _at(drums, hat(0.16, 0.02, 9), t0 + BEAT * 0.5)
-        if 11.5 <= t0 < 14.0:
+        if 18.5 <= t0 < 21.5:
             _at(drums, hat(0.18, 0.03, 5), t0 + BEAT * 0.5)
-        if t0 in (13.0, 13.5):
-            _at(drums, snare(0.30 + 0.2 * (t0 - 13.0) * 2), t0)
-        if t0 in (13.5,):
+        if t0 in (20.0, 20.5):
+            _at(drums, snare(0.30 + 0.2 * (t0 - 20.0) * 2), t0)
+        if t0 in (20.5,):
             _at(drums, kick(0.7), t0 + BEAT * 0.5)
 
     # --- sub drops on the section starts
-    for t0 in (2.0, 4.0, 6.0, 8.0, 9.0, 11.5):
+    for t0 in (2.5, 5.5, 9.5, 13.5, 15.5, 18.5):
         _at(drums, sub(0.9), t0)
 
     # --- bass line, D minor
@@ -225,9 +225,9 @@ def build(duration=15.0, seed=0):
     scale = [1.0, 1.0, 1.5, 1.1892, 1.0, 1.5, 2.0, 1.5]
     for b in range(int(duration / BEAT) - 1):
         t0 = b * BEAT
-        if t0 < 1.0 or t0 > 12.0:
+        if t0 < 1.0 or t0 > 19.0:
             continue
-        amp = 0.9 if t0 < 9.0 else 0.7
+        amp = 0.9 if t0 < 15.5 else 0.7
         for off, ln in patt:
             f = root * scale[(b * 2 + int(off * 4)) % len(scale)]
             _at(bassb, bass(f, BEAT * ln * 0.95, amp), t0 + off * BEAT)
@@ -236,34 +236,34 @@ def build(duration=15.0, seed=0):
     chords = [[146.83, 174.61, 220.0], [146.83, 174.61, 261.63],
               [130.81, 164.81, 196.0], [174.61, 220.0, 261.63]]
     for i, ch in enumerate(chords):
-        t0 = 2.0 + i * 2.4
+        t0 = 2.5 + i * 3.1
         if t0 >= duration:
             break
-        _at(music, pad(ch, 2.6, 0.85), t0)
+        _at(music, pad(ch, 3.0, 0.85), t0)
     # sustained beds for the statement + end card
-    _at(music, pad([146.83, 220.0, 293.66], 3.0, 1.5), 9.0)
-    _at(music, pad([174.61, 261.63, 349.23], 3.0, 1.6), 11.4)
-    _at(music, pad([146.83, 174.61, 220.0], 1.8, 1.3), 13.2)
+    _at(music, pad([146.83, 220.0, 293.66], 3.0, 1.5), 15.5)
+    _at(music, pad([174.61, 261.63, 349.23], 3.0, 1.6), 18.4)
+    _at(music, pad([146.83, 174.61, 220.0], 2.1, 1.3), 20.9)
     arp = [587.33, 698.46, 880.0, 1046.5]
-    for b in range(int((13.6 - 2.0) / BEAT)):
-        t0 = 2.0 + b * BEAT
-        if t0 >= 13.6:
+    for b in range(int((20.5 - 2.5) / BEAT)):
+        t0 = 2.5 + b * BEAT
+        if t0 >= 20.5:
             break
-        f = arp[(b + (2 if t0 >= 8 else 0)) % len(arp)]
-        amp = 0.5 if t0 < 9.0 else (0.42 if t0 < 11.5 else 0.34)
+        f = arp[(b + (2 if t0 >= 13.5 else 0)) % len(arp)]
+        amp = 0.5 if t0 < 15.5 else (0.42 if t0 < 18.5 else 0.34)
         _at(music, pluck(f, amp), t0)
-        _at(music, pluck(f * 2, 0.14 if t0 < 11.5 else 0.08), t0 + BEAT * 0.5)
+        _at(music, pluck(f * 2, 0.14 if t0 < 18.5 else 0.08), t0 + BEAT * 0.5)
 
     # --- transitions
     for i, c in enumerate(CUTS):
         _at(sfx, whoosh(0.55 if i % 2 == 0 else 0.4, i % 2 == 0, 13 + i), c - 0.16)
         if i in (0, 2, 4, 5, 7):
             _at(sfx, impact(0.8 if i in (0, 4, 7) else 0.5), c)
-    for t0, dur in ((1.0, 1.0), (5.0, 1.0), (8.0, 1.0), (10.5, 1.0), (13.0, 1.0)):
+    for t0, dur in ((1.5, 1.0), (8.5, 1.0), (14.5, 1.0), (17.5, 1.0), (20.5, 1.0)):
         if t0 + dur < duration + 0.4:
             _at(sfx, riser(dur, 0.45, seed=int(t0 * 7)), t0)
-    _at(sfx, impact(0.95), 14.0)
-    _at(sfx, impact(0.45), 14.5)
+    _at(sfx, impact(0.95), 21.5)
+    _at(sfx, impact(0.45), 22.0)
 
     # --- mix
     drums_wet = reverb(drums, 0.80, 0.10)
@@ -292,7 +292,7 @@ def stereo(mono, width=0.16):
     return np.stack([left, right], axis=1)
 
 
-def render_track(path, duration=15.0, seed=0):
+def render_track(path, duration=23.0, seed=0):
     mono = build(duration, seed)
     st = stereo(mono)
     st *= 0.97
@@ -309,5 +309,5 @@ if __name__ == "__main__":
     import os
     p = os.path.join(os.path.dirname(os.path.abspath(__file__)), "out", "track_test.wav")
     os.makedirs(os.path.dirname(p), exist_ok=True)
-    render_track(p, 15.0)
+    render_track(p, 23.0)
     print(p, os.path.getsize(p) / 1e6, "MB")

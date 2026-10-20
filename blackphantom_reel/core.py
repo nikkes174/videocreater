@@ -208,14 +208,23 @@ def from_np(a):
 
 
 def blur(mask, radius, quality=1.0):
+    radius = float(np.asarray(radius).item())
+    quality = float(np.asarray(quality).item())
+
     if radius <= 0:
         return mask
+
     if quality < 1.0:
-        small = from_np(mask).resize((max(4, int(W * quality)), max(4, int(H * quality))),
-                                     Image.BILINEAR)
+        small = from_np(mask).resize(
+            (max(4, int(W * quality)), max(4, int(H * quality))),
+            Image.BILINEAR,
+        )
         small = small.filter(ImageFilter.GaussianBlur(radius * quality))
         return to_np(small.resize((W, H), Image.BILINEAR))
-    return to_np(from_np(mask).filter(ImageFilter.GaussianBlur(radius)))
+
+    return to_np(
+        from_np(mask).filter(ImageFilter.GaussianBlur(radius))
+    )
 
 
 def down(mask, f=4):
