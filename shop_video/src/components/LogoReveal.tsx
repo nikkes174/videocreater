@@ -8,7 +8,7 @@ import {
   useVideoConfig,
 } from "remotion";
 import type { CSSProperties } from "react";
-import { CinematicBackground } from "./CinematicBackground";
+import { CinematicBackground, CinematicForeground } from "./CinematicBackground";
 
 export type LogoRevealProps = {
   logoSrc?: string;
@@ -200,6 +200,8 @@ export const LogoReveal: React.FC<LogoRevealProps> = ({
           </>
         ) : null}
       </AbsoluteFill>
+
+      <CinematicForeground />
 
       <AbsoluteFill
         style={{

@@ -1,5 +1,5 @@
 import { AbsoluteFill } from "remotion";
-import { CinematicBackground } from "../components/CinematicBackground";
+import { CinematicBackground, CinematicForeground } from "../components/CinematicBackground";
 import { LegacyCinematicBackground } from "../components/LegacyCinematicBackground";
 
 const HalfFrame: React.FC<{ side: "left" | "right"; children: React.ReactNode }> = ({ side, children }) => (
@@ -34,7 +34,10 @@ export const BackgroundComparison: React.FC = () => (
       <LegacyCinematicBackground />
     </HalfFrame>
     <HalfFrame side="right">
-      <CinematicBackground />
+      <>
+        <CinematicBackground />
+        <CinematicForeground />
+      </>
     </HalfFrame>
     <div
       style={{

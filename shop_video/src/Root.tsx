@@ -3,6 +3,7 @@ import { staticFile } from "remotion";
 import { VIDEO_CONFIG } from "./config/video";
 import { BackgroundComparison } from "./scenes/BackgroundComparison";
 import { BackgroundOnly } from "./scenes/BackgroundOnly";
+import { BackgroundLayerPreview, type BackgroundLayerName } from "./scenes/BackgroundLayerPreview";
 import { UnlimitSubTest } from "./scenes/UnlimitSubTest";
 
 const TEST_DURATION_SECONDS = 3.5;
@@ -42,6 +43,25 @@ export const RemotionRoot: React.FC = () => {
         width={VIDEO_CONFIG.width}
         height={VIDEO_CONFIG.height}
       />
+      {([
+        ["BackgroundFarPreview", "far"],
+        ["BackgroundLightsPreview", "lights"],
+        ["BackgroundHazePreview", "haze"],
+        ["BackgroundParticlesPreview", "particles"],
+        ["BackgroundBokehPreview", "bokeh"],
+        ["BackgroundFloorPreview", "floor"],
+      ] as const).map(([id, layer]) => (
+        <Composition
+          key={id}
+          id={id}
+          component={BackgroundLayerPreview}
+          durationInFrames={Math.round(TEST_DURATION_SECONDS * VIDEO_CONFIG.fps)}
+          fps={VIDEO_CONFIG.fps}
+          width={VIDEO_CONFIG.width}
+          height={VIDEO_CONFIG.height}
+          defaultProps={{ layer: layer as BackgroundLayerName }}
+        />
+      ))}
     </>
   );
 };
