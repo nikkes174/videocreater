@@ -1,0 +1,23 @@
+{
+  "name": "unlimitsub-video-ads",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Isolated Remotion project for UnlimitSub vertical video ads",
+  "scripts": {
+    "dev": "remotion studio src/index.tsx",
+    "render:test": "remotion render src/index.tsx UnlimitSubTest output/test.mp4",
+    "verify:test": "node scripts/verify-output.mjs output/test.mp4",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "remotion": "4.0.537"
+  },
+  "devDependencies": {
+    "@remotion/cli": "4.0.537",
+    "@types/react": "19.2.8",
+    "@types/react-dom": "19.2.3",
+    "typescript": "5.9.3"
+  }
+}
