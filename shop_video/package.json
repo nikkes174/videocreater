@@ -5,8 +5,10 @@
   "description": "Isolated Remotion project for UnlimitSub vertical video ads",
   "scripts": {
     "dev": "remotion studio src/index.tsx",
-    "render:test": "remotion render src/index.tsx UnlimitSubTest output/test.mp4",
-    "verify:test": "node scripts/verify-output.mjs output/test.mp4",
+    "render:test": "npm run render:logo",
+    "render:logo": "remotion render src/index.tsx UnlimitSubTest output/logo_reveal_preview.mp4",
+    "verify:test": "npm run verify:logo",
+    "verify:logo": "node scripts/verify-output.mjs output/logo_reveal_preview.mp4 105 3.5",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

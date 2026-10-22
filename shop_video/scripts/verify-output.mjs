@@ -5,6 +5,8 @@ import { fileURLToPath } from "node:url";
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const inputPath = resolve(projectRoot, process.argv[2] ?? "output/test.mp4");
+const expectedFrames = Number(process.argv[3] ?? 90);
+const expectedDurationSeconds = Number(process.argv[4] ?? 3);
 
 if (!existsSync(inputPath)) {
   console.error(`Video file not found: ${inputPath}`);
@@ -57,9 +59,11 @@ if (video?.codec_name !== "h264") failures.push(`codec must be h264 (found ${vid
 if (video?.width !== 1080 || video?.height !== 1920) failures.push(`dimensions must be 1080x1920 (found ${video?.width}x${video?.height})`);
 if (video?.pix_fmt !== "yuv420p") failures.push(`pixel format must be yuv420p (found ${video?.pix_fmt ?? "none"})`);
 if (video?.avg_frame_rate !== "30/1") failures.push(`frame rate must be 30 FPS (found ${video?.avg_frame_rate ?? "unknown"})`);
-if (video?.nb_read_frames !== "90") failures.push(`test composition must contain 90 frames (found ${video?.nb_read_frames ?? "unknown"})`);
-if (!Number.isFinite(durationSeconds) || Math.abs(durationSeconds - 3) > 0.01) {
-  failures.push(`test duration must be 3 seconds (found ${durationSeconds})`);
+if (video?.nb_read_frames !== String(expectedFrames)) {
+  failures.push(`composition must contain ${expectedFrames} frames (found ${video?.nb_read_frames ?? "unknown"})`);
+}
+if (!Number.isFinite(durationSeconds) || Math.abs(durationSeconds - expectedDurationSeconds) > 0.01) {
+  failures.push(`duration must be ${expectedDurationSeconds} seconds (found ${durationSeconds})`);
 }
 
 if (failures.length) {
