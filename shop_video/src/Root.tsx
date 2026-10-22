@@ -6,6 +6,7 @@ import { BackgroundOnly } from "./scenes/BackgroundOnly";
 import { BackgroundLayerPreview, type BackgroundLayerName } from "./scenes/BackgroundLayerPreview";
 import { ParticleLogoIntro } from "./scenes/ParticleLogoIntro";
 import { UnlimitSubTest } from "./scenes/UnlimitSubTest";
+import { FlyingServicesScene } from "./scenes/FlyingServicesScene";
 
 const TEST_DURATION_SECONDS = 3.5;
 
@@ -43,6 +44,14 @@ export const RemotionRoot: React.FC = () => {
           gatherDuration: 43,
           settleDuration: 20,
         }}
+      />
+      <Composition
+        id="FlyingServicesScene"
+        component={FlyingServicesScene}
+        durationInFrames={150}
+        fps={VIDEO_CONFIG.fps}
+        width={VIDEO_CONFIG.width}
+        height={VIDEO_CONFIG.height}
       />
       <Composition
         id="CinematicBackgroundOnly"
