@@ -4,6 +4,7 @@ import { VIDEO_CONFIG } from "./config/video";
 import { BackgroundComparison } from "./scenes/BackgroundComparison";
 import { BackgroundOnly } from "./scenes/BackgroundOnly";
 import { BackgroundLayerPreview, type BackgroundLayerName } from "./scenes/BackgroundLayerPreview";
+import { ParticleLogoIntro } from "./scenes/ParticleLogoIntro";
 import { UnlimitSubTest } from "./scenes/UnlimitSubTest";
 
 const TEST_DURATION_SECONDS = 3.5;
@@ -25,6 +26,22 @@ export const RemotionRoot: React.FC = () => {
           glowIntensity: 1,
           sweepWidth: 50,
           zoomAmount: 0.08,
+        }}
+      />
+      <Composition
+        id="ParticleLogoIntro"
+        component={ParticleLogoIntro}
+        durationInFrames={Math.round(TEST_DURATION_SECONDS * VIDEO_CONFIG.fps)}
+        fps={VIDEO_CONFIG.fps}
+        width={VIDEO_CONFIG.width}
+        height={VIDEO_CONFIG.height}
+        defaultProps={{
+          logoSrc: staticFile("assets/unlimitsub-logo.png"),
+          particleCount: 2200,
+          vortexStrength: 1,
+          glowIntensity: 1,
+          gatherDuration: 43,
+          settleDuration: 20,
         }}
       />
       <Composition
