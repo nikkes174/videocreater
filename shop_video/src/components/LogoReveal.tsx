@@ -8,6 +8,7 @@ import {
   useVideoConfig,
 } from "remotion";
 import type { CSSProperties } from "react";
+import { CinematicBackground } from "./CinematicBackground";
 
 export type LogoRevealProps = {
   logoSrc?: string;
@@ -73,18 +74,6 @@ export const LogoReveal: React.FC<LogoRevealProps> = ({
     [glowIntensity, glowIntensity * 1.12],
     { ...clamp, easing: Easing.inOut(Easing.sin) },
   );
-  const introGlow = interpolate(frame, [0, 4, 12, 36], [0.035, 0.075, 0.24, 0.62], {
-    ...clamp,
-    easing: Easing.inOut(Easing.sin),
-  });
-  const parallaxX = interpolate(frame, [72, durationInFrames - 1], [-14, 14], {
-    ...clamp,
-    easing: Easing.inOut(Easing.sin),
-  });
-  const parallaxY = interpolate(frame, [72, durationInFrames - 1], [8, -8], {
-    ...clamp,
-    easing: Easing.inOut(Easing.sin),
-  });
   const fadeOut = interpolate(
     frame,
     [durationInFrames - 9, durationInFrames - 1],
@@ -181,30 +170,15 @@ export const LogoReveal: React.FC<LogoRevealProps> = ({
   };
 
   return (
-    <AbsoluteFill style={{ backgroundColor: "#020304", overflow: "hidden" }}>
+    <AbsoluteFill style={{ backgroundColor: "#03080D", overflow: "hidden" }}>
+      <CinematicBackground />
       <AbsoluteFill
         style={{
           transform: `scale(${cameraScale})`,
           transformOrigin: "50% 50%",
-          background:
-            "radial-gradient(ellipse 74% 43% at 50% 49%, rgba(14, 37, 39, 0.24) 0%, rgba(7, 14, 16, 0.11) 47%, rgba(2, 3, 4, 0) 78%), linear-gradient(155deg, #080b0d 0%, #030506 48%, #07090a 100%)",
+          background: "transparent",
         }}
       >
-        <div
-          style={{
-            position: "absolute",
-            left: `${interpolate(frame, [0, 12, 36], [35, 43, 50], { ...clamp, easing: Easing.inOut(Easing.sin) })}%`,
-            top: "50%",
-            width: 790,
-            height: 420,
-            transform: `translate(calc(-50% + ${parallaxX}px), calc(-50% + ${parallaxY}px))`,
-            borderRadius: "50%",
-            background: "radial-gradient(ellipse, rgba(50, 222, 215, 0.16) 0%, rgba(28, 143, 147, 0.07) 43%, rgba(0, 0, 0, 0) 74%)",
-            filter: "blur(48px)",
-            opacity: introGlow,
-          }}
-        />
-
         <Img
           src={logoSrc}
           style={{
