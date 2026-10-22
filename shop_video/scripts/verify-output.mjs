@@ -7,6 +7,8 @@ const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const inputPath = resolve(projectRoot, process.argv[2] ?? "output/test.mp4");
 const expectedFrames = Number(process.argv[3] ?? 90);
 const expectedDurationSeconds = Number(process.argv[4] ?? 3);
+const expectedWidth = Number(process.argv[5] ?? 1080);
+const expectedHeight = Number(process.argv[6] ?? 1920);
 
 if (!existsSync(inputPath)) {
   console.error(`Video file not found: ${inputPath}`);
@@ -56,7 +58,9 @@ const failures = [];
 
 if (basename(inputPath).toLowerCase().endsWith(".mp4") === false) failures.push("container extension must be .mp4");
 if (video?.codec_name !== "h264") failures.push(`codec must be h264 (found ${video?.codec_name ?? "none"})`);
-if (video?.width !== 1080 || video?.height !== 1920) failures.push(`dimensions must be 1080x1920 (found ${video?.width}x${video?.height})`);
+if (video?.width !== expectedWidth || video?.height !== expectedHeight) {
+  failures.push(`dimensions must be ${expectedWidth}x${expectedHeight} (found ${video?.width}x${video?.height})`);
+}
 if (video?.pix_fmt !== "yuv420p") failures.push(`pixel format must be yuv420p (found ${video?.pix_fmt ?? "none"})`);
 if (video?.avg_frame_rate !== "30/1") failures.push(`frame rate must be 30 FPS (found ${video?.avg_frame_rate ?? "unknown"})`);
 if (video?.nb_read_frames !== String(expectedFrames)) {

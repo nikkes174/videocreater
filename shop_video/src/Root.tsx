@@ -5,6 +5,8 @@ import { BackgroundComparison } from "./scenes/BackgroundComparison";
 import { BackgroundOnly } from "./scenes/BackgroundOnly";
 import { BackgroundLayerPreview, type BackgroundLayerName } from "./scenes/BackgroundLayerPreview";
 import { ParticleLogoIntro } from "./scenes/ParticleLogoIntro";
+import { FlyingWordsOriginal } from "./scenes/FlyingWordsOriginal";
+import { FlyingServicesScene, FlyingWordsVertical } from "./scenes/FlyingWordsVertical";
 import { UnlimitSubTest } from "./scenes/UnlimitSubTest";
 
 const TEST_DURATION_SECONDS = 3.5;
@@ -43,6 +45,30 @@ export const RemotionRoot: React.FC = () => {
           gatherDuration: 43,
           settleDuration: 20,
         }}
+      />
+      <Composition
+        id="FlyingWordsOriginal"
+        component={FlyingWordsOriginal}
+        durationInFrames={180}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="FlyingWordsVertical"
+        component={FlyingWordsVertical}
+        durationInFrames={180}
+        fps={30}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="FlyingServicesScene"
+        component={FlyingServicesScene}
+        durationInFrames={150}
+        fps={30}
+        width={1080}
+        height={1920}
       />
       <Composition
         id="CinematicBackgroundOnly"

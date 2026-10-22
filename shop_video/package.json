@@ -7,6 +7,12 @@
     "dev": "remotion studio src/index.tsx",
     "render:test": "npm run render:logo",
     "render:logo": "remotion render src/index.tsx UnlimitSubTest output/logo_reveal_preview.mp4",
+    "render:flying-original": "remotion render --config remotion.config.ts --port 3147 src/index.tsx FlyingWordsOriginal output/flying_words_original.mp4 --codec=h264 --pixel-format=yuv420p",
+    "render:flying-vertical": "remotion render --config remotion.config.ts --port 3147 src/index.tsx FlyingWordsVertical output/flying_words_vertical.mp4 --codec=h264 --pixel-format=yuv420p",
+    "render:flying-services": "remotion render --config remotion.config.ts --port 3147 src/index.tsx FlyingServicesScene output/flying_services_v2.mp4 --codec=h264 --pixel-format=yuv420p",
+    "verify:flying-original": "node scripts/verify-output.mjs output/flying_words_original.mp4 180 6 1920 1080",
+    "verify:flying-vertical": "node scripts/verify-output.mjs output/flying_words_vertical.mp4 180 6 1080 1920",
+    "verify:flying-services": "node scripts/verify-output.mjs output/flying_services_v2.mp4 150 5 1080 1920",
     "verify:test": "npm run verify:logo",
     "verify:logo": "node scripts/verify-output.mjs output/logo_reveal_preview.mp4 105 3.5",
     "typecheck": "tsc --noEmit"
