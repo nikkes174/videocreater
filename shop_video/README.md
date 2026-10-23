@@ -24,6 +24,21 @@
 
 Анимация считается по номеру кадра через Remotion `useCurrentFrame()` и `interpolate()`. Переиспользуемый компонент `src/components/LogoReveal.tsx` принимает `logoSrc`, `revealStart`, `revealDuration`, `glowIntensity`, `sweepWidth` и `zoomAmount`.
 
+`LogoReveal` также принимает `showBackground` (по умолчанию `true`). При `false` фоновые слои заставки не рисуются; логотип, световой проход, металлические отражения и push-in остаются, а финальное исчезновение затрагивает только логотип.
+
+## Заставка поверх готового видео
+
+Композиция `UnlimitSubLuxuryIntro` использует готовый `public/assets/one.mp4` в качестве видеофона и `LogoReveal` с прозрачной подложкой. Исходный файл был 1280 × 720, 25 FPS, 7,96 секунды, без аудиодорожки. Центрированный режим `cover` сохраняет пропорции и кадрирует по горизонтали, оставляя центральный световой проход в кадре Stories. Для 3,5-секундной композиции видео хватает без зацикливания.
+
+Скопированный файл хранится в `public/assets/one.mp4`; корневой оригинал не изменён. Создать и проверить ролик можно командами:
+
+```powershell
+npm run render:luxury-intro
+npm run verify:luxury-intro
+```
+
+Результат: `output/unlimitsub_luxury_intro.mp4` (1080 × 1920, 30 FPS, H.264, `yuv420p`, 105 кадров).
+
 ## Установка
 
 Требуется Node.js. Из этой папки выполните:
@@ -94,6 +109,17 @@ npm run verify:flying-services
 ```
 
 Проверки подтверждают MP4/H.264, `yuv420p`, 30 FPS, ожидаемый размер кадра, число кадров и длительность. Результаты сохраняются в `output/flying_words_original.mp4`, `output/flying_words_vertical.mp4` и `output/flying_services_v2.mp4`.
+
+## Оригинальная Basic3DScene Video Shotcraft
+
+`ShotcraftBasic3DOriginal` — локальный оригинал композиции Basic3DScene, 1920 × 1080, 30 FPS, 225 кадров (7,5 секунды). Компонент и целиком необходимые фикстуры скопированы в `src/vendor/videoShotcraft/demos/`; сцена использует исходную математику и оформление без изменений.
+
+```powershell
+npm run render:shotcraft-basic3d
+npm run verify:shotcraft-basic3d
+```
+
+Контактный лист сохраняется в `output/shotcraft_basic3d_contact.png`, а видео — в `output/shotcraft_basic3d_original.mp4`. Атрибуция и Apache-2.0 указаны в `THIRD_PARTY_NOTICES.md`.
 
 ## Добавление рекламных сцен
 

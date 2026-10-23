@@ -8,6 +8,8 @@ import { ParticleLogoIntro } from "./scenes/ParticleLogoIntro";
 import { FlyingWordsOriginal } from "./scenes/FlyingWordsOriginal";
 import { FlyingServicesScene, FlyingWordsVertical } from "./scenes/FlyingWordsVertical";
 import { UnlimitSubTest } from "./scenes/UnlimitSubTest";
+import { UnlimitSubLuxuryIntro } from "./scenes/UnlimitSubLuxuryIntro";
+import { BASIC_3D_SCENE_DURATION, Basic3DScene } from "./vendor/videoShotcraft/demos/camera/basic-3d-scene/Basic3DScene";
 
 const TEST_DURATION_SECONDS = 3.5;
 
@@ -45,6 +47,22 @@ export const RemotionRoot: React.FC = () => {
           gatherDuration: 43,
           settleDuration: 20,
         }}
+      />
+      <Composition
+        id="UnlimitSubLuxuryIntro"
+        component={UnlimitSubLuxuryIntro}
+        durationInFrames={105}
+        fps={VIDEO_CONFIG.fps}
+        width={VIDEO_CONFIG.width}
+        height={VIDEO_CONFIG.height}
+      />
+      <Composition
+        id="ShotcraftBasic3DOriginal"
+        component={Basic3DScene}
+        durationInFrames={BASIC_3D_SCENE_DURATION}
+        fps={30}
+        width={1920}
+        height={1080}
       />
       <Composition
         id="FlyingWordsOriginal"

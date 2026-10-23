@@ -17,6 +17,7 @@ export type LogoRevealProps = {
   glowIntensity?: number;
   sweepWidth?: number;
   zoomAmount?: number;
+  showBackground?: boolean;
 };
 
 const clamp = {
@@ -31,6 +32,7 @@ export const LogoReveal: React.FC<LogoRevealProps> = ({
   glowIntensity = 1,
   sweepWidth = 50,
   zoomAmount = 0.08,
+  showBackground = true,
 }) => {
   const frame = useCurrentFrame();
   const { width, durationInFrames } = useVideoConfig();
@@ -170,13 +172,14 @@ export const LogoReveal: React.FC<LogoRevealProps> = ({
   };
 
   return (
-    <AbsoluteFill style={{ backgroundColor: "#03080D", overflow: "hidden" }}>
-      <CinematicBackground />
+    <AbsoluteFill style={{ backgroundColor: showBackground ? "#03080D" : "transparent", overflow: "hidden" }}>
+      {showBackground ? <CinematicBackground /> : null}
       <AbsoluteFill
         style={{
           transform: `scale(${cameraScale})`,
           transformOrigin: "50% 50%",
           background: "transparent",
+          opacity: showBackground ? 1 : 1 - fadeOut,
         }}
       >
         <Img
@@ -201,15 +204,17 @@ export const LogoReveal: React.FC<LogoRevealProps> = ({
         ) : null}
       </AbsoluteFill>
 
-      <CinematicForeground />
+      {showBackground ? <CinematicForeground /> : null}
 
-      <AbsoluteFill
-        style={{
-          backgroundColor: "#000",
-          opacity: fadeOut,
-          pointerEvents: "none",
-        }}
-      />
+      {showBackground ? (
+        <AbsoluteFill
+          style={{
+            backgroundColor: "#000",
+            opacity: fadeOut,
+            pointerEvents: "none",
+          }}
+        />
+      ) : null}
     </AbsoluteFill>
   );
 };
