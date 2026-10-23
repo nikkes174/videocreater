@@ -9,6 +9,8 @@
     "render:logo": "remotion render src/index.tsx UnlimitSubTest output/logo_reveal_preview.mp4",
     "render:luxury-intro": "remotion render --config remotion.config.ts --port 3147 src/index.tsx UnlimitSubLuxuryIntro output/unlimitsub_luxury_intro.mp4 --codec=h264 --pixel-format=yuv420p",
     "render:shotcraft-basic3d": "remotion render --config remotion.config.ts --port 3147 src/index.tsx ShotcraftBasic3DOriginal output/shotcraft_basic3d_original.mp4 --codec=h264 --pixel-format=yuv420p",
+    "render:unlimitsub-basic3d": "remotion render --config remotion.config.ts --port 3147 src/index.tsx UnlimitSubBasic3D output/unlimitsub_basic3d.mp4 --codec=h264 --pixel-format=yuv420p",
+    "render:unlimitsub-site-tour": "remotion render --config remotion.config.ts --port 3147 src/index.tsx UnlimitSubSiteTour output/unlimitsub_site_tour.mp4 --codec=h264 --pixel-format=yuv420p",
     "render:flying-original": "remotion render --config remotion.config.ts --port 3147 src/index.tsx FlyingWordsOriginal output/flying_words_original.mp4 --codec=h264 --pixel-format=yuv420p",
     "render:flying-vertical": "remotion render --config remotion.config.ts --port 3147 src/index.tsx FlyingWordsVertical output/flying_words_vertical.mp4 --codec=h264 --pixel-format=yuv420p",
     "render:flying-services": "remotion render --config remotion.config.ts --port 3147 src/index.tsx FlyingServicesScene output/flying_services_v2.mp4 --codec=h264 --pixel-format=yuv420p",
@@ -17,6 +19,9 @@
     "verify:flying-services": "node scripts/verify-output.mjs output/flying_services_v2.mp4 150 5 1080 1920",
     "verify:luxury-intro": "node scripts/verify-output.mjs output/unlimitsub_luxury_intro.mp4 105 3.5 1080 1920",
     "verify:shotcraft-basic3d": "node scripts/verify-output.mjs output/shotcraft_basic3d_original.mp4 225 7.5 1920 1080",
+    "verify:unlimitsub-basic3d": "node scripts/verify-output.mjs output/unlimitsub_basic3d.mp4 225 7.5 1920 1080",
+    "verify:unlimitsub-site-tour": "node scripts/verify-output.mjs output/unlimitsub_site_tour.mp4 180 6 1920 1080",
+    "contact:unlimitsub-site-tour": "python scripts/create-site-tour-contact.py",
     "verify:test": "npm run verify:logo",
     "verify:logo": "node scripts/verify-output.mjs output/logo_reveal_preview.mp4 105 3.5",
     "typecheck": "tsc --noEmit"

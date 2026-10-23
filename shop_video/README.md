@@ -114,6 +114,15 @@ npm run verify:flying-services
 
 `ShotcraftBasic3DOriginal` — локальный оригинал композиции Basic3DScene, 1920 × 1080, 30 FPS, 225 кадров (7,5 секунды). Компонент и целиком необходимые фикстуры скопированы в `src/vendor/videoShotcraft/demos/`; сцена использует исходную математику и оформление без изменений.
 
+## Фирменная сцена UnlimitSub Basic3D
+
+`UnlimitSubBasic3D` — локальная фирменная копия той же постановки, 1920 × 1080, 30 FPS, 225 кадров (7,5 секунды). Изменены только палитра, карточки, бренд и финальный слоган; оригинальная композиция и глобальные фикстуры Video Shotcraft остаются без изменений.
+
+```powershell
+npm run render:unlimitsub-basic3d
+npm run verify:unlimitsub-basic3d
+```
+
 ```powershell
 npm run render:shotcraft-basic3d
 npm run verify:shotcraft-basic3d

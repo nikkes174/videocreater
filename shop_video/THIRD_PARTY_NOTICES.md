@@ -17,3 +17,11 @@ The local port changes only fixture import paths and the exported component name
 - Original scene: <https://github.com/Vincentwei1021/video-shotcraft/blob/main/demos/camera/basic-3d-scene/Basic3DScene.tsx>
 - Original fixtures: `demos/_fixtures/Polish.tsx`, `Look.tsx`, and `Brand.tsx`.
 - License: Apache License 2.0, included at `src/vendor/videoShotcraft/LICENSE`.
+
+## video-shotcraft — GrazeFaceTour camera-motion reference
+
+`src/vendor/videoShotcraft/demos/camera/graze-face-tour/GrazeFaceTour.tsx` is an unchanged copy of the original camera tour, Copyright 2026 Wei Yihao. The planned `src/scenes/UnlimitSubSiteTour.tsx` composition will adapt the camera path and lift/landing treatment for real UnlimitSub page captures; the vendor scene and existing shared fixtures remain unchanged.
+
+- Original scene: <https://github.com/Vincentwei1021/video-shotcraft/blob/main/demos/camera/graze-face-tour/GrazeFaceTour.tsx>
+- Fixtures: `demos/_fixtures/Polish.tsx` and `demos/_fixtures/Brand.tsx`.
+- License: Apache License 2.0, included at `src/vendor/videoShotcraft/LICENSE`.

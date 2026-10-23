@@ -9,6 +9,8 @@ import { FlyingWordsOriginal } from "./scenes/FlyingWordsOriginal";
 import { FlyingServicesScene, FlyingWordsVertical } from "./scenes/FlyingWordsVertical";
 import { UnlimitSubTest } from "./scenes/UnlimitSubTest";
 import { UnlimitSubLuxuryIntro } from "./scenes/UnlimitSubLuxuryIntro";
+import { UNLIMITSUB_BASIC3D_DURATION, UnlimitSubBasic3D } from "./scenes/UnlimitSubBasic3D";
+import { UnlimitSubSiteTour } from "./scenes/UnlimitSubSiteTour";
 import { BASIC_3D_SCENE_DURATION, Basic3DScene } from "./vendor/videoShotcraft/demos/camera/basic-3d-scene/Basic3DScene";
 
 const TEST_DURATION_SECONDS = 3.5;
@@ -60,6 +62,23 @@ export const RemotionRoot: React.FC = () => {
         id="ShotcraftBasic3DOriginal"
         component={Basic3DScene}
         durationInFrames={BASIC_3D_SCENE_DURATION}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="UnlimitSubBasic3D"
+        component={UnlimitSubBasic3D}
+        durationInFrames={UNLIMITSUB_BASIC3D_DURATION}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={{ logoSrc: staticFile("assets/unlimitsub-logo.png") }}
+      />
+      <Composition
+        id="UnlimitSubSiteTour"
+        component={UnlimitSubSiteTour}
+        durationInFrames={180}
         fps={30}
         width={1920}
         height={1080}
