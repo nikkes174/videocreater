@@ -1,16 +1,29 @@
 """Render the specified review frames and build a labeled spotlight contact sheet."""
 
 import subprocess
+import sys
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
 
 ROOT = Path(__file__).resolve().parents[1]
-VIDEO = ROOT / "output" / "unlimitsub_spotlight_product.mp4"
-FRAME_DIR = ROOT / "output" / "spotlight-product-frames"
-OUTPUT = ROOT / "output" / "unlimitsub_spotlight_product_contact.png"
-FRAMES = (0, 12, 24, 34, 58, 72, 96, 124, 142, 171)
+VIDEO = ROOT / (sys.argv[1] if len(sys.argv) > 1 else "output/unlimitsub_spotlight_product.mp4")
+FRAME_DIR = ROOT / "output" / (
+    "spotlight-product-frames"
+    if len(sys.argv) == 1
+    else f"{VIDEO.stem}-frames"
+)
+OUTPUT = ROOT / (
+    sys.argv[2]
+    if len(sys.argv) > 2
+    else "output/unlimitsub_spotlight_product_contact.png"
+)
+FRAMES = (
+    tuple(int(frame) for frame in sys.argv[3].split(","))
+    if len(sys.argv) > 3
+    else (0, 12, 24, 34, 58, 72, 96, 124, 142, 171)
+)
 FPS = 30
 THUMB_WIDTH = 600
 THUMB_HEIGHT = 338

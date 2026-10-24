@@ -434,17 +434,28 @@ export const UnlimitSubSpotlightProduct: React.FC = () => {
               <div style={{ position: "relative", display: "inline-block", marginTop: 3 }}>
                 <div
                   style={{
-                    position: "absolute",
-                    left: -5,
-                    top: "8%",
-                    bottom: "2%",
-                    width: `${(marker * 100).toFixed(2)}%`,
-                    background: COLORS.teal,
-                    borderRadius: 4,
+                    position: "relative",
+                    display: "inline-block",
+                    padding: "2px 8px",
+                    whiteSpace: "nowrap",
+                    fontSize: 21,
+                    fontWeight: 760,
+                    lineHeight: 1.12,
+                    color: marker > 0.55 ? COLORS.background : COLORS.silver,
                   }}
-                />
-                <div style={{ position: "relative", fontSize: 26, fontWeight: 760, color: marker > 0.55 ? COLORS.background : COLORS.silver }}>
-                  Твои возможности.
+                >
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: 0,
+                      top: "8%",
+                      bottom: "2%",
+                      width: `${(marker * 100).toFixed(2)}%`,
+                      background: COLORS.teal,
+                      borderRadius: 4,
+                    }}
+                  />
+                  <span style={{ position: "relative" }}>По адекватной цене</span>
                 </div>
               </div>
               <div

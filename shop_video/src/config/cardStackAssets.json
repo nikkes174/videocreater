@@ -1,0 +1,50 @@
+[
+  {
+    "index": 1,
+    "src": "assets/site-tour/cards/card_1.png",
+    "width": 1448,
+    "height": 1086
+  },
+  {
+    "index": 2,
+    "src": "assets/site-tour/cards/card_2.png",
+    "width": 1448,
+    "height": 1086
+  },
+  {
+    "index": 3,
+    "src": "assets/site-tour/cards/card_3.png",
+    "width": 1448,
+    "height": 1086
+  },
+  {
+    "index": 4,
+    "src": "assets/site-tour/cards/card_4.png",
+    "width": 1448,
+    "height": 1086
+  },
+  {
+    "index": 5,
+    "src": "assets/site-tour/cards/card_5.png",
+    "width": 1448,
+    "height": 1086
+  },
+  {
+    "index": 6,
+    "src": "assets/site-tour/cards/card_6.png",
+    "width": 1448,
+    "height": 1086
+  },
+  {
+    "index": 7,
+    "src": "assets/site-tour/cards/card_7.png",
+    "width": 1448,
+    "height": 1086
+  },
+  {
+    "index": 8,
+    "src": "assets/site-tour/cards/card_8.png",
+    "width": 1448,
+    "height": 1086
+  }
+]

@@ -34,3 +34,12 @@ The local port changes only fixture import paths and the exported component name
 - Original visual reference: <https://github.com/Vincentwei1021/video-shotcraft/blob/main/references/shots/opening/spotlight-hero-card.md>
 - Camera fixture: `demos/_fixtures/PageCam2D.tsx`.
 - License: Apache License 2.0, included at `src/vendor/videoShotcraft/LICENSE`.
+
+## video-shotcraft — card-stack motion reference
+
+`src/scenes/UnlimitSubCardStack.tsx` adapts the card-stack motion to the eight real UnlimitSub card images. It retains the source shot's per-card spring entrance, settling compression, deterministic stack offsets, fixed layer order, wrist-pivot fan, contact shadow, and slow push/pull camera.
+
+- Original component: <https://github.com/Vincentwei1021/video-shotcraft/blob/main/demos/ui-entrance/card-stack/CardStack.tsx>
+- Motion reference: <https://github.com/Vincentwei1021/video-shotcraft/blob/main/references/shots/ui-entrance/card-stack.md>
+- Shared fixtures used: `demos/_fixtures/Polish.tsx` and `Look.tsx`.
+- License: Apache License 2.0, included at `src/vendor/videoShotcraft/LICENSE`.
