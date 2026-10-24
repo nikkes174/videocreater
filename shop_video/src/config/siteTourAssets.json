@@ -1,0 +1,35 @@
+{
+  "fps": 30,
+  "durationSeconds": 7,
+  "durationInFrames": 210,
+  "assets": [
+    {
+      "fileName": "img.png",
+      "src": "assets/site-tour/img.png",
+      "width": 1874,
+      "height": 779,
+      "sha256": "e67d3d517b6022586ecf682171a284552e0703d1434028de7c512289365ebf2c"
+    },
+    {
+      "fileName": "img_1.png",
+      "src": "assets/site-tour/img_1.png",
+      "width": 1749,
+      "height": 845,
+      "sha256": "f87b2869d4c2acbda33b5f93234352e6b32c799195a431f2ee069a350a073b7c"
+    },
+    {
+      "fileName": "img_2.png",
+      "src": "assets/site-tour/img_2.png",
+      "width": 1722,
+      "height": 762,
+      "sha256": "891d957638dcfb852714b3d4a0dfe5bdccdf9764a13dd8f49138de62dd86c249"
+    },
+    {
+      "fileName": "img_3.png",
+      "src": "assets/site-tour/img_3.png",
+      "width": 1728,
+      "height": 743,
+      "sha256": "31093adaa46fbed5d96bed48c89c315017ba5ce76efd73f73b81342f2bec75fa"
+    }
+  ]
+}

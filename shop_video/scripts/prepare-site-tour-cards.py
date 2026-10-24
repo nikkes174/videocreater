@@ -18,8 +18,8 @@ OUTPUT = ASSETS / "cards"
 # (source screenshot, filename, screenshot-space crop rectangle)
 CARDS = [
     ("img_1.png", "roblox-3000.png", (20, 94, 303, 455)),
-    ("img_2.png", "pubg-3850.png", (294, 7, 581, 359)),
-    ("img_2.png", "telegram-premium.png", (861, 362, 1147, 735)),
+    ("img_1.png", "pubg-3850.png", (294, 7, 581, 359)),
+    ("img_1.png", "telegram-premium.png", (861, 362, 1147, 735)),
 ]
 
 

@@ -10,7 +10,7 @@ import { FlyingServicesScene, FlyingWordsVertical } from "./scenes/FlyingWordsVe
 import { UnlimitSubTest } from "./scenes/UnlimitSubTest";
 import { UnlimitSubLuxuryIntro } from "./scenes/UnlimitSubLuxuryIntro";
 import { UNLIMITSUB_BASIC3D_DURATION, UnlimitSubBasic3D } from "./scenes/UnlimitSubBasic3D";
-import { UnlimitSubSiteTour } from "./scenes/UnlimitSubSiteTour";
+import { UNLIMITSUB_SITE_TOUR_DURATION, UNLIMITSUB_SITE_TOUR_FPS, UnlimitSubSiteTour } from "./scenes/UnlimitSubSiteTour";
 import { BASIC_3D_SCENE_DURATION, Basic3DScene } from "./vendor/videoShotcraft/demos/camera/basic-3d-scene/Basic3DScene";
 
 const TEST_DURATION_SECONDS = 3.5;
@@ -78,8 +78,8 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="UnlimitSubSiteTour"
         component={UnlimitSubSiteTour}
-        durationInFrames={180}
-        fps={30}
+        durationInFrames={UNLIMITSUB_SITE_TOUR_DURATION}
+        fps={UNLIMITSUB_SITE_TOUR_FPS}
         width={1920}
         height={1080}
       />
