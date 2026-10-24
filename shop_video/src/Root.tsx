@@ -11,6 +11,7 @@ import { UnlimitSubTest } from "./scenes/UnlimitSubTest";
 import { UnlimitSubLuxuryIntro } from "./scenes/UnlimitSubLuxuryIntro";
 import { UNLIMITSUB_BASIC3D_DURATION, UnlimitSubBasic3D } from "./scenes/UnlimitSubBasic3D";
 import { UNLIMITSUB_SITE_TOUR_DURATION, UNLIMITSUB_SITE_TOUR_FPS, UnlimitSubSiteTour } from "./scenes/UnlimitSubSiteTour";
+import { UNLIMITSUB_SPOTLIGHT_PRODUCT_DURATION, UNLIMITSUB_SPOTLIGHT_PRODUCT_FPS, UnlimitSubSpotlightProduct } from "./scenes/UnlimitSubSpotlightProduct";
 import { BASIC_3D_SCENE_DURATION, Basic3DScene } from "./vendor/videoShotcraft/demos/camera/basic-3d-scene/Basic3DScene";
 
 const TEST_DURATION_SECONDS = 3.5;
@@ -80,6 +81,14 @@ export const RemotionRoot: React.FC = () => {
         component={UnlimitSubSiteTour}
         durationInFrames={UNLIMITSUB_SITE_TOUR_DURATION}
         fps={UNLIMITSUB_SITE_TOUR_FPS}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="UnlimitSubSpotlightProduct"
+        component={UnlimitSubSpotlightProduct}
+        durationInFrames={UNLIMITSUB_SPOTLIGHT_PRODUCT_DURATION}
+        fps={UNLIMITSUB_SPOTLIGHT_PRODUCT_FPS}
         width={1920}
         height={1080}
       />

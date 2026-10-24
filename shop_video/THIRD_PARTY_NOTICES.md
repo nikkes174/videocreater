@@ -25,3 +25,12 @@ The local port changes only fixture import paths and the exported component name
 - Original scene: <https://github.com/Vincentwei1021/video-shotcraft/blob/main/demos/camera/graze-face-tour/GrazeFaceTour.tsx>
 - Fixtures: `demos/_fixtures/Polish.tsx` and `demos/_fixtures/Brand.tsx`.
 - License: Apache License 2.0, included at `src/vendor/videoShotcraft/LICENSE`.
+
+## video-shotcraft — SpotlightHeroCard camera and lighting mechanics
+
+`src/scenes/UnlimitSubSpotlightProduct.tsx` adapts the original SpotlightHeroCard demo to the real UnlimitSub catalogue and product artwork. `src/vendor/videoShotcraft/demos/_fixtures/PageCam2D.tsx` carries the original 2.5D screenshot-camera interpolation and transform math, with an exported resolver so the adjacent annotation shares the camera state.
+
+- Original scene: <https://github.com/Vincentwei1021/video-shotcraft/blob/main/demos/opening/spotlight-hero-card/SpotlightHeroCard.tsx>
+- Original visual reference: <https://github.com/Vincentwei1021/video-shotcraft/blob/main/references/shots/opening/spotlight-hero-card.md>
+- Camera fixture: `demos/_fixtures/PageCam2D.tsx`.
+- License: Apache License 2.0, included at `src/vendor/videoShotcraft/LICENSE`.
