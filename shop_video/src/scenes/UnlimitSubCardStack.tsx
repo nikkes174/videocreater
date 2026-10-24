@@ -6,6 +6,7 @@ import {
   useCurrentFrame,
 } from "remotion";
 import cardStackAssets from "../config/cardStackAssets.json";
+import { ParticleTextReveal } from "../components/ParticleTextReveal";
 import { EASE, mix, ramp, softShadow } from "../vendor/videoShotcraft/demos/_fixtures/Polish";
 import { alpha, springAt, stagger } from "../vendor/videoShotcraft/demos/_fixtures/Look";
 
@@ -37,6 +38,9 @@ const COLORS = {
   shadow: "#02070A",
 };
 
+const SUBTITLE = "Подписки, пополнения и gift cards — в одном месте";
+const SUBTITLE_WORDS = SUBTITLE.split(" ");
+
 const deterministic = (seed: number) => {
   const value = Math.sin(seed * 127.1 + 311.7) * 43758.5453;
   return value - Math.floor(value);
@@ -66,7 +70,9 @@ export const UnlimitSubCardStack: React.FC = () => {
   const cameraPush = mix(1, 1.055, ramp(frame, 0, 91, EASE.smooth));
   const camera = mix(cameraPush, 0.9, ramp(frame, CAMERA_PULL_START, CAMERA_PULL_DURATION, EASE.smooth));
   const finalBreath = mix(1, 1.008, ramp(frame, 134, 31, EASE.smooth));
-  const cameraScale = camera * finalBreath;
+  const secondaryMotion = ramp(frame, 118, 8, EASE.out) * (1 - ramp(frame, 145, 19, EASE.smooth));
+  const cameraMicroDrift = 1 + Math.sin((frame - 118) / 25) * 0.012 * secondaryMotion;
+  const cameraScale = camera * finalBreath * cameraMicroDrift;
 
   const floorWidth = mix(280, 940, Math.min(1, fan));
   const floorOpacity = ramp(frame, 14, 24, EASE.out);
@@ -97,45 +103,49 @@ export const UnlimitSubCardStack: React.FC = () => {
         }}
       />
 
-      {/* Copy is frame-driven and remains fixed while the card camera moves. */}
+      {/* Pixel mask particles gather into the real title glyphs, then crossfade to crisp Manrope. */}
+      <ParticleTextReveal
+        text="Широкий выбор цифровых сервисов"
+        fontSize={62}
+        y={154}
+        startFrame={0}
+        travelStartFrame={8}
+        gatherEndFrame={40}
+        settleStartFrame={48}
+        settleDuration={6}
+        maxParticles={2400}
+      />
       <div
         style={{
           position: "absolute",
-          left: 160,
-          right: 160,
-          top: 112,
+          left: 190,
+          right: 190,
+          top: 202,
           textAlign: "center",
-          opacity: ramp(frame, 2, 16, EASE.out),
-          transform: `translateY(${((1 - ramp(frame, 2, 16, EASE.out)) * 20).toFixed(2)}px)`,
-          fontFamily: '"SF Pro Display", "Helvetica Neue", Inter, Arial, sans-serif',
-          fontSize: 54,
-          fontWeight: 680,
-          lineHeight: 1.08,
-          letterSpacing: "-0.04em",
-          color: COLORS.silver,
-          textShadow: "0 2px 26px rgba(0,0,0,0.38)",
-        }}
-      >
-        Широкий выбор цифровых сервисов
-      </div>
-      <div
-        style={{
-          position: "absolute",
-          left: 240,
-          right: 240,
-          top: 184,
-          textAlign: "center",
-          opacity: ramp(frame, 10, 18, EASE.out),
-          transform: `translateY(${((1 - ramp(frame, 10, 18, EASE.out)) * 14).toFixed(2)}px)`,
-          fontFamily: '"SF Pro Display", "Helvetica Neue", Inter, Arial, sans-serif',
+          fontFamily: '"UnlimitSubManrope", sans-serif',
           fontSize: 27,
-          fontWeight: 430,
+          fontWeight: 500,
           lineHeight: 1.3,
-          letterSpacing: "0.005em",
+          letterSpacing: "0em",
           color: COLORS.secondary,
         }}
       >
-        Подписки, пополнения и gift cards — в одном месте
+        {SUBTITLE_WORDS.map((word, index) => {
+          const reveal = ramp(frame, 54 + index * 1.25, 8, EASE.out);
+          return (
+            <span
+              key={`${word}-${index}`}
+              style={{
+                display: "inline-block",
+                opacity: reveal,
+                transform: `translateY(${((1 - reveal) * 9).toFixed(2)}px)`,
+                marginRight: index < SUBTITLE_WORDS.length - 1 ? "0.28em" : 0,
+              }}
+            >
+              {word}
+            </span>
+          );
+        })}
       </div>
 
       <AbsoluteFill
@@ -175,10 +185,14 @@ export const UnlimitSubCardStack: React.FC = () => {
             const stackRotation = (deterministic(index * 3 + 1) - 0.5) * 6.4;
             const stackOffsetX = (deterministic(index * 5 + 2) - 0.5) * 22;
             const flightTilt = (index % 2 ? 1 : -1) * 9 * (verticalOffset / DROP);
-            const rotation = mix(stackRotation + flightTilt, offsetFromCenter * ROTATION_PER_CARD, fan);
-            const offsetX = mix(stackOffsetX, offsetFromCenter * TRANSLATION_PER_CARD, fan);
-            const depth = index * 2;
-            const elevation = 6 + (verticalOffset / DROP) * 48;
+            const parallaxPhase = (frame - 118) / 17 + index * 0.62;
+            const parallaxX = Math.sin(parallaxPhase) * (4.5 + (index % 3) * 1.25) * secondaryMotion;
+            const parallaxY = Math.cos(parallaxPhase * 0.82) * 2.2 * secondaryMotion;
+            const microRotation = Math.sin(parallaxPhase + 0.4) * 0.62 * secondaryMotion;
+            const rotation = mix(stackRotation + flightTilt, offsetFromCenter * ROTATION_PER_CARD, fan) + microRotation;
+            const offsetX = mix(stackOffsetX, offsetFromCenter * TRANSLATION_PER_CARD, fan) + parallaxX;
+            const depth = index * 2 + Math.sin(parallaxPhase + 0.8) * 0.65 * secondaryMotion;
+            const elevation = 6 + (verticalOffset / DROP) * 48 + (0.7 + (index % 2) * 0.8) * secondaryMotion;
 
             return (
               <div
@@ -190,7 +204,7 @@ export const UnlimitSubCardStack: React.FC = () => {
                   width: CARD_WIDTH,
                   height: cardHeight,
                   transformOrigin: "50% 130%",
-                  transform: `translate3d(${offsetX.toFixed(2)}px, ${(verticalOffset + dip).toFixed(2)}px, ${depth}px) rotate(${rotation.toFixed(3)}deg) scale(${squeeze.toFixed(4)})`,
+                  transform: `translate3d(${offsetX.toFixed(2)}px, ${(verticalOffset + dip + parallaxY).toFixed(2)}px, ${depth}px) rotate(${rotation.toFixed(3)}deg) scale(${squeeze.toFixed(4)})`,
                   zIndex: index,
                 }}
               >

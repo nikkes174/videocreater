@@ -43,3 +43,7 @@ The local port changes only fixture import paths and the exported component name
 - Motion reference: <https://github.com/Vincentwei1021/video-shotcraft/blob/main/references/shots/ui-entrance/card-stack.md>
 - Shared fixtures used: `demos/_fixtures/Polish.tsx` and `Look.tsx`.
 - License: Apache License 2.0, included at `src/vendor/videoShotcraft/LICENSE`.
+
+## Manrope typeface
+
+The Manrope 500 and 800 WOFF2 subsets in `public/assets/fonts/` are from Google Fonts and are licensed under the SIL Open Font License 1.1. The license text is included at `public/assets/fonts/OFL-Manrope.txt`.
