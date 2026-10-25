@@ -15,6 +15,7 @@ import { UNLIMITSUB_SPOTLIGHT_PRODUCT_DURATION, UNLIMITSUB_SPOTLIGHT_PRODUCT_FPS
 import { UNLIMITSUB_CARD_STACK_DURATION, UnlimitSubCardStack } from "./scenes/UnlimitSubCardStack";
 import { UNLIMITSUB_SUPPORT_TYPEWRITER_DURATION, UnlimitSubSupportTypewriter } from "./scenes/UnlimitSubSupportTypewriter";
 import { UNLIMITSUB_PAGE_TURN_DURATION, UnlimitSubPageTurnIntro } from "./scenes/UnlimitSubPageTurnIntro";
+import { UNLIMITSUB_PAGE_TURN_VERTICAL_DURATION, UnlimitSubPageTurnIntroVertical } from "./scenes/UnlimitSubPageTurnIntroVertical";
 import { UNLIMITSUB_FULL_PROMO_DURATION, UNLIMITSUB_FULL_PROMO_FPS, UnlimitSubFullPromoVertical } from "./scenes/UnlimitSubFullPromoVertical";
 import { BASIC_3D_SCENE_DURATION, Basic3DScene } from "./vendor/videoShotcraft/demos/camera/basic-3d-scene/Basic3DScene";
 import { BARN_DOOR_SPLIT_DURATION, BarnDoorSplit } from "./vendor/videoShotcraft/demos/transition/page-turn-transitions/BarnDoorSplit";
@@ -79,6 +80,15 @@ export const RemotionRoot: React.FC = () => {
         fps={30}
         width={1920}
         height={1080}
+        defaultProps={{ logoSrc: staticFile("assets/unlimitsub-logo.png") }}
+      />
+      <Composition
+        id="UnlimitSubPageTurnIntroVertical"
+        component={UnlimitSubPageTurnIntroVertical}
+        durationInFrames={UNLIMITSUB_PAGE_TURN_VERTICAL_DURATION}
+        fps={30}
+        width={1080}
+        height={1920}
         defaultProps={{ logoSrc: staticFile("assets/unlimitsub-logo.png") }}
       />
       <Composition
