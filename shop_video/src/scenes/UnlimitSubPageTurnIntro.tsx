@@ -14,7 +14,7 @@ import {
   useCurrentFrame,
 } from "remotion";
 import { EASE, SpeedBlur, bezier, mix, ramp, velocity } from "../vendor/videoShotcraft/demos/_fixtures/Polish";
-import { TextReveal, alpha, glow } from "../vendor/videoShotcraft/demos/_fixtures/Look";
+import { alpha, glow } from "../vendor/videoShotcraft/demos/_fixtures/Look";
 
 export const UNLIMITSUB_PAGE_TURN_DURATION = 150;
 
@@ -61,7 +61,7 @@ const ClosedMetalPage: React.FC = () => (
       inset: 0,
       overflow: "hidden",
       background:
-        "radial-gradient(ellipse 78% 70% at 50% 26%, #243139 0%, #18242A 36%, #11181B 72%, #060C11 100%)",
+        "radial-gradient(ellipse 78% 70% at 50% 26%, #293943 0%, #18242A 34%, #10171B 68%, #04090D 100%)",
     }}
   >
     <div
@@ -69,8 +69,8 @@ const ClosedMetalPage: React.FC = () => (
         position: "absolute",
         inset: 0,
         background:
-          "linear-gradient(112deg, rgba(234,246,245,0.12) 0%, rgba(234,246,245,0.025) 19%, transparent 38%, transparent 63%, rgba(114,222,219,0.035) 82%, rgba(234,246,245,0.09) 100%), repeating-linear-gradient(180deg, rgba(234,246,245,0.026) 0px, rgba(234,246,245,0.026) 1px, transparent 1px, transparent 5px)",
-        opacity: 0.56,
+          "linear-gradient(112deg, rgba(234,246,245,0.17) 0%, rgba(234,246,245,0.035) 19%, transparent 38%, transparent 63%, rgba(114,222,219,0.055) 82%, rgba(234,246,245,0.13) 100%), linear-gradient(90deg, rgba(0,0,0,0.28), transparent 18%, transparent 82%, rgba(0,0,0,0.26)), repeating-linear-gradient(180deg, rgba(234,246,245,0.034) 0px, rgba(234,246,245,0.034) 1px, transparent 1px, transparent 5px)",
+        opacity: 0.68,
       }}
     />
     <div
@@ -78,7 +78,7 @@ const ClosedMetalPage: React.FC = () => (
         position: "absolute",
         inset: "0 0 auto",
         height: 410,
-        background: "linear-gradient(180deg, rgba(234,246,245,0.055), transparent)",
+          background: "linear-gradient(180deg, rgba(234,246,245,0.075), rgba(114,222,219,0.025) 36%, transparent)",
         filter: "blur(22px)",
       }}
     />
@@ -107,15 +107,22 @@ const ClosedMetalPage: React.FC = () => (
     >
       <div
         style={{
-          color: "#D5E0E3",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 8,
+          color: "#EAF6F5",
           fontFamily: FONT_FAMILY,
-          fontSize: 36,
-          fontWeight: 500,
-          letterSpacing: "0.14em",
-          textShadow: "0 1px 0 rgba(255,255,255,0.16), 0 8px 30px rgba(0,0,0,0.42)",
+          fontSize: 46,
+          fontWeight: 800,
+          lineHeight: 1.23,
+          letterSpacing: "0.005em",
+          whiteSpace: "nowrap",
+          textShadow: "0 1px 0 rgba(255,255,255,0.16), 0 8px 24px rgba(0,0,0,0.52)",
         }}
       >
-        Привычные рамки?
+        <span>Нужный сервис есть.</span>
+        <span style={{ color: "#72DEDB" }}>А как оплатить?</span>
       </div>
     </div>
   </div>
@@ -134,20 +141,140 @@ const FarGlassPlanes: React.FC<{ frame: number }> = ({ frame }) => {
     >
       <defs>
         <linearGradient id="page-turn-glass-left" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#EAF6F5" stopOpacity="0.045" />
-          <stop offset="0.54" stopColor="#39D5C7" stopOpacity="0.012" />
+          <stop offset="0" stopColor="#EAF6F5" stopOpacity="0.062" />
+          <stop offset="0.54" stopColor="#39D5C7" stopOpacity="0.022" />
           <stop offset="1" stopColor="#03080D" stopOpacity="0" />
         </linearGradient>
         <linearGradient id="page-turn-glass-right" x1="1" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#EAF6F5" stopOpacity="0.052" />
-          <stop offset="0.5" stopColor="#39D5C7" stopOpacity="0.014" />
+          <stop offset="0" stopColor="#EAF6F5" stopOpacity="0.068" />
+          <stop offset="0.5" stopColor="#39D5C7" stopOpacity="0.026" />
           <stop offset="1" stopColor="#03080D" stopOpacity="0" />
         </linearGradient>
       </defs>
-      <path d="M0 120 L434 0 L610 1080 L0 1080 Z" fill="url(#page-turn-glass-left)" stroke="rgba(234,246,245,0.09)" strokeWidth="1.2" />
-      <path d="M1920 72 L1512 0 L1342 1080 L1920 1080 Z" fill="url(#page-turn-glass-right)" stroke="rgba(114,222,219,0.075)" strokeWidth="1.2" />
-      <path d="M0 817 C460 769 1380 772 1920 818" fill="none" stroke="rgba(234,246,245,0.055)" strokeWidth="1" />
+      <path d="M0 120 L434 0 L610 1080 L0 1080 Z" fill="url(#page-turn-glass-left)" stroke="rgba(234,246,245,0.12)" strokeWidth="1.2" />
+      <path d="M1920 72 L1512 0 L1342 1080 L1920 1080 Z" fill="url(#page-turn-glass-right)" stroke="rgba(114,222,219,0.1)" strokeWidth="1.2" />
+      <path d="M0 817 C460 769 1380 772 1920 818" fill="none" stroke="rgba(234,246,245,0.075)" strokeWidth="1" />
     </svg>
+  );
+};
+
+const StableSloganReveal: React.FC<{ frame: number }> = ({ frame }) => {
+  const opacity = interpolate(frame, [70, 90], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: EASE.smooth,
+  });
+  const blur = interpolate(frame, [70, 90, 100], [10, 2, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: EASE.smooth,
+  });
+
+  return (
+    <div
+      aria-label="Цифровые возможности без границ."
+      style={{
+        position: "absolute",
+        left: "50%",
+        top: 654,
+        width: 1560,
+        height: 72,
+        transform: "translateX(-50%)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 13,
+        whiteSpace: "nowrap",
+        opacity,
+        filter: `blur(${blur.toFixed(2)}px)`,
+      }}
+    >
+      <span
+        style={{
+          color: "#F0F7F7",
+          fontFamily: FONT_FAMILY,
+          fontSize: 48,
+          fontWeight: 800,
+          lineHeight: 1.2,
+          letterSpacing: "-0.035em",
+          textShadow: "0 3px 18px rgba(0,0,0,0.38)",
+        }}
+      >
+        Цифровые возможности
+      </span>
+      <span
+        style={{
+          color: "#58E5DA",
+          fontFamily: FONT_FAMILY,
+          fontSize: 48,
+          fontWeight: 800,
+          lineHeight: 1.2,
+          letterSpacing: "-0.035em",
+          textShadow: "0 2px 14px rgba(0,0,0,0.32)",
+        }}
+      >
+        без границ.
+      </span>
+    </div>
+  );
+};
+
+const StableSecondaryReveal: React.FC<{ frame: number }> = ({ frame }) => {
+  const opacity = interpolate(frame, [95, 112], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: EASE.smooth,
+  });
+  const blur = interpolate(frame, [95, 108, 116], [5, 1, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: EASE.smooth,
+  });
+
+  return (
+    <div
+      aria-label="ОТ ПОДПИСОК ДО ИГРОВЫХ МИРОВ."
+      style={{
+        position: "absolute",
+        left: "50%",
+        top: 752,
+        width: 1500,
+        height: 46,
+        transform: "translateX(-50%)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 8,
+        whiteSpace: "nowrap",
+        opacity,
+        filter: `blur(${blur.toFixed(2)}px)`,
+      }}
+    >
+      <span
+        style={{
+          color: "#B7CED2",
+          fontFamily: FONT_FAMILY,
+          fontSize: 23,
+          fontWeight: 500,
+          lineHeight: 1.3,
+          letterSpacing: "0.13em",
+        }}
+      >
+        ОТ ПОДПИСОК ДО
+      </span>
+      <span
+        style={{
+          color: "#72DEDB",
+          fontFamily: FONT_FAMILY,
+          fontSize: 23,
+          fontWeight: 800,
+          lineHeight: 1.3,
+          letterSpacing: "0.13em",
+        }}
+      >
+        ИГРОВЫХ МИРОВ.
+      </span>
+    </div>
   );
 };
 
@@ -163,7 +290,7 @@ const LuxuryBrandPage: React.FC<{ frame: number; logoSrc: string; flash: number 
     easing: EASE.snappy,
   });
   const sweepProgress = ramp(frame, 80, 32, EASE.smooth);
-  const sweepOpacity = interpolate(frame, [78, 84, 104, 112], [0, 0.64, 0.56, 0], {
+  const sweepOpacity = interpolate(frame, [78, 84, 104, 112], [0, 0.8, 0.7, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: EASE.smooth,
@@ -177,8 +304,8 @@ const LuxuryBrandPage: React.FC<{ frame: number; logoSrc: string; flash: number 
           position: "absolute",
           inset: 0,
           background:
-            "linear-gradient(180deg, #0A151B 0%, #050B10 45%, #03080D 73%, #020507 100%), radial-gradient(ellipse 74% 62% at 50% 22%, rgba(57,213,199,0.12), transparent 72%)",
-          backgroundBlendMode: "screen, normal",
+            "linear-gradient(180deg, #0A151B 0%, #050B10 45%, #03080D 73%, #020507 100%), radial-gradient(ellipse 68% 56% at 50% 22%, rgba(57,213,199,0.2), transparent 72%)",
+          backgroundBlendMode: "normal, screen",
         }}
       />
       <div
@@ -188,9 +315,9 @@ const LuxuryBrandPage: React.FC<{ frame: number; logoSrc: string; flash: number 
           right: -120,
           top: -130,
           height: 750,
-          opacity: 0.18 + ambient * 0.18 + flash * 0.12,
-          background: `radial-gradient(ellipse 54% 61% at ${beamCenter}% 22%, rgba(127,232,226,0.62) 0%, rgba(39,145,153,0.24) 34%, rgba(9,37,47,0.08) 61%, transparent 78%)`,
-          filter: "blur(40px)",
+          opacity: 0.28 + ambient * 0.24 + flash * 0.1,
+          background: `radial-gradient(ellipse 54% 61% at ${beamCenter}% 22%, rgba(163,246,241,0.68) 0%, rgba(39,145,153,0.32) 34%, rgba(9,37,47,0.1) 61%, transparent 78%)`,
+          filter: "blur(34px)",
           transform: `translateY(${(Math.sin(frame / 102) * 12).toFixed(2)}px)`,
           mixBlendMode: "screen",
         }}
@@ -202,9 +329,9 @@ const LuxuryBrandPage: React.FC<{ frame: number; logoSrc: string; flash: number 
           right: "13%",
           top: 242,
           height: 390,
-          opacity: 0.08 + ambient * 0.055,
-          background: "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(35,111,124,0.54) 0%, rgba(9,29,39,0.17) 52%, transparent 78%)",
-          filter: "blur(36px)",
+          opacity: 0.27 + ambient * 0.18,
+          background: "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(61,164,175,0.58) 0%, rgba(9,36,47,0.24) 52%, transparent 78%)",
+          filter: "blur(30px)",
           mixBlendMode: "screen",
         }}
       />
@@ -217,7 +344,7 @@ const LuxuryBrandPage: React.FC<{ frame: number; logoSrc: string; flash: number 
           top: "72%",
           bottom: 0,
           background:
-            "linear-gradient(180deg, rgba(3,8,13,0) 0%, rgba(5,18,23,0.44) 18%, rgba(2,6,10,0.94) 100%), radial-gradient(ellipse 54% 22% at 50% 3%, rgba(57,213,199,0.27) 0%, rgba(13,81,91,0.12) 44%, transparent 82%)",
+            "linear-gradient(180deg, rgba(3,8,13,0) 0%, rgba(5,18,23,0.5) 18%, rgba(2,6,10,0.97) 100%), radial-gradient(ellipse 54% 22% at 50% 3%, rgba(57,213,199,0.34) 0%, rgba(13,81,91,0.16) 44%, transparent 82%)",
         }}
       />
       <div
@@ -227,8 +354,8 @@ const LuxuryBrandPage: React.FC<{ frame: number; logoSrc: string; flash: number 
           right: "16%",
           top: "75%",
           height: 2,
-          opacity: 0.15 + ambient * 0.12,
-          background: "linear-gradient(90deg, transparent, rgba(114,222,219,0.32), rgba(234,246,245,0.22), rgba(57,213,199,0.28), transparent)",
+          opacity: 0.19 + ambient * 0.14,
+          background: "linear-gradient(90deg, transparent, rgba(114,222,219,0.4), rgba(234,246,245,0.32), rgba(57,213,199,0.36), transparent)",
           filter: "blur(2px)",
         }}
       />
@@ -236,7 +363,7 @@ const LuxuryBrandPage: React.FC<{ frame: number; logoSrc: string; flash: number 
         style={{
           position: "absolute",
           inset: 0,
-          background: "radial-gradient(ellipse 92% 96% at 50% 44%, transparent 43%, rgba(0,3,7,0.18) 77%, rgba(0,2,5,0.46) 100%)",
+          background: "radial-gradient(ellipse 84% 92% at 50% 42%, transparent 40%, rgba(0,3,7,0.24) 73%, rgba(0,2,5,0.6) 100%)",
           pointerEvents: "none",
         }}
       />
@@ -251,7 +378,7 @@ const LuxuryBrandPage: React.FC<{ frame: number; logoSrc: string; flash: number 
           opacity: logoOpacity,
           transform: "translate(-50%, -50%)",
           transformOrigin: "50% 50%",
-          filter: "drop-shadow(0 22px 50px rgba(0,0,0,0.42))",
+          filter: "drop-shadow(0 24px 56px rgba(0,0,0,0.58)) drop-shadow(0 0 18px rgba(57,213,199,0.13))",
         }}
       >
         <Img
@@ -262,7 +389,7 @@ const LuxuryBrandPage: React.FC<{ frame: number; logoSrc: string; flash: number 
             width: "100%",
             height: "100%",
             objectFit: "contain",
-            filter: "drop-shadow(0 0 18px rgba(57,213,199,0.19)) drop-shadow(0 0 44px rgba(18,118,130,0.16))",
+            filter: "drop-shadow(0 0 2px rgba(240,247,247,0.38)) drop-shadow(0 0 20px rgba(57,213,199,0.24)) drop-shadow(0 0 54px rgba(18,118,130,0.22))",
           }}
         />
         <div
@@ -270,7 +397,7 @@ const LuxuryBrandPage: React.FC<{ frame: number; logoSrc: string; flash: number 
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(112deg, transparent 43%, rgba(57,213,199,0.12) 47%, rgba(234,246,245,0.82) 50%, rgba(223,255,253,0.66) 52%, rgba(57,213,199,0.1) 56%, transparent 61%)",
+              "linear-gradient(112deg, transparent 43%, rgba(57,213,199,0.18) 47%, rgba(234,246,245,0.9) 50%, rgba(223,255,253,0.76) 52%, rgba(57,213,199,0.14) 56%, transparent 61%)",
             backgroundSize: "250% 100%",
             backgroundPosition: `${((1 - sweepProgress) * 100).toFixed(2)}% 50%`,
             opacity: sweepOpacity,
@@ -288,32 +415,8 @@ const LuxuryBrandPage: React.FC<{ frame: number; logoSrc: string; flash: number 
         />
       </div>
 
-      <div style={{ position: "absolute", left: 70, right: 70, top: 654, textAlign: "center", whiteSpace: "nowrap" }}>
-        <TextReveal
-          text="Цифровые возможности без границ."
-          start={65}
-          by="word"
-          variant="blur"
-          each={15}
-          gap={3}
-          ease={EASE.snappy}
-          style={{ fontFamily: FONT_FAMILY, fontSize: 46, fontWeight: 800, lineHeight: 1.25, letterSpacing: "-0.035em", color: "#EAF6F5", textShadow: "0 5px 24px rgba(0,0,0,0.34)" }}
-          unitStyle={(wordIndex) => wordIndex >= 2 ? { color: "#72DEDB", textShadow: "0 0 22px rgba(57,213,199,0.2)" } : { color: "#EAF6F5" }}
-        />
-      </div>
-      <div style={{ position: "absolute", left: 90, right: 90, top: 752, textAlign: "center", whiteSpace: "nowrap" }}>
-        <TextReveal
-          text="ИГРЫ · ПОДПИСКИ · ПОДАРОЧНЫЕ КАРТЫ"
-          start={85}
-          by="word"
-          variant="track"
-          each={12}
-          gap={2.3}
-          ease={EASE.out}
-          style={{ fontFamily: FONT_FAMILY, fontSize: 17, fontWeight: 500, lineHeight: 1.4, letterSpacing: "0.17em", color: "#9EB5BA" }}
-          unitStyle={(wordIndex) => wordIndex % 2 === 0 ? { color: wordIndex === 0 || wordIndex === 2 ? "#72DEDB" : "#B8C7CA" } : { color: "#667E83" }}
-        />
-      </div>
+      <StableSloganReveal frame={frame} />
+      <StableSecondaryReveal frame={frame} />
     </div>
   );
 };
@@ -359,7 +462,7 @@ const MetalDoor: React.FC<{ side: Side; offset: number; light: number; edge: num
             [inner]: 0,
             width: 10,
             opacity: edge,
-            background: "linear-gradient(to left, #EAF6F5 0%, #72DEDB 35%, #10252C 100%)",
+            background: `linear-gradient(${toward}, #EAF6F5 0%, #72DEDB 35%, #10252C 100%)`,
           }}
         />
       )}
@@ -377,8 +480,8 @@ export const UnlimitSubPageTurnIntro: React.FC<UnlimitSubPageTurnIntroProps> = (
   const seamLight = ramp(frame, CRACK, 12, EASE.out);
   const edge = frame >= GAP ? 1 : 0;
   const flash = ramp(frame, GAP, 12, EASE.exit) * (1 - ramp(frame, SLIDE + 6, 30, EASE.out));
-  const pageProgress = ramp(frame, SLIDE + 2, 36, EASE.snappy);
-  const pageScale = mix(1.08, 1, pageProgress) * mix(1, 1.018, ramp(frame, 78, 72, EASE.smooth));
+  const pageProgress = ramp(frame, SLIDE + 2, 28, EASE.snappy);
+  const pageScale = mix(1.08, 1, pageProgress);
   const closedPagePush = mix(1, 1.015, ramp(frame, 0, SLIDE, EASE.smooth));
   const doorsGone = frame > SLIDE + SLIDE_D;
   const showNewPage = frame >= GAP;
@@ -406,9 +509,9 @@ export const UnlimitSubPageTurnIntro: React.FC<UnlimitSubPageTurnIntroProps> = (
         const fontSet = document.fonts as FontFaceSet & { add: (face: FontFace) => FontFaceSet };
         loaded.forEach((face) => fontSet.add(face));
         await Promise.all([
-          document.fonts.load(`800 46px "${FONT_FAMILY}"`, "Цифровые возможности без границ"),
-          document.fonts.load(`500 36px "${FONT_FAMILY}"`, "Привычные рамки"),
-          document.fonts.load(`500 17px "${FONT_FAMILY}"`, "ИГРЫ ПОДПИСКИ ПОДАРОЧНЫЕ КАРТЫ"),
+          document.fonts.load(`800 48px "${FONT_FAMILY}"`, "Цифровые возможности без границ"),
+          document.fonts.load(`800 46px "${FONT_FAMILY}"`, "Нужный сервис есть А как оплатить"),
+          document.fonts.load(`500 23px "${FONT_FAMILY}"`, "ОТ ПОДПИСОК ДО ИГРОВЫХ МИРОВ"),
         ]);
         if (cancelled) return;
         setFontReady(true);
