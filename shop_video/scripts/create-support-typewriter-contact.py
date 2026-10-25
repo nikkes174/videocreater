@@ -1,16 +1,21 @@
 """Render the required review frames for the UnlimitSub support typewriter scene."""
 
 import subprocess
+import sys
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
 
 ROOT = Path(__file__).resolve().parents[1]
-VIDEO = ROOT / "output" / "unlimitsub_support_typewriter.mp4"
-FRAME_DIR = ROOT / "output" / "unlimitsub_support_typewriter-frames"
-OUTPUT = ROOT / "output" / "unlimitsub_support_typewriter_contact.png"
-FRAMES = (0, 20, 40, 60, 80, 100, 120, 140, 160, 179)
+VIDEO = ROOT / (sys.argv[1] if len(sys.argv) > 1 else "output/unlimitsub_support_typewriter.mp4")
+OUTPUT = ROOT / (sys.argv[2] if len(sys.argv) > 2 else "output/unlimitsub_support_typewriter_contact.png")
+FRAMES = (
+    tuple(int(frame) for frame in sys.argv[3].split(","))
+    if len(sys.argv) > 3
+    else (0, 20, 40, 60, 80, 100, 120, 140, 160, 179)
+)
+FRAME_DIR = ROOT / "output" / f"{OUTPUT.stem}-frames"
 FPS = 30
 THUMB_WIDTH = 600
 THUMB_HEIGHT = 338

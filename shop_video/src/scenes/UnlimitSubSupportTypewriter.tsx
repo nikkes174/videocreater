@@ -13,11 +13,15 @@ import {
   staticFile,
   useCurrentFrame,
 } from "remotion";
-import { LOOKS, Stage, Dust, alpha, type Look } from "../vendor/videoShotcraft/demos/_fixtures/Look";
+import { SupportLuxuryBackground } from "../components/SupportLuxuryBackground";
+import { alpha } from "../vendor/videoShotcraft/demos/_fixtures/Look";
 
 export const UNLIMITSUB_SUPPORT_TYPEWRITER_DURATION = 180;
 
-const FONT_FAMILY = "UnlimitSubManrope";
+const MANROPE_FAMILY = "UnlimitSubManrope";
+const UNBOUNDED_FAMILY = "UnlimitSubUnbounded";
+const SILVER_TEXT = "linear-gradient(180deg, #FFFFFF 0%, #DCE9ED 48%, #89A5AF 100%)";
+const TEAL_TEXT = "linear-gradient(180deg, #DFFFFD 0%, #80E8E0 48%, #39D5C7 100%)";
 const FONT_SUBSETS = [
   {
     name: "latin",
@@ -34,26 +38,15 @@ const FONT_SUBSETS = [
     range: "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F",
   },
 ] as const;
-
-const UNLIMITSUB_LOOK: Look = {
-  ...LOOKS.midnight,
-  bg: ["#03080D", "#071116", "#03080D"],
-  light: "#39D5C7",
-  surface: "#11181B",
-  surface2: "#172126",
-  line: "rgba(114,222,219,0.14)",
-  ink: "#EAF6F5",
-  ink2: "#9EB5BA",
-  ink3: "#627A7E",
-  accent: "#39D5C7",
-  accent2: "#72DEDB",
-  onAccent: "#03080D",
-  shadow: "#00040A",
-};
+const FONT_FILES = [
+  { family: MANROPE_FAMILY, prefix: "manrope", weight: 500 },
+  { family: MANROPE_FAMILY, prefix: "manrope", weight: 800 },
+  { family: UNBOUNDED_FAMILY, prefix: "unbounded", weight: 700 },
+] as const;
 
 const PAGE_W = 1920;
 const PAGE_H = 1080;
-const WINDOW = { left: 90, top: 50, width: 1740, height: 980 };
+const WINDOW = { left: 1000, top: 110, width: 820, height: 880 };
 const CARET_COLOR = "#72DEDB";
 const WIPE_EASE = Easing.bezier(0.4, 0, 0.6, 1);
 const CAMERA_PERSPECTIVE = 2200;
@@ -63,12 +56,11 @@ type CameraKey = Camera & { frame: number };
 
 // The source uses a monotone cubic Hermite spline, preserving its calm continuous pullback.
 const CAMERA_KEYS: CameraKey[] = [
-  { frame: 0, cx: 610, cy: 260, zoom: 1.34, rotX: 7.5, rotY: -16, sx: 0, sy: 0 },
-  { frame: 28, cx: 770, cy: 370, zoom: 1.17, rotX: 6, rotY: -12, sx: 0, sy: 0 },
-  { frame: 50, cx: 960, cy: 540, zoom: 0.98, rotX: 5, rotY: -7, sx: 0, sy: 0 },
-  { frame: 78, cx: 960, cy: 540, zoom: 0.9, rotX: 4.5, rotY: -6, sx: 0, sy: 0 },
-  { frame: 132, cx: 960, cy: 540, zoom: 0.8, rotX: 8, rotY: -3, sx: 0, sy: 0 },
-  { frame: 180, cx: 960, cy: 574, zoom: 0.808, rotX: 8, rotY: -3, sx: 0, sy: 0 },
+  { frame: 0, cx: 960, cy: 540, zoom: 1.04, rotX: 4.5, rotY: -9, sx: 0, sy: 0 },
+  { frame: 34, cx: 960, cy: 540, zoom: 0.97, rotX: 4, rotY: -6, sx: 0, sy: 0 },
+  { frame: 78, cx: 960, cy: 540, zoom: 0.9, rotX: 4.5, rotY: -4, sx: 0, sy: 0 },
+  { frame: 132, cx: 960, cy: 540, zoom: 0.86, rotX: 5.5, rotY: -2.5, sx: 0, sy: 0 },
+  { frame: 180, cx: 960, cy: 540, zoom: 0.868, rotX: 5.5, rotY: -2.5, sx: 0, sy: 0 },
 ];
 const CAMERA_PARAMS: (keyof Camera)[] = ["cx", "cy", "zoom", "rotX", "rotY", "sx", "sy"];
 
@@ -129,14 +121,17 @@ const cameraAt = (frame: number): Camera =>
   Object.fromEntries(CAMERA_PARAMS.map((parameter) => [parameter, CAMERA_CURVES[parameter](frame)])) as Camera;
 
 const TYPEWRITER_BLOCKS = [
-  { id: "headline", start: 2, duration: 10 },
-  { id: "subtitle", start: 15, duration: 10 },
-  { id: "question-1", start: 44, duration: 12 },
-  { id: "answer-1", start: 58, duration: 13 },
-  { id: "question-2", start: 73, duration: 12 },
-  { id: "answer-2", start: 87, duration: 13 },
-  { id: "question-3", start: 102, duration: 11 },
-  { id: "answer-3", start: 115, duration: 19 },
+  { id: "support", start: 0, duration: 10 },
+  { id: "support-hours", start: 10, duration: 6 },
+  { id: "promise-one", start: 16, duration: 14 },
+  { id: "promise-two", start: 30, duration: 13 },
+  { id: "signature", start: 43, duration: 9 },
+  { id: "question-1", start: 56, duration: 11 },
+  { id: "answer-1", start: 69, duration: 12 },
+  { id: "question-2", start: 83, duration: 10 },
+  { id: "answer-2", start: 95, duration: 12 },
+  { id: "question-3", start: 109, duration: 10 },
+  { id: "answer-3", start: 121, duration: 16 },
 ] as const;
 
 const revealProgress = (frame: number, start: number, duration: number) =>
@@ -144,6 +139,25 @@ const revealProgress = (frame: number, start: number, duration: number) =>
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: WIPE_EASE,
+  });
+
+const responsePulseAt = (frame: number, start: number, duration: number) => {
+  const attack = interpolate(frame, [start, start + 4], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  const release = interpolate(frame, [start + 4, start + duration + 18], [1, 0.12], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  return attack * release;
+};
+
+const FINAL_RESPONSE_LOCK = (frame: number) =>
+  interpolate(frame, [137, 142, 154], [0, 0.2, 0.38], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: Easing.bezier(0.22, 1, 0.36, 1),
   });
 
 const TypewriterText: React.FC<{
@@ -157,8 +171,11 @@ const TypewriterText: React.FC<{
   color: string;
   fontSize: number;
   fontWeight?: number;
+  fontFamily?: string;
   lineHeight?: number;
   letterSpacing?: string;
+  gradient?: string;
+  revealMode?: "cover" | "clip";
 }> = ({
   id,
   frame,
@@ -170,8 +187,11 @@ const TypewriterText: React.FC<{
   color,
   fontSize,
   fontWeight = 500,
+  fontFamily = MANROPE_FAMILY,
   lineHeight = 1.24,
   letterSpacing,
+  gradient,
+  revealMode = "cover",
 }) => {
   const progress = revealProgress(frame, start, duration);
   const caretOpacity =
@@ -190,8 +210,12 @@ const TypewriterText: React.FC<{
         display: "inline-block",
         width: "max-content",
         maxWidth: "none",
-        color,
-        fontFamily: FONT_FAMILY,
+        color: gradient ? "transparent" : color,
+        backgroundImage: gradient,
+        backgroundClip: gradient ? "text" : undefined,
+        WebkitBackgroundClip: gradient ? "text" : undefined,
+        WebkitTextFillColor: gradient ? "transparent" : undefined,
+        fontFamily,
         fontSize,
         fontWeight,
         lineHeight,
@@ -200,8 +224,15 @@ const TypewriterText: React.FC<{
         fontVariantNumeric: "tabular-nums",
       }}
     >
-      <span style={{ display: "block" }}>{text}</span>
-      {progress < 1 ? (
+      <span
+        style={{
+          display: "block",
+          clipPath: revealMode === "clip" ? `inset(0 ${((1 - progress) * 100).toFixed(3)}% 0 0)` : undefined,
+        }}
+      >
+        {text}
+      </span>
+      {revealMode === "cover" && progress < 1 ? (
         <div
           style={{
             position: "absolute",
@@ -237,58 +268,60 @@ const TypewriterText: React.FC<{
 const EXCHANGES = [
   {
     id: 1,
-    top: 350,
-    height: 140,
-    groupStart: 40,
-    question: "Подскажите, что выбрать для Apple Gift Card?",
-    questionStart: 44,
-    questionDuration: 12,
-    answer: "Помогу. Сначала выберите нужный регион и номинал карты.",
-    answerStart: 58,
-    answerDuration: 13,
+    top: 96,
+    groupStart: 52,
+    question: "Подскажите, что выбрать\nдля Apple Gift Card?",
+    questionStart: 56,
+    questionDuration: 11,
+    answer: "Помогу. Сначала выберите нужный\nрегион и номинал карты.",
+    answerStart: 69,
+    answerDuration: 12,
   },
   {
     id: 2,
-    top: 508,
-    height: 140,
-    groupStart: 69,
-    question: "А если нужна карта для России на 1000 RUB?",
-    questionStart: 73,
-    questionDuration: 12,
-    answer: "Тогда подойдёт Apple Gift Card Россия 1000 RUB.",
-    answerStart: 87,
-    answerDuration: 13,
+    top: 346,
+    groupStart: 79,
+    question: "А если нужна карта для России\nна 1000 RUB?",
+    questionStart: 83,
+    questionDuration: 10,
+    answer: "Тогда подойдёт Apple Gift Card\nРоссия 1000 RUB.",
+    answerStart: 95,
+    answerDuration: 12,
   },
   {
     id: 3,
-    top: 666,
-    height: 170,
-    groupStart: 98,
+    top: 596,
+    groupStart: 105,
     question: "И как быстро приходит?",
-    questionStart: 102,
-    questionDuration: 11,
+    questionStart: 109,
+    questionDuration: 10,
     answer:
-      "Обычно после оплаты товар отправляется максимально быстро.\nЕсли потребуется уточнение, я сразу подскажу статус.",
-    answerStart: 115,
-    answerDuration: 19,
+      "Обычно после оплаты товар отправляется\nмаксимально быстро. Если потребуется\nуточнение, я сразу подскажу статус.",
+    answerStart: 121,
+    answerDuration: 16,
   },
 ] as const;
 
 export const UnlimitSubSupportTypewriter: React.FC = () => {
   const frame = useCurrentFrame();
   const camera = cameraAt(frame);
+  const finalResponseLock = FINAL_RESPONSE_LOCK(frame);
+  const responsePulse = Math.max(
+    finalResponseLock,
+    ...EXCHANGES.map((exchange) => responsePulseAt(frame, exchange.answerStart, exchange.answerDuration)),
+  );
   const [fontReady, setFontReady] = useState(false);
-  const [renderHandle] = useState(() => delayRender("Loading local Manrope subsets for UnlimitSub support scene"));
+  const [renderHandle] = useState(() => delayRender("Loading local Manrope and Unbounded fonts for UnlimitSub support scene"));
   const releasedRef = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
-    const faces = ([500, 800] as const).flatMap((weight) =>
+    const faces = FONT_FILES.flatMap(({ family, prefix, weight }) =>
       FONT_SUBSETS.map(
         ({ name, range }) =>
           new FontFace(
-            FONT_FAMILY,
-            `url("${staticFontUrl(name, weight)}") format("woff2")`,
+            family,
+            `url("${staticFontUrl(prefix, name, weight)}") format("woff2")`,
             { weight: String(weight), style: "normal", unicodeRange: range, display: "block" },
           ),
       ),
@@ -300,8 +333,9 @@ export const UnlimitSubSupportTypewriter: React.FC = () => {
         const fontSet = document.fonts as FontFaceSet & { add: (face: FontFace) => FontFaceSet };
         loadedFaces.forEach((face) => fontSet.add(face));
         await Promise.all([
-          document.fonts.load(`500 32px "${FONT_FAMILY}"`, "Поддержка ИИ-ассистент Apple Gift Card"),
-          document.fonts.load(`800 84px "${FONT_FAMILY}"`, "Поддержка 24/7"),
+          document.fonts.load(`500 24px "${MANROPE_FAMILY}"`, "Поддержка ИИ-ассистент Apple Gift Card"),
+          document.fonts.load(`800 38px "${MANROPE_FAMILY}"`, "Ответы на вопросы Когда они нужны"),
+          document.fonts.load(`700 58px "${UNBOUNDED_FAMILY}"`, "Поддержка 24/7"),
         ]);
         if (cancelled) return;
         setFontReady(true);
@@ -326,12 +360,12 @@ export const UnlimitSubSupportTypewriter: React.FC = () => {
     if (frame >= block.start && frame <= block.start + block.duration + 2) activeId = block.id;
   }
 
-  const cameraEnter = interpolate(frame, [0, 20], [0, 1], {
+  const cameraEnter = interpolate(frame, [0, 18], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: Easing.bezier(0.22, 1, 0.36, 1),
   });
-  const windowReveal = interpolate(frame, [0, 21], [0, 1], {
+  const windowReveal = interpolate(frame, [0, 20], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: Easing.bezier(0.22, 1, 0.36, 1),
@@ -339,18 +373,7 @@ export const UnlimitSubSupportTypewriter: React.FC = () => {
 
   return (
     <AbsoluteFill style={{ background: "#03080D", overflow: "hidden" }}>
-      <Stage
-        look={UNLIMITSUB_LOOK}
-        keyLight={{ x: 0.49, y: 0.05 }}
-        fill={{ x: 0.86, y: 0.88 }}
-        horizon={0.91}
-        intensity={0.5}
-        breathe={0.42}
-        grain={0.045}
-        vignette={0.62}
-      >
-        <Dust look={UNLIMITSUB_LOOK} count={24} seed={29} drift={0.13} opacity={0.2} color="#72DEDB" />
-      </Stage>
+      <SupportLuxuryBackground responsePulse={responsePulse} />
 
       {/* Reference 3D document camera: same page-space zoom and anchor-to-screen transform. */}
       <AbsoluteFill style={{ transform: `translate(${camera.sx.toFixed(2)}px, ${camera.sy.toFixed(2)}px)` }}>
@@ -382,7 +405,7 @@ export const UnlimitSubSupportTypewriter: React.FC = () => {
                 height: WINDOW.height + 360,
                 pointerEvents: "none",
                 opacity: windowReveal,
-                background: `radial-gradient(ellipse 50% 48% at 50% 48%, ${alpha(UNLIMITSUB_LOOK.accent, 0.24)} 0%, ${alpha(UNLIMITSUB_LOOK.accent2, 0.085)} 46%, transparent 74%)`,
+                background: `radial-gradient(ellipse 50% 48% at 50% 48%, rgba(57,213,199,${(0.19 + responsePulse * 0.08).toFixed(3)}) 0%, rgba(114,222,219,0.075) 46%, transparent 74%)`,
                 transform: "translateZ(-48px)",
               }}
             />
@@ -395,189 +418,144 @@ export const UnlimitSubSupportTypewriter: React.FC = () => {
                 width: WINDOW.width,
                 height: WINDOW.height,
                 overflow: "hidden",
-                borderRadius: 30,
+                borderRadius: 26,
                 boxSizing: "border-box",
-                color: UNLIMITSUB_LOOK.ink,
-                fontFamily: FONT_FAMILY,
+                color: "#EAF6F5",
+                fontFamily: MANROPE_FAMILY,
                 opacity: windowReveal,
                 transform: `translateY(${((1 - cameraEnter) * 18).toFixed(2)}px) scale(${(0.975 + cameraEnter * 0.025).toFixed(4)})`,
                 transformOrigin: "50% 50%",
-                background: "#10191D",
-                border: "1px solid rgba(234,246,245,0.2)",
+                background: "linear-gradient(145deg, rgba(17,24,27,0.94), rgba(8,16,20,0.93))",
+                backdropFilter: "blur(16px)",
+                border: `1px solid rgba(234,246,245,${(0.13 + responsePulse * 0.12).toFixed(3)})`,
                 boxShadow:
-                  "0 0 0 1px rgba(57,213,199,0.09), 0 56px 140px rgba(0,4,9,0.76), 0 14px 38px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.07)",
+                  `0 0 0 1px rgba(57,213,199,${(0.07 + responsePulse * 0.08).toFixed(3)}), 0 42px 110px rgba(0,4,9,0.74), 0 14px 38px rgba(0,0,0,0.48), inset 0 1px 0 rgba(255,255,255,0.07)`,
               }}
             >
-              {/* Floating application header */}
+              {/* Compact branded concierge header */}
               <div
                 style={{
                   position: "absolute",
                   left: 0,
                   right: 0,
                   top: 0,
-                  height: 100,
+                  height: 86,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                  padding: "0 66px",
+                  padding: "0 28px",
                   boxSizing: "border-box",
-                  background: "linear-gradient(180deg, #0B1216 0%, #0D1519 100%)",
-                  borderBottom: "1px solid rgba(158,181,186,0.12)",
+                  background: "linear-gradient(180deg, rgba(9,17,21,0.9), rgba(9,17,21,0.58))",
+                  borderBottom: "1px solid rgba(158,181,186,0.11)",
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 13 }}>
                   <div
                     style={{
-                      width: 38,
-                      height: 38,
-                      borderRadius: 12,
+                      width: 31,
+                      height: 31,
+                      borderRadius: 10,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
                       color: "#03080D",
-                      background: "linear-gradient(145deg, #72DEDB, #39D5C7)",
-                      fontSize: 23,
+                      background: "linear-gradient(145deg, #DFFFFD, #39D5C7)",
+                      fontSize: 19,
                       fontWeight: 800,
                       letterSpacing: "-0.08em",
-                      boxShadow: "0 0 20px rgba(57,213,199,0.18)",
                     }}
                   >
                     U
                   </div>
-                  <div style={{ fontSize: 25, lineHeight: 1, fontWeight: 800, letterSpacing: "-0.035em" }}>
+                  <div style={{ fontSize: 20, lineHeight: 1, fontWeight: 800, letterSpacing: "-0.035em" }}>
                     UnlimitSub
-                  </div>
-                  <div style={{ width: 1, height: 28, margin: "0 6px", background: "rgba(158,181,186,0.2)" }} />
-                  <div style={{ fontSize: 18, color: "#9EB5BA", letterSpacing: "0.09em", fontWeight: 500 }}>
-                    ЦЕНТР ПОДДЕРЖКИ
                   </div>
                 </div>
                 <div
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: 12,
+                    gap: 9,
                     borderRadius: 24,
-                    padding: "12px 20px",
-                    background: "rgba(57,213,199,0.08)",
-                    border: "1px solid rgba(57,213,199,0.19)",
-                    color: "#B8E9E6",
-                    fontSize: 18,
+                    padding: "9px 13px",
+                    background: "rgba(57,213,199,0.07)",
+                    border: "1px solid rgba(57,213,199,0.18)",
+                    color: "#BFE9E6",
+                    fontSize: 13,
                     fontWeight: 700,
-                    letterSpacing: "0.04em",
+                    letterSpacing: "0.065em",
                   }}
                 >
                   <span
                     style={{
-                      width: 9,
-                      height: 9,
+                      width: 7,
+                      height: 7,
                       borderRadius: "50%",
                       background: "#39D5C7",
-                      boxShadow: "0 0 12px rgba(57,213,199,0.7)",
+                      boxShadow: `0 0 ${(7 + responsePulse * 5).toFixed(1)}px rgba(57,213,199,0.45)`,
                     }}
                   />
                   НА СВЯЗИ 24/7
                 </div>
               </div>
 
-              {/* Headline and promise */}
-              <div
-                style={{
-                  position: "absolute",
-                  left: 0,
-                  right: 0,
-                  top: 100,
-                  height: 244,
-                  padding: "48px 72px 0",
-                  boxSizing: "border-box",
-                  background: "#10191D",
-                }}
-              >
-                <div style={{ position: "absolute", left: 72, top: 48 }}>
-                  <TypewriterText
-                    id="headline"
-                    frame={frame}
-                    activeId={activeId}
-                    text="Поддержка 24/7"
-                    start={2}
-                    duration={10}
-                    coverColor="#10191D"
-                    color="#EAF6F5"
-                    fontSize={84}
-                    fontWeight={800}
-                    lineHeight={1.04}
-                    letterSpacing="-0.045em"
-                  />
-                </div>
-                <div style={{ position: "absolute", left: 74, top: 160 }}>
-                  <TypewriterText
-                    id="subtitle"
-                    frame={frame}
-                    activeId={activeId}
-                    text="По всем интересующим вопросам — ИИ-ассистент"
-                    start={15}
-                    duration={10}
-                    coverColor="#10191D"
-                    color="#9EB5BA"
-                    fontSize={34}
-                    fontWeight={500}
-                    lineHeight={1.25}
-                    letterSpacing="-0.014em"
-                  />
-                </div>
-                <div
-                  style={{
-                    position: "absolute",
-                    left: 74,
-                    bottom: 0,
-                    width: 154,
-                    height: 2,
-                    background: "linear-gradient(90deg, #39D5C7, rgba(57,213,199,0))",
-                    opacity: interpolate(frame, [15, 32], [0, 0.72], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
-                  }}
-                />
-              </div>
-
-              {/* Three paired question/answer entries, matching the source's two-at-a-time reveal rhythm. */}
+              {/* The three exchanges are paired, but client questions and assistant replies have distinct forms. */}
               {EXCHANGES.map((exchange) => {
                 const groupOpacity = interpolate(frame, [exchange.groupStart, exchange.groupStart + 8], [0, 1], {
                   extrapolateLeft: "clamp",
                   extrapolateRight: "clamp",
                   easing: Easing.bezier(0.3, 0, 0.2, 1),
                 });
-                const y = exchange.top;
+                const replyPulse = Math.max(
+                  responsePulseAt(frame, exchange.answerStart, exchange.answerDuration),
+                  exchange.id === 3 ? finalResponseLock : 0,
+                );
+                const replyEntrance = interpolate(frame, [exchange.answerStart, exchange.answerStart + 4], [0, 1], {
+                  extrapolateLeft: "clamp",
+                  extrapolateRight: "clamp",
+                  easing: Easing.bezier(0.3, 0, 0.2, 1),
+                });
+                const answerHeight = exchange.id === 3 ? 154 : 126;
                 return (
                   <div
                     key={exchange.id}
                     style={{
                       position: "absolute",
-                      left: 120,
-                      right: 120,
-                      top: y,
-                      height: exchange.height,
+                      left: 21,
+                      right: 21,
+                      top: exchange.top,
+                      height: answerHeight + 92,
                       opacity: groupOpacity,
-                      transform: `translateY(${((1 - groupOpacity) * 9).toFixed(2)}px)`,
-                      boxSizing: "border-box",
-                      borderRadius: 22,
-                      background: "#0B1418",
-                      border: "1px solid rgba(114,222,219,0.105)",
-                      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.025)",
+                      transform: `translateY(${((1 - groupOpacity) * 8).toFixed(2)}px)`,
                     }}
                   >
                     <div
                       style={{
                         position: "absolute",
-                        right: 34,
-                        top: 12,
-                        color: "#72878B",
-                        fontSize: 16,
-                        fontWeight: 700,
-                        letterSpacing: "0.12em",
+                        right: 0,
+                        top: 0,
+                        width: "max-content",
+                        maxWidth: 600,
+                        boxSizing: "border-box",
+                        padding: "12px 16px 14px",
+                        borderRadius: 15,
+                        background: "#141D21",
+                        border: "1px solid rgba(158,181,186,0.17)",
+                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.035), 0 7px 20px rgba(0,0,0,0.14)",
                       }}
                     >
-                      КЛИЕНТ
-                    </div>
-                    <div style={{ position: "absolute", right: 34, top: 39, textAlign: "right" }}>
+                      <div
+                        style={{
+                          marginBottom: 7,
+                          color: "#8FA5A9",
+                          fontSize: 13,
+                          lineHeight: 1,
+                          textAlign: "right",
+                          letterSpacing: "0.06em",
+                        }}
+                      >
+                        Клиент
+                      </div>
                       <TypewriterText
                         id={`question-${exchange.id}` as (typeof TYPEWRITER_BLOCKS)[number]["id"]}
                         frame={frame}
@@ -585,93 +563,198 @@ export const UnlimitSubSupportTypewriter: React.FC = () => {
                         text={exchange.question}
                         start={exchange.questionStart}
                         duration={exchange.questionDuration}
-                        coverColor="#0B1418"
+                        coverColor="#141D21"
                         color="#EAF6F5"
-                        fontSize={30}
-                        fontWeight={500}
-                        lineHeight={1.25}
-                        letterSpacing="-0.02em"
-                      />
-                    </div>
-                    <div
-                      style={{
-                        position: "absolute",
-                        left: 32,
-                        top: 79,
-                        width: 3,
-                        height: 42,
-                        borderRadius: 2,
-                        background: "linear-gradient(180deg, #72DEDB, rgba(57,213,199,0.2))",
-                      }}
-                    />
-                    <div
-                      style={{
-                        position: "absolute",
-                        left: 52,
-                        top: 72,
-                        color: "#72DEDB",
-                        fontSize: 15,
-                        fontWeight: 700,
-                        letterSpacing: "0.12em",
-                      }}
-                    >
-                      ИИ-АССИСТЕНТ
-                    </div>
-                    <div style={{ position: "absolute", left: 52, top: 94 }}>
-                      <TypewriterText
-                        id={`answer-${exchange.id}` as (typeof TYPEWRITER_BLOCKS)[number]["id"]}
-                        frame={frame}
-                        activeId={activeId}
-                        text={exchange.answer}
-                        start={exchange.answerStart}
-                        duration={exchange.answerDuration}
-                        coverColor="#0B1418"
-                        color="#D7EBE9"
-                        fontSize={29}
+                        fontSize={22}
                         fontWeight={500}
                         lineHeight={1.28}
                         letterSpacing="-0.018em"
                       />
                     </div>
+
+                    <div
+                      style={{
+                        position: "absolute",
+                        left: 0,
+                        top: 110,
+                        width: 756,
+                        height: answerHeight,
+                        opacity: replyEntrance,
+                        padding: "13px 18px 14px",
+                        boxSizing: "border-box",
+                        borderRadius: 17,
+                        background: "#0D171A",
+                        border: `1px solid rgba(57,213,199,${(0.12 + replyPulse * 0.22).toFixed(3)})`,
+                        boxShadow: `0 0 ${(7 + replyPulse * 18).toFixed(1)}px rgba(57,213,199,${(0.045 + replyPulse * 0.13).toFixed(3)}), inset 0 1px 0 rgba(255,255,255,0.035)`,
+                        overflow: "hidden",
+                      }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <div
+                          style={{
+                            width: 25,
+                            height: 25,
+                            borderRadius: 8,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            color: "#061014",
+                            background: "linear-gradient(145deg, #DFFFFD, #39D5C7)",
+                            fontSize: 15,
+                            lineHeight: 1,
+                            fontWeight: 800,
+                            letterSpacing: "-0.08em",
+                            flex: "none",
+                          }}
+                        >
+                          U
+                        </div>
+                        <div
+                          style={{
+                            color: "#72DEDB",
+                            fontSize: 12,
+                            lineHeight: 1,
+                            fontWeight: 800,
+                            letterSpacing: "0.13em",
+                          }}
+                        >
+                          ИИ-АССИСТЕНТ
+                        </div>
+                      </div>
+                    <div style={{ position: "absolute", left: 56, top: 45, opacity: replyEntrance }}>
+                        <TypewriterText
+                          id={`answer-${exchange.id}` as (typeof TYPEWRITER_BLOCKS)[number]["id"]}
+                          frame={frame}
+                          activeId={activeId}
+                          text={exchange.answer}
+                          start={exchange.answerStart}
+                          duration={exchange.answerDuration}
+                          coverColor="#0D171A"
+                          color="#DCEBEA"
+                          fontSize={23}
+                          fontWeight={500}
+                          lineHeight={1.3}
+                          letterSpacing="-0.015em"
+                        />
+                      </div>
+                    </div>
                   </div>
                 );
               })}
 
-              {/* The quiet status line takes the place of the source demo's closing slogan. */}
-              <div
-                style={{
-                  position: "absolute",
-                  left: 120,
-                  right: 120,
-                  bottom: 35,
-                  height: 1,
-                  background: "linear-gradient(90deg, rgba(114,222,219,0.16), rgba(158,181,186,0.05), transparent)",
-                }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  right: 122,
-                  bottom: 12,
-                  color: "#627A7E",
-                  fontSize: 15,
-                  fontWeight: 500,
-                  letterSpacing: "0.08em",
-                }}
-              >
-                UNLIMITSUB · AI SUPPORT
-              </div>
               <div
                 style={{
                   position: "absolute",
                   left: 0,
                   right: 0,
                   top: 0,
-                  height: 2,
-                  background: "linear-gradient(90deg, transparent, rgba(234,246,245,0.4), rgba(57,213,199,0.24), transparent)",
+                  height: 1,
+                  background: "linear-gradient(90deg, transparent, rgba(234,246,245,0.32), rgba(57,213,199,0.34), transparent)",
                 }}
               />
             </div>
+
+            {/* Independent advertising copy: the title and the conversation remain separate visual planes. */}
+            <div style={{ position: "absolute", left: 124, top: 298, display: "flex", alignItems: "baseline", gap: 18 }}>
+              <TypewriterText
+                id="support"
+                frame={frame}
+                activeId={activeId}
+                text="Поддержка"
+                start={0}
+                duration={10}
+                coverColor="#03080D"
+                color="#FFFFFF"
+                fontSize={56}
+                fontWeight={700}
+                fontFamily={UNBOUNDED_FAMILY}
+                lineHeight={1.1}
+                letterSpacing="-0.045em"
+                gradient={SILVER_TEXT}
+                revealMode="clip"
+              />
+              <TypewriterText
+                id="support-hours"
+                frame={frame}
+                activeId={activeId}
+                text="24/7"
+                start={10}
+                duration={6}
+                coverColor="#03080D"
+                color="#72DEDB"
+                fontSize={58}
+                fontWeight={700}
+                fontFamily={UNBOUNDED_FAMILY}
+                lineHeight={1.1}
+                letterSpacing="-0.05em"
+                gradient={TEAL_TEXT}
+                revealMode="clip"
+              />
+            </div>
+            <div style={{ position: "absolute", left: 128, top: 400 }}>
+              <TypewriterText
+                id="promise-one"
+                frame={frame}
+                activeId={activeId}
+                text="Ответы на вопросы."
+                start={16}
+                duration={14}
+                coverColor="#03080D"
+                color="#EAF6F5"
+                fontSize={38}
+                fontWeight={800}
+                lineHeight={1.18}
+                letterSpacing="-0.035em"
+                gradient="linear-gradient(180deg, #FFFFFF 0%, #DCE9ED 48%, #A9C0C7 100%)"
+                revealMode="clip"
+              />
+            </div>
+            <div style={{ position: "absolute", left: 128, top: 454 }}>
+              <TypewriterText
+                id="promise-two"
+                frame={frame}
+                activeId={activeId}
+                text="Когда они нужны."
+                start={30}
+                duration={13}
+                coverColor="#03080D"
+                color="#72DEDB"
+                fontSize={38}
+                fontWeight={800}
+                lineHeight={1.18}
+                letterSpacing="-0.035em"
+                gradient="linear-gradient(108deg, #72DEDB 0%, #DCE9ED 94%)"
+                revealMode="clip"
+              />
+            </div>
+            <div style={{ position: "absolute", left: 132, top: 530 }}>
+              <TypewriterText
+                id="signature"
+                frame={frame}
+                activeId={activeId}
+                text="ВАШ ИИ-АССИСТЕНТ UNLIMITSUB"
+                start={43}
+                duration={9}
+                coverColor="#03080D"
+                color="#9EB5BA"
+                fontSize={17}
+                fontWeight={500}
+                lineHeight={1.2}
+                letterSpacing="0.19em"
+                revealMode="clip"
+              />
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                left: 130,
+                top: 574,
+                width: 155,
+                height: 1,
+                background: "linear-gradient(90deg, rgba(114,222,219,0.68), rgba(114,222,219,0))",
+                opacity: interpolate(frame, [49, 59], [0, 0.62], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+              }}
+            />
           </div>
         </div>
       </AbsoluteFill>
@@ -679,6 +762,10 @@ export const UnlimitSubSupportTypewriter: React.FC = () => {
   );
 };
 
-function staticFontUrl(subset: (typeof FONT_SUBSETS)[number]["name"], weight: 500 | 800): string {
-  return staticFile(`assets/fonts/manrope-${weight}-${subset}.woff2`);
+function staticFontUrl(
+  prefix: "manrope" | "unbounded",
+  subset: (typeof FONT_SUBSETS)[number]["name"],
+  weight: 500 | 700 | 800,
+): string {
+  return staticFile(`assets/fonts/${prefix}-${weight}-${subset}.woff2`);
 }
