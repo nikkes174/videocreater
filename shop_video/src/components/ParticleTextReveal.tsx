@@ -1,25 +1,21 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { cancelRender, continueRender, delayRender, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 
-const FONT_FAMILY = "UnlimitSubManrope";
+export const CARD_STACK_MANROPE_FONT_FAMILY = "UnlimitSubManrope";
 const INK: RGB = [234, 246, 245];
 const ACCENT: RGB = [114, 222, 219];
 const PAGE: RGB = [3, 8, 13];
+
+const FONT_FAMILIES = {
+  Manrope: { family: CARD_STACK_MANROPE_FONT_FAMILY, filePrefix: "manrope" },
+  Unbounded: { family: "UnlimitSubUnbounded", filePrefix: "unbounded" },
+} as const;
 
 const UNICODE_RANGES = {
   latin: "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD",
   latinExt: "U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF",
   cyrillic: "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F",
 } as const;
-
-const FONT_FILES = [
-  { weight: "500", subset: "latin", range: UNICODE_RANGES.latin },
-  { weight: "500", subset: "latin-ext", range: UNICODE_RANGES.latinExt },
-  { weight: "500", subset: "cyrillic", range: UNICODE_RANGES.cyrillic },
-  { weight: "800", subset: "latin", range: UNICODE_RANGES.latin },
-  { weight: "800", subset: "latin-ext", range: UNICODE_RANGES.latinExt },
-  { weight: "800", subset: "cyrillic", range: UNICODE_RANGES.cyrillic },
-] as const;
 
 type RGB = [number, number, number];
 type Point = { x: number; y: number };
@@ -48,10 +44,13 @@ type ParticleMap = { canvas: HTMLCanvasElement; particles: Particle[] };
 
 export type ParticleTextRevealProps = {
   text: string;
+  fontFamily?: keyof typeof FONT_FAMILIES;
+  fontWeight?: 500 | 700 | 800;
   fontSize?: number;
   x?: number;
   y?: number;
   color?: string;
+  gradient?: readonly [string, string, string];
   startFrame?: number;
   travelStartFrame?: number;
   gatherEndFrame?: number;
@@ -132,9 +131,12 @@ function createTextMask(
   width: number,
   height: number,
   fontSize: number,
+  fontFamily: string,
+  fontWeight: number,
   x: number,
   y: number,
   color: string,
+  gradient: readonly [string, string, string] | undefined,
   maxParticles: number,
 ): ParticleMap {
   const canvas = document.createElement("canvas");
@@ -144,10 +146,18 @@ function createTextMask(
   if (!context) throw new Error("Canvas 2D is unavailable for the particle title mask.");
 
   context.clearRect(0, 0, width, height);
-  context.font = `800 ${fontSize}px "${FONT_FAMILY}"`;
+  context.font = `${fontWeight} ${fontSize}px "${fontFamily}"`;
   context.textAlign = "center";
   context.textBaseline = "middle";
-  context.fillStyle = color;
+  if (gradient) {
+    const metallic = context.createLinearGradient(0, y - fontSize * 0.82, 0, y + fontSize * 0.82);
+    metallic.addColorStop(0, gradient[0]);
+    metallic.addColorStop(0.48, gradient[1]);
+    metallic.addColorStop(1, gradient[2]);
+    context.fillStyle = metallic;
+  } else {
+    context.fillStyle = color;
+  }
   const letterSpacingContext = context as CanvasRenderingContext2D & { letterSpacing?: string };
   if ("letterSpacing" in letterSpacingContext) letterSpacingContext.letterSpacing = `${(-fontSize * 0.035).toFixed(2)}px`;
   context.fillText(text, x, y, width - 180);
@@ -299,10 +309,13 @@ function drawFrame(
 
 export const ParticleTextReveal: React.FC<ParticleTextRevealProps> = ({
   text,
+  fontFamily: fontKey = "Manrope",
+  fontWeight = 800,
   fontSize = 62,
   x,
   y,
   color = "#EAF6F5",
+  gradient,
   startFrame = 0,
   travelStartFrame = 8,
   gatherEndFrame = 40,
@@ -312,6 +325,8 @@ export const ParticleTextReveal: React.FC<ParticleTextRevealProps> = ({
 }) => {
   const frame = useCurrentFrame();
   const { width, height } = useVideoConfig();
+  const font = FONT_FAMILIES[fontKey];
+  const fontWeightString = String(fontWeight);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const releasedRef = useRef(false);
   const [renderHandle] = useState(() => delayRender("Loading bundled Manrope and building deterministic text mask"));
@@ -323,17 +338,28 @@ export const ParticleTextReveal: React.FC<ParticleTextRevealProps> = ({
   useEffect(() => {
     let cancelled = false;
     const loadMask = async () => {
-      const faces = FONT_FILES.map(({ weight, subset, range }) => new FontFace(
-        FONT_FAMILY,
-        `url("${staticFile(`assets/fonts/manrope-${weight}-${subset}.woff2`)}") format("woff2")`,
-        { weight, style: "normal", unicodeRange: range, display: "block" },
-      ));
+      const subsets = [
+        { name: "latin", range: UNICODE_RANGES.latin },
+        { name: "latin-ext", range: UNICODE_RANGES.latinExt },
+        { name: "cyrillic", range: UNICODE_RANGES.cyrillic },
+      ] as const;
+      const requiredFaces = [{ family: font.family, filePrefix: font.filePrefix, weight: fontWeightString }];
+      if (fontKey !== "Manrope") {
+        requiredFaces.push({ family: CARD_STACK_MANROPE_FONT_FAMILY, filePrefix: "manrope", weight: "500" });
+      }
+      const faces = requiredFaces.flatMap(({ family, filePrefix, weight }) =>
+        subsets.map(({ name, range }) => new FontFace(
+          family,
+          `url("${staticFile(`assets/fonts/${filePrefix}-${weight}-${name}.woff2`)}") format("woff2")`,
+          { weight, style: "normal", unicodeRange: range, display: "block" },
+        )),
+      );
       const loadedFaces = await Promise.all(faces.map((face) => face.load()));
       const fontSet = document.fonts as FontFaceSet & { add: (face: FontFace) => FontFaceSet };
       loadedFaces.forEach((face) => fontSet.add(face));
-      await document.fonts.load(`800 ${fontSize}px "${FONT_FAMILY}"`, text);
+      await document.fonts.load(`${fontWeightString} ${fontSize}px "${font.family}"`, text);
       if (cancelled) return;
-      const nextMap = createTextMask(text, width, height, fontSize, centerX, centerY, color, maxParticles);
+      const nextMap = createTextMask(text, width, height, fontSize, font.family, fontWeight, centerX, centerY, color, gradient, maxParticles);
       setMap(nextMap);
     };
 
@@ -343,7 +369,7 @@ export const ParticleTextReveal: React.FC<ParticleTextRevealProps> = ({
     return () => {
       cancelled = true;
     };
-  }, [centerX, centerY, color, fontSize, height, maxParticles, text, width]);
+  }, [centerX, centerY, color, font.family, font.filePrefix, fontKey, fontSize, fontWeight, fontWeightString, gradient, height, maxParticles, text, width]);
 
   useLayoutEffect(() => {
     const canvas = canvasRef.current;

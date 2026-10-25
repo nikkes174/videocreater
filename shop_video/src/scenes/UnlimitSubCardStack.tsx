@@ -6,7 +6,8 @@ import {
   useCurrentFrame,
 } from "remotion";
 import cardStackAssets from "../config/cardStackAssets.json";
-import { ParticleTextReveal } from "../components/ParticleTextReveal";
+import { CardStackLuxuryBackground } from "../components/CardStackLuxuryBackground";
+import { CARD_STACK_MANROPE_FONT_FAMILY, ParticleTextReveal } from "../components/ParticleTextReveal";
 import { EASE, mix, ramp, softShadow } from "../vendor/videoShotcraft/demos/_fixtures/Polish";
 import { alpha, springAt, stagger } from "../vendor/videoShotcraft/demos/_fixtures/Look";
 
@@ -38,8 +39,7 @@ const COLORS = {
   shadow: "#02070A",
 };
 
-const SUBTITLE = "Подписки, пополнения и gift cards — в одном месте";
-const SUBTITLE_WORDS = SUBTITLE.split(" ");
+const SUBTITLE = "ПОДПИСКИ · ПОПОЛНЕНИЯ · ПОДАРОЧНЫЕ КАРТЫ";
 
 const deterministic = (seed: number) => {
   const value = Math.sin(seed * 127.1 + 311.7) * 43758.5453;
@@ -80,73 +80,7 @@ export const UnlimitSubCardStack: React.FC = () => {
 
   return (
     <AbsoluteFill style={{ backgroundColor: COLORS.background, overflow: "hidden" }}>
-      {/* Quiet graphite stage and low teal fill keep the real artwork dominant. */}
-      <AbsoluteFill
-        style={{
-          background:
-            `radial-gradient(ellipse 70% 52% at 50% 58%, rgba(15,66,72,${(0.34 * glow).toFixed(3)}) 0%, rgba(10,34,41,0.22) 42%, transparent 78%), ` +
-            `radial-gradient(ellipse 86% 55% at 50% 100%, rgba(17,24,27,0.72) 0%, rgba(3,8,13,0) 77%), ` +
-            `linear-gradient(180deg, ${COLORS.background} 0%, ${COLORS.graphite} 58%, ${COLORS.background} 100%)`,
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          left: "8%",
-          right: "8%",
-          top: 844,
-          height: 2,
-          background: `linear-gradient(90deg, transparent, ${alpha(COLORS.teal, 0.16)}, ${alpha(COLORS.lightTeal, 0.23)}, ${alpha(COLORS.teal, 0.16)}, transparent)`,
-          filter: "blur(5px)",
-          opacity: floorOpacity * (0.55 + fan * 0.45),
-          pointerEvents: "none",
-        }}
-      />
-
-      {/* Pixel mask particles gather into the real title glyphs, then crossfade to crisp Manrope. */}
-      <ParticleTextReveal
-        text="Широкий выбор цифровых сервисов"
-        fontSize={62}
-        y={154}
-        startFrame={0}
-        travelStartFrame={8}
-        gatherEndFrame={40}
-        settleStartFrame={48}
-        settleDuration={6}
-        maxParticles={2400}
-      />
-      <div
-        style={{
-          position: "absolute",
-          left: 190,
-          right: 190,
-          top: 202,
-          textAlign: "center",
-          fontFamily: '"UnlimitSubManrope", sans-serif',
-          fontSize: 27,
-          fontWeight: 500,
-          lineHeight: 1.3,
-          letterSpacing: "0em",
-          color: COLORS.secondary,
-        }}
-      >
-        {SUBTITLE_WORDS.map((word, index) => {
-          const reveal = ramp(frame, 54 + index * 1.25, 8, EASE.out);
-          return (
-            <span
-              key={`${word}-${index}`}
-              style={{
-                display: "inline-block",
-                opacity: reveal,
-                transform: `translateY(${((1 - reveal) * 9).toFixed(2)}px)`,
-                marginRight: index < SUBTITLE_WORDS.length - 1 ? "0.28em" : 0,
-              }}
-            >
-              {word}
-            </span>
-          );
-        })}
-      </div>
+      <CardStackLuxuryBackground fanProgress={fan} />
 
       <AbsoluteFill
         style={{
@@ -208,6 +142,27 @@ export const UnlimitSubCardStack: React.FC = () => {
                   zIndex: index,
                 }}
               >
+                <div
+                  style={{
+                    position: "absolute",
+                    left: 0,
+                    top: cardHeight + 8,
+                    width: "100%",
+                    height: cardHeight,
+                    overflow: "hidden",
+                    borderRadius: 20,
+                    opacity: 0.24 + Math.min(1, fan) * 0.12,
+                    filter: "blur(4px) brightness(0.7) saturate(0.72)",
+                    mixBlendMode: "screen",
+                    maskImage: "linear-gradient(180deg, rgba(0,0,0,0.48) 0%, rgba(0,0,0,0.2) 42%, transparent 88%)",
+                    pointerEvents: "none",
+                  }}
+                >
+                  <Img
+                    src={staticFile(card.src)}
+                    style={{ display: "block", width: "100%", height: "100%", objectFit: "contain", transform: "scaleY(-1)" }}
+                  />
+                </div>
                 {blurY > 0.4 ? (
                   <svg width={0} height={0} style={{ position: "absolute" }} aria-hidden>
                     <filter id={`unlimitsub-card-stack-blur-${index}`} x="-10%" y="-30%" width="120%" height="160%">
@@ -239,10 +194,63 @@ export const UnlimitSubCardStack: React.FC = () => {
         </div>
       </AbsoluteFill>
 
+      {/* Two independent particle masks resolve into complementary metallic finishes. */}
+      <ParticleTextReveal
+        text="ШИРОКИЙ ВЫБОР"
+        fontFamily="Unbounded"
+        fontWeight={700}
+        fontSize={70}
+        y={116}
+        color="#FFFFFF"
+        gradient={["#FFFFFF", "#CBDDE2", "#7898A4"]}
+        startFrame={0}
+        travelStartFrame={8}
+        gatherEndFrame={40}
+        settleStartFrame={48}
+        settleDuration={6}
+        maxParticles={2100}
+      />
+      <ParticleTextReveal
+        text="ЦИФРОВЫХ СЕРВИСОВ"
+        fontFamily="Unbounded"
+        fontWeight={700}
+        fontSize={76}
+        y={207}
+        color="#D9FFFC"
+        gradient={["#D9FFFC", "#72DEDB", "#39D5C7"]}
+        startFrame={6}
+        travelStartFrame={14}
+        gatherEndFrame={46}
+        settleStartFrame={52}
+        settleDuration={6}
+        maxParticles={2400}
+      />
+      <div
+        style={{
+          position: "absolute",
+          left: 160,
+          right: 160,
+          top: 276,
+          textAlign: "center",
+          opacity: ramp(frame, 59, 15, EASE.out),
+          transform: `translateY(${((1 - ramp(frame, 59, 15, EASE.out)) * 9).toFixed(2)}px)`,
+          fontFamily: `"${CARD_STACK_MANROPE_FONT_FAMILY}", sans-serif`,
+          fontSize: 25,
+          fontWeight: 500,
+          lineHeight: 1.2,
+          letterSpacing: "0.085em",
+          color: "#A8C4C9",
+          textShadow: "0 1px 16px rgba(39,105,113,0.18)",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {SUBTITLE}
+      </div>
+
       {/* A gentle edge vignette anchors the composition without tinting assets. */}
       <AbsoluteFill
         style={{
-          background: "radial-gradient(ellipse 82% 86% at 50% 53%, transparent 48%, rgba(1,4,7,0.38) 100%)",
+          background: "radial-gradient(ellipse 84% 82% at 50% 48%, transparent 44%, rgba(1,4,7,0.34) 100%)",
           pointerEvents: "none",
         }}
       />

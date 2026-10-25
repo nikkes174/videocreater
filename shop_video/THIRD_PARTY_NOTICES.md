@@ -47,3 +47,5 @@ The local port changes only fixture import paths and the exported component name
 ## Manrope typeface
 
 The Manrope 500 and 800 WOFF2 subsets in `public/assets/fonts/` are from Google Fonts and are licensed under the SIL Open Font License 1.1. The license text is included at `public/assets/fonts/OFL-Manrope.txt`.
+
+The Unbounded 700 WOFF2 subsets in `public/assets/fonts/` are from Google Fonts and are licensed under the SIL Open Font License 1.1. The license text is included at `public/assets/fonts/OFL-Unbounded.txt`.

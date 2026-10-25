@@ -11,6 +11,7 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_FRAMES = (0, 20, 40, 60, 80, 95, 110, 135, 164)
 V2_FRAMES = (0, 8, 20, 36, 48, 60, 80, 96, 118, 140, 164)
+V3_FRAMES = (0, 15, 30, 45, 60, 80, 100, 120, 145, 164)
 FPS = 30
 THUMB_WIDTH = 600
 THUMB_HEIGHT = 338
@@ -24,7 +25,12 @@ def main() -> None:
     output = ROOT / (sys.argv[2] if len(sys.argv) > 2 else "output/unlimitsub_card_stack_contact.png")
     default_frame_dir = "card-stack-frames" if output.stem == "unlimitsub_card_stack_contact" else f"{output.stem}-frames"
     frame_dir = ROOT / "output" / default_frame_dir
-    frames = V2_FRAMES if output.stem == "unlimitsub_card_stack_v2_contact" else DEFAULT_FRAMES
+    if output.stem == "unlimitsub_card_stack_v3_contact":
+        frames = V3_FRAMES
+    elif output.stem == "unlimitsub_card_stack_v2_contact":
+        frames = V2_FRAMES
+    else:
+        frames = DEFAULT_FRAMES
     rows = math.ceil(len(frames) / COLUMNS)
 
     ffmpeg = next(
