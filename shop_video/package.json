@@ -20,6 +20,7 @@
     "render:unlimitsub-card-stack-v3": "node scripts/generate-card-stack-assets.mjs && remotion render --config remotion.config.ts --port 3147 src/index.tsx UnlimitSubCardStack output/unlimitsub_card_stack_v3.mp4 --codec=h264 --pixel-format=yuv420p --concurrency=2",
     "render:unlimitsub-support-typewriter": "remotion render --config remotion.config.ts --port 3147 src/index.tsx UnlimitSubSupportTypewriter output/unlimitsub_support_typewriter.mp4 --codec=h264 --pixel-format=yuv420p --concurrency=2",
     "render:unlimitsub-support-typewriter-v2": "remotion render --config remotion.config.ts --port 3147 src/index.tsx UnlimitSubSupportTypewriter output/unlimitsub_support_typewriter_v2.mp4 --codec=h264 --pixel-format=yuv420p --concurrency=2",
+    "render:unlimitsub-page-turn-intro": "remotion render --config remotion.config.ts --port 3147 src/index.tsx UnlimitSubPageTurnIntro output/unlimitsub_page_turn_intro.mp4 --codec=h264 --pixel-format=yuv420p --concurrency=2",
     "render:flying-original": "remotion render --config remotion.config.ts --port 3147 src/index.tsx FlyingWordsOriginal output/flying_words_original.mp4 --codec=h264 --pixel-format=yuv420p",
     "render:flying-vertical": "remotion render --config remotion.config.ts --port 3147 src/index.tsx FlyingWordsVertical output/flying_words_vertical.mp4 --codec=h264 --pixel-format=yuv420p",
     "render:flying-services": "remotion render --config remotion.config.ts --port 3147 src/index.tsx FlyingServicesScene output/flying_services_v2.mp4 --codec=h264 --pixel-format=yuv420p",
@@ -36,6 +37,7 @@
     "verify:unlimitsub-card-stack-v3": "node scripts/verify-output.mjs output/unlimitsub_card_stack_v3.mp4 165 5.5 1920 1080",
     "verify:unlimitsub-support-typewriter": "node scripts/verify-output.mjs output/unlimitsub_support_typewriter.mp4 180 6 1920 1080",
     "verify:unlimitsub-support-typewriter-v2": "node scripts/verify-output.mjs output/unlimitsub_support_typewriter_v2.mp4 180 6 1920 1080",
+    "verify:unlimitsub-page-turn-intro": "node scripts/verify-output.mjs output/unlimitsub_page_turn_intro.mp4 150 5 1920 1080",
     "contact:unlimitsub-site-tour": "node scripts/generate-site-tour-assets.mjs && python scripts/create-site-tour-contact.py",
     "contact:unlimitsub-spotlight-product": "python scripts/create-spotlight-product-contact.py",
     "contact:unlimitsub-card-stack": "python scripts/create-card-stack-contact.py",
@@ -43,6 +45,7 @@
     "contact:unlimitsub-card-stack-v3": "python scripts/create-card-stack-contact.py output/unlimitsub_card_stack_v3.mp4 output/unlimitsub_card_stack_v3_contact.png",
     "contact:unlimitsub-support-typewriter": "python scripts/create-support-typewriter-contact.py",
     "contact:unlimitsub-support-typewriter-v2": "python scripts/create-support-typewriter-contact.py output/unlimitsub_support_typewriter_v2.mp4 output/unlimitsub_support_typewriter_v2_contact.png 0,15,30,45,60,80,100,120,140,160,179",
+    "contact:unlimitsub-page-turn-intro": "python scripts/create-page-turn-contact.py",
     "verify:test": "npm run verify:logo",
     "verify:logo": "node scripts/verify-output.mjs output/logo_reveal_preview.mp4 105 3.5",
     "typecheck": "tsc --noEmit"

@@ -51,6 +51,15 @@ The local port changes only fixture import paths and the exported component name
 - Original component: <https://github.com/Vincentwei1021/video-shotcraft/blob/43bd349a136651865ecfa6ea1cf012f6e957d304/demos/ui-entrance/document-typewriter-reveal/DocumentTypewriterReveal.tsx>
 - License: Apache License 2.0, included at `src/vendor/videoShotcraft/LICENSE`.
 
+## video-shotcraft — BarnDoorSplit page-turn transition
+
+`src/vendor/videoShotcraft/demos/transition/page-turn-transitions/BarnDoorSplit.tsx` is a local copy of the original BarnDoorSplit composition. `src/scenes/UnlimitSubPageTurnIntro.tsx` adapts its split-door timing, easing, velocity-based motion blur, lit inner edges, and incoming-page scale to the UnlimitSub graphite/teal brand scene.
+
+- Original component: <https://github.com/Vincentwei1021/video-shotcraft/blob/main/demos/transition/page-turn-transitions/BarnDoorSplit.tsx>
+- Visual reference: <https://github.com/Vincentwei1021/video-shotcraft/blob/main/references/shots/transition/page-turn-transitions.md>
+- Shared fixtures: `demos/_fixtures/Polish.tsx`, `Look.tsx`, and `Brand.tsx` (already present in this project).
+- License: Apache License 2.0, included at `src/vendor/videoShotcraft/LICENSE`.
+
 ## Manrope typeface
 
 The Manrope 500 and 800 WOFF2 subsets in `public/assets/fonts/` are from Google Fonts and are licensed under the SIL Open Font License 1.1. The license text is included at `public/assets/fonts/OFL-Manrope.txt`.

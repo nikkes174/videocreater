@@ -14,7 +14,9 @@ import { UNLIMITSUB_SITE_TOUR_DURATION, UNLIMITSUB_SITE_TOUR_FPS, UnlimitSubSite
 import { UNLIMITSUB_SPOTLIGHT_PRODUCT_DURATION, UNLIMITSUB_SPOTLIGHT_PRODUCT_FPS, UnlimitSubSpotlightProduct } from "./scenes/UnlimitSubSpotlightProduct";
 import { UNLIMITSUB_CARD_STACK_DURATION, UnlimitSubCardStack } from "./scenes/UnlimitSubCardStack";
 import { UNLIMITSUB_SUPPORT_TYPEWRITER_DURATION, UnlimitSubSupportTypewriter } from "./scenes/UnlimitSubSupportTypewriter";
+import { UNLIMITSUB_PAGE_TURN_DURATION, UnlimitSubPageTurnIntro } from "./scenes/UnlimitSubPageTurnIntro";
 import { BASIC_3D_SCENE_DURATION, Basic3DScene } from "./vendor/videoShotcraft/demos/camera/basic-3d-scene/Basic3DScene";
+import { BARN_DOOR_SPLIT_DURATION, BarnDoorSplit } from "./vendor/videoShotcraft/demos/transition/page-turn-transitions/BarnDoorSplit";
 
 const TEST_DURATION_SECONDS = 3.5;
 
@@ -60,6 +62,23 @@ export const RemotionRoot: React.FC = () => {
         fps={VIDEO_CONFIG.fps}
         width={VIDEO_CONFIG.width}
         height={VIDEO_CONFIG.height}
+      />
+      <Composition
+        id="BarnDoorSplitOriginal"
+        component={BarnDoorSplit}
+        durationInFrames={BARN_DOOR_SPLIT_DURATION}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="UnlimitSubPageTurnIntro"
+        component={UnlimitSubPageTurnIntro}
+        durationInFrames={UNLIMITSUB_PAGE_TURN_DURATION}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={{ logoSrc: staticFile("assets/unlimitsub-logo.png") }}
       />
       <Composition
         id="ShotcraftBasic3DOriginal"
