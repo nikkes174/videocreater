@@ -4,17 +4,19 @@ from __future__ import annotations
 
 import json
 import subprocess
+import sys
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
 
 ROOT = Path(__file__).resolve().parents[1]
-VIDEO = ROOT / "output" / "unlimitsub_full_promo_9x16.mp4"
+VIDEO = ROOT / (sys.argv[1] if len(sys.argv) > 1 else "output/unlimitsub_full_promo_9x16.mp4")
 MANIFEST = ROOT / "src" / "config" / "fullPromoManifest.json"
-SCENE_CONTACT = ROOT / "output" / "unlimitsub_full_promo_9x16_contact.png"
-TRANSITION_CONTACT = ROOT / "output" / "unlimitsub_full_promo_9x16_transitions_contact.png"
-TRANSITION_FRAME_DIR = ROOT / "output" / "unlimitsub_full_promo_9x16_transition_frames"
+OUTPUT_STEM = VIDEO.stem
+SCENE_CONTACT = ROOT / "output" / f"{OUTPUT_STEM}_contact.png"
+TRANSITION_CONTACT = ROOT / "output" / f"{OUTPUT_STEM}_transitions_contact.png"
+TRANSITION_FRAME_DIR = ROOT / "output" / f"{OUTPUT_STEM}_transition_frames"
 FPS = 30
 
 
@@ -96,7 +98,7 @@ def main() -> None:
         raise FileNotFoundError(f"Generated scene manifest is missing: {MANIFEST}")
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     ffmpeg = bundled_binary("ffmpeg")
-    frame_dir = ROOT / "output" / "unlimitsub_full_promo_9x16_contact-frames"
+    frame_dir = ROOT / "output" / f"{OUTPUT_STEM}_contact-frames"
     frame_dir.mkdir(parents=True, exist_ok=True)
 
     starts: list[int] = []
