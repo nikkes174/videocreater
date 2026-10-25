@@ -2,7 +2,7 @@
 // The source timing, gap/slide equations, easing, door split, edge lighting, SpeedBlur,
 // and incoming-page scale are retained; only the two page designs and palette are replaced.
 // Copyright 2026 Wei Yihao; source licensed under Apache License 2.0.
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, type CSSProperties } from "react";
 import {
   AbsoluteFill,
   Img,
@@ -52,9 +52,161 @@ const gapAt = (frame: number) => 16 * ramp(frame, GAP, 10, EASE.exit);
 const slideAt = (frame: number) => 1000 * ramp(frame, SLIDE, SLIDE_D, SLIDE_EASE);
 const doorAt = (frame: number) => gapAt(frame) / 2 + slideAt(frame);
 
+type MetallicRevealTextProps = {
+  text: string;
+  frame: number;
+  startFrame: number;
+  fontSize: number;
+  fontWeight: 500 | 800;
+  lineHeight: number;
+  letterSpacing: string;
+  gradient: string;
+  sliceGradient: string;
+  textShadow?: string;
+  letterStagger?: number;
+  revealDuration?: number;
+  sweepStartFrame?: number;
+  sweepDuration?: number;
+  sweepOpacity?: number;
+};
+
+const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
+const smooth01 = (value: number) => {
+  const t = clamp01(value);
+  return t * t * (3 - 2 * t);
+};
+
+/** Remotion-safe adaptation of text.html's per-character reveal and sliced passes. */
+const MetallicRevealText: React.FC<MetallicRevealTextProps> = ({
+  text,
+  frame,
+  startFrame,
+  fontSize,
+  fontWeight,
+  lineHeight,
+  letterSpacing,
+  gradient,
+  sliceGradient,
+  textShadow = "0 2px 14px rgba(0,0,0,0.34)",
+  letterStagger = 0.32,
+  revealDuration = 13,
+  sweepStartFrame,
+  sweepDuration = 34,
+  sweepOpacity = 0.3,
+}) => {
+  const characters = Array.from(text);
+  const sweepProgress =
+    sweepStartFrame === undefined
+      ? 0
+      : clamp01((frame - sweepStartFrame) / Math.max(1, sweepDuration));
+  const sweepAlpha = Math.sin(Math.PI * sweepProgress) * sweepOpacity;
+  const sweepPosition = 100 - sweepProgress * 100;
+  const textStyle: CSSProperties = {
+    fontFamily: FONT_FAMILY,
+    fontSize,
+    fontWeight,
+    lineHeight,
+    letterSpacing,
+    whiteSpace: "pre",
+  };
+  const clippedGradientStyle: CSSProperties = {
+    background: gradient,
+    backgroundClip: "text",
+    WebkitBackgroundClip: "text",
+    color: "transparent",
+    WebkitTextFillColor: "transparent",
+  };
+
+  return (
+    <span
+      aria-label={text}
+      style={{
+        position: "relative",
+        display: "inline-flex",
+        alignItems: "center",
+        whiteSpace: "pre",
+        ...textStyle,
+      }}
+    >
+      {characters.map((character, index) => {
+        const content = character === " " ? "\u00a0" : character;
+        const local = clamp01(
+          (frame - startFrame - index * letterStagger) / Math.max(1, revealDuration),
+        );
+        const eased = smooth01(local);
+        const sliceOpacity = Math.sin(Math.PI * local) * 0.28;
+        const leftToRight = (local * 2 - 1) * 1.08;
+        const rightToLeft = -leftToRight;
+        const sliceStyle = (clipPath: string, translate: number): CSSProperties => ({
+          position: "absolute",
+          inset: 0,
+          display: "block",
+          ...textStyle,
+          ...clippedGradientStyle,
+          background: sliceGradient,
+          clipPath,
+          opacity: sliceOpacity,
+          transform: `translateX(${(translate * 100).toFixed(2)}%)`,
+          pointerEvents: "none",
+        });
+
+        return (
+          <span
+            key={`${character}-${index}`}
+            aria-hidden="true"
+            style={{ position: "relative", display: "inline-block", overflow: "hidden", ...textStyle }}
+          >
+            <span
+              style={{
+                display: "inline-block",
+                ...textStyle,
+                ...clippedGradientStyle,
+                opacity: eased,
+                filter: `blur(${((1 - eased) * 7).toFixed(2)}px)`,
+                textShadow,
+              }}
+            >
+              {content}
+            </span>
+            <span style={sliceStyle("inset(0 0 65% 0)", leftToRight)}>{content}</span>
+            <span style={sliceStyle("inset(35% 0 35% 0)", rightToLeft)}>{content}</span>
+            <span style={sliceStyle("inset(65% 0 0 0)", leftToRight)}>{content}</span>
+          </span>
+        );
+      })}
+      {sweepAlpha > 0.002 && (
+        <span
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            ...textStyle,
+            background:
+              "linear-gradient(108deg, transparent 35%, rgba(255,255,255,0.04) 42%, rgba(242,255,254,0.82) 49%, rgba(125,240,232,0.54) 53%, rgba(255,255,255,0.08) 59%, transparent 67%)",
+            backgroundSize: "250% 100%",
+            backgroundPosition: `${sweepPosition.toFixed(2)}% 50%`,
+            backgroundClip: "text",
+            WebkitBackgroundClip: "text",
+            color: "transparent",
+            WebkitTextFillColor: "transparent",
+            opacity: sweepAlpha,
+            mixBlendMode: "screen",
+            pointerEvents: "none",
+          }}
+        >
+          {text}
+        </span>
+      )}
+    </span>
+  );
+};
+
 type Side = "left" | "right";
 
-const ClosedMetalPage: React.FC = () => (
+const ClosedMetalPage: React.FC<{ frame: number }> = ({ frame }) => (
   <div
     style={{
       position: "absolute",
@@ -105,24 +257,41 @@ const ClosedMetalPage: React.FC = () => (
         justifyContent: "center",
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 8,
-          color: "#EAF6F5",
-          fontFamily: FONT_FAMILY,
-          fontSize: 46,
-          fontWeight: 800,
-          lineHeight: 1.23,
-          letterSpacing: "0.005em",
-          whiteSpace: "nowrap",
-          textShadow: "0 1px 0 rgba(255,255,255,0.16), 0 8px 24px rgba(0,0,0,0.52)",
-        }}
-      >
-        <span>Нужный сервис есть.</span>
-        <span style={{ color: "#72DEDB" }}>А как оплатить?</span>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8, whiteSpace: "nowrap" }}>
+        <MetallicRevealText
+          text="Нужный сервис есть."
+          frame={frame}
+          startFrame={0}
+          fontSize={46}
+          fontWeight={800}
+          lineHeight={1.23}
+          letterSpacing="0.005em"
+          gradient="linear-gradient(180deg, #FFFFFF 0%, #DCE9ED 45%, #8FA6AE 100%)"
+          sliceGradient="linear-gradient(180deg, #FFFFFF 0%, #DCE9ED 52%, #AABFC4 100%)"
+          textShadow="0 1px 0 rgba(255,255,255,0.14), 0 8px 24px rgba(0,0,0,0.52)"
+          letterStagger={0.34}
+          revealDuration={13}
+          sweepStartFrame={12}
+          sweepDuration={28}
+          sweepOpacity={0.26}
+        />
+        <MetallicRevealText
+          text="А как оплатить?"
+          frame={frame}
+          startFrame={2}
+          fontSize={46}
+          fontWeight={800}
+          lineHeight={1.23}
+          letterSpacing="0.005em"
+          gradient="linear-gradient(180deg, #E8FFFD 0%, #72DEDB 50%, #39D5C7 100%)"
+          sliceGradient="linear-gradient(180deg, #E8FFFD 0%, #72DEDB 58%, #39D5C7 100%)"
+          textShadow="0 1px 0 rgba(255,255,255,0.1), 0 8px 24px rgba(0,0,0,0.52)"
+          letterStagger={0.38}
+          revealDuration={13}
+          sweepStartFrame={18}
+          sweepDuration={28}
+          sweepOpacity={0.24}
+        />
       </div>
     </div>
   </div>
@@ -189,32 +358,40 @@ const StableSloganReveal: React.FC<{ frame: number }> = ({ frame }) => {
         filter: `blur(${blur.toFixed(2)}px)`,
       }}
     >
-      <span
-        style={{
-          color: "#F0F7F7",
-          fontFamily: FONT_FAMILY,
-          fontSize: 48,
-          fontWeight: 800,
-          lineHeight: 1.2,
-          letterSpacing: "-0.035em",
-          textShadow: "0 3px 18px rgba(0,0,0,0.38)",
-        }}
-      >
-        Цифровые возможности
-      </span>
-      <span
-        style={{
-          color: "#58E5DA",
-          fontFamily: FONT_FAMILY,
-          fontSize: 48,
-          fontWeight: 800,
-          lineHeight: 1.2,
-          letterSpacing: "-0.035em",
-          textShadow: "0 2px 14px rgba(0,0,0,0.32)",
-        }}
-      >
-        без границ.
-      </span>
+      <MetallicRevealText
+        text="Цифровые возможности"
+        frame={frame}
+        startFrame={68}
+        fontSize={48}
+        fontWeight={800}
+        lineHeight={1.2}
+        letterSpacing="-0.035em"
+        gradient="linear-gradient(180deg, #FFFFFF 0%, #DCE9ED 45%, #8FA6AE 100%)"
+        sliceGradient="linear-gradient(180deg, #FFFFFF 0%, #DCE9ED 52%, #AABFC4 100%)"
+        textShadow="0 3px 18px rgba(0,0,0,0.38)"
+        letterStagger={0.34}
+        revealDuration={14}
+        sweepStartFrame={84}
+        sweepDuration={36}
+        sweepOpacity={0.25}
+      />
+      <MetallicRevealText
+        text="без границ."
+        frame={frame}
+        startFrame={69}
+        fontSize={48}
+        fontWeight={800}
+        lineHeight={1.2}
+        letterSpacing="-0.035em"
+        gradient="linear-gradient(180deg, #E8FFFD 0%, #72DEDB 48%, #39D5C7 100%)"
+        sliceGradient="linear-gradient(180deg, #E8FFFD 0%, #72DEDB 56%, #39D5C7 100%)"
+        textShadow="0 2px 14px rgba(0,0,0,0.32)"
+        letterStagger={0.34}
+        revealDuration={14}
+        sweepStartFrame={88}
+        sweepDuration={36}
+        sweepOpacity={0.29}
+      />
     </div>
   );
 };
@@ -250,30 +427,40 @@ const StableSecondaryReveal: React.FC<{ frame: number }> = ({ frame }) => {
         filter: `blur(${blur.toFixed(2)}px)`,
       }}
     >
-      <span
-        style={{
-          color: "#B7CED2",
-          fontFamily: FONT_FAMILY,
-          fontSize: 23,
-          fontWeight: 500,
-          lineHeight: 1.3,
-          letterSpacing: "0.13em",
-        }}
-      >
-        ОТ ПОДПИСОК ДО
-      </span>
-      <span
-        style={{
-          color: "#72DEDB",
-          fontFamily: FONT_FAMILY,
-          fontSize: 23,
-          fontWeight: 800,
-          lineHeight: 1.3,
-          letterSpacing: "0.13em",
-        }}
-      >
-        ИГРОВЫХ МИРОВ.
-      </span>
+      <MetallicRevealText
+        text="ОТ ПОДПИСОК ДО"
+        frame={frame}
+        startFrame={94}
+        fontSize={23}
+        fontWeight={500}
+        lineHeight={1.3}
+        letterSpacing="0.13em"
+        gradient="linear-gradient(180deg, #DDE9EB 0%, #B7CED2 48%, #8FA6AE 100%)"
+        sliceGradient="linear-gradient(180deg, #EAF6F5 0%, #B7CED2 52%, #9EB5BA 100%)"
+        textShadow="0 2px 10px rgba(0,0,0,0.36)"
+        letterStagger={0.27}
+        revealDuration={11}
+        sweepStartFrame={108}
+        sweepDuration={32}
+        sweepOpacity={0.2}
+      />
+      <MetallicRevealText
+        text="ИГРОВЫХ МИРОВ."
+        frame={frame}
+        startFrame={95}
+        fontSize={23}
+        fontWeight={800}
+        lineHeight={1.3}
+        letterSpacing="0.13em"
+        gradient="linear-gradient(180deg, #E8FFFD 0%, #72DEDB 48%, #39D5C7 100%)"
+        sliceGradient="linear-gradient(180deg, #E8FFFD 0%, #72DEDB 56%, #39D5C7 100%)"
+        textShadow="0 2px 10px rgba(0,0,0,0.36)"
+        letterStagger={0.27}
+        revealDuration={11}
+        sweepStartFrame={112}
+        sweepDuration={32}
+        sweepOpacity={0.22}
+      />
     </div>
   );
 };
@@ -421,7 +608,13 @@ const LuxuryBrandPage: React.FC<{ frame: number; logoSrc: string; flash: number 
   );
 };
 
-const MetalDoor: React.FC<{ side: Side; offset: number; light: number; edge: number }> = ({ side, offset, light, edge }) => {
+const MetalDoor: React.FC<{
+  side: Side;
+  offset: number;
+  light: number;
+  edge: number;
+  frame: number;
+}> = ({ side, offset, light, edge, frame }) => {
   const inner = side === "left" ? "right" : "left";
   const toward = side === "left" ? "to left" : "to right";
   return (
@@ -437,7 +630,7 @@ const MetalDoor: React.FC<{ side: Side; offset: number; light: number; edge: num
       }}
     >
       <div style={{ position: "absolute", top: 0, left: side === "left" ? 0 : -WIDTH / 2, width: WIDTH, height: HEIGHT }}>
-        <ClosedMetalPage />
+        <ClosedMetalPage frame={frame} />
       </div>
       {light > 0.01 && (
         <div
@@ -555,10 +748,10 @@ export const UnlimitSubPageTurnIntro: React.FC<UnlimitSubPageTurnIntroProps> = (
       {!doorsGone && (
         <div style={{ position: "absolute", inset: 0, transform: `scale(${closedPagePush.toFixed(5)})`, transformOrigin: "50% 50%" }}>
           <SpeedBlur vx={-vx} amount={0.09} max={22}>
-            <MetalDoor side="left" offset={door} light={doorLight} edge={edge} />
+            <MetalDoor side="left" offset={door} light={doorLight} edge={edge} frame={frame} />
           </SpeedBlur>
           <SpeedBlur vx={vx} amount={0.09} max={22}>
-            <MetalDoor side="right" offset={door} light={doorLight} edge={edge} />
+            <MetalDoor side="right" offset={door} light={doorLight} edge={edge} frame={frame} />
           </SpeedBlur>
           {crack > 0 && frame < SLIDE + 4 && (
             <div
