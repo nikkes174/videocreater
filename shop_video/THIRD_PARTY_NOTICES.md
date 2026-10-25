@@ -44,6 +44,13 @@ The local port changes only fixture import paths and the exported component name
 - Shared fixtures used: `demos/_fixtures/Polish.tsx` and `Look.tsx`.
 - License: Apache License 2.0, included at `src/vendor/videoShotcraft/LICENSE`.
 
+## video-shotcraft — document-typewriter-reveal mechanics
+
+`src/scenes/UnlimitSubSupportTypewriter.tsx` adapts the camera spline, perspective application window, paired left-to-right text wipes, and single moving caret from `DocumentTypewriterReveal.tsx`. The UnlimitSub scene uses its own dialogue, Russian copy, and graphite/teal interface styling.
+
+- Original component: <https://github.com/Vincentwei1021/video-shotcraft/blob/43bd349a136651865ecfa6ea1cf012f6e957d304/demos/ui-entrance/document-typewriter-reveal/DocumentTypewriterReveal.tsx>
+- License: Apache License 2.0, included at `src/vendor/videoShotcraft/LICENSE`.
+
 ## Manrope typeface
 
 The Manrope 500 and 800 WOFF2 subsets in `public/assets/fonts/` are from Google Fonts and are licensed under the SIL Open Font License 1.1. The license text is included at `public/assets/fonts/OFL-Manrope.txt`.

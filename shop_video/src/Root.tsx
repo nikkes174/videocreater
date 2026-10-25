@@ -13,6 +13,7 @@ import { UNLIMITSUB_BASIC3D_DURATION, UnlimitSubBasic3D } from "./scenes/Unlimit
 import { UNLIMITSUB_SITE_TOUR_DURATION, UNLIMITSUB_SITE_TOUR_FPS, UnlimitSubSiteTour } from "./scenes/UnlimitSubSiteTour";
 import { UNLIMITSUB_SPOTLIGHT_PRODUCT_DURATION, UNLIMITSUB_SPOTLIGHT_PRODUCT_FPS, UnlimitSubSpotlightProduct } from "./scenes/UnlimitSubSpotlightProduct";
 import { UNLIMITSUB_CARD_STACK_DURATION, UnlimitSubCardStack } from "./scenes/UnlimitSubCardStack";
+import { UNLIMITSUB_SUPPORT_TYPEWRITER_DURATION, UnlimitSubSupportTypewriter } from "./scenes/UnlimitSubSupportTypewriter";
 import { BASIC_3D_SCENE_DURATION, Basic3DScene } from "./vendor/videoShotcraft/demos/camera/basic-3d-scene/Basic3DScene";
 
 const TEST_DURATION_SECONDS = 3.5;
@@ -97,6 +98,14 @@ export const RemotionRoot: React.FC = () => {
         id="UnlimitSubCardStack"
         component={UnlimitSubCardStack}
         durationInFrames={UNLIMITSUB_CARD_STACK_DURATION}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="UnlimitSubSupportTypewriter"
+        component={UnlimitSubSupportTypewriter}
+        durationInFrames={UNLIMITSUB_SUPPORT_TYPEWRITER_DURATION}
         fps={30}
         width={1920}
         height={1080}
