@@ -10,10 +10,15 @@ import { FlyingServicesScene, FlyingWordsVertical } from "./scenes/FlyingWordsVe
 import { UnlimitSubTest } from "./scenes/UnlimitSubTest";
 import { UnlimitSubLuxuryIntro } from "./scenes/UnlimitSubLuxuryIntro";
 import { UNLIMITSUB_BASIC3D_DURATION, UnlimitSubBasic3D } from "./scenes/UnlimitSubBasic3D";
+import { UNLIMITSUB_BASIC3D_VERTICAL_DURATION, UnlimitSubBasic3DVertical } from "./scenes/UnlimitSubBasic3DVertical";
 import { UNLIMITSUB_SITE_TOUR_DURATION, UNLIMITSUB_SITE_TOUR_FPS, UnlimitSubSiteTour } from "./scenes/UnlimitSubSiteTour";
+import { UNLIMITSUB_SITE_TOUR_VERTICAL_DURATION, UNLIMITSUB_SITE_TOUR_VERTICAL_FPS, UnlimitSubSiteTourVertical } from "./scenes/UnlimitSubSiteTourVertical";
 import { UNLIMITSUB_SPOTLIGHT_PRODUCT_DURATION, UNLIMITSUB_SPOTLIGHT_PRODUCT_FPS, UnlimitSubSpotlightProduct } from "./scenes/UnlimitSubSpotlightProduct";
+import { UNLIMITSUB_SPOTLIGHT_PRODUCT_VERTICAL_DURATION, UNLIMITSUB_SPOTLIGHT_PRODUCT_VERTICAL_FPS, UnlimitSubSpotlightProductVertical } from "./scenes/UnlimitSubSpotlightProductVertical";
 import { UNLIMITSUB_CARD_STACK_DURATION, UnlimitSubCardStack } from "./scenes/UnlimitSubCardStack";
+import { UNLIMITSUB_CARD_STACK_VERTICAL_DURATION, UnlimitSubCardStackVertical } from "./scenes/UnlimitSubCardStackVertical";
 import { UNLIMITSUB_SUPPORT_TYPEWRITER_DURATION, UnlimitSubSupportTypewriter } from "./scenes/UnlimitSubSupportTypewriter";
+import { UNLIMITSUB_SUPPORT_TYPEWRITER_VERTICAL_DURATION, UnlimitSubSupportTypewriterVertical } from "./scenes/UnlimitSubSupportTypewriterVertical";
 import { UNLIMITSUB_PAGE_TURN_DURATION, UnlimitSubPageTurnIntro } from "./scenes/UnlimitSubPageTurnIntro";
 import { UNLIMITSUB_PAGE_TURN_VERTICAL_DURATION, UnlimitSubPageTurnIntroVertical } from "./scenes/UnlimitSubPageTurnIntroVertical";
 import { UNLIMITSUB_FULL_PROMO_DURATION, UNLIMITSUB_FULL_PROMO_FPS, UnlimitSubFullPromoVertical } from "./scenes/UnlimitSubFullPromoVertical";
@@ -117,12 +122,29 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={{ logoSrc: staticFile("assets/unlimitsub-logo.png") }}
       />
       <Composition
+        id="UnlimitSubBasic3DVertical"
+        component={UnlimitSubBasic3DVertical}
+        durationInFrames={UNLIMITSUB_BASIC3D_VERTICAL_DURATION}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={{ logoSrc: staticFile("assets/unlimitsub-logo.png") }}
+      />
+      <Composition
         id="UnlimitSubSiteTour"
         component={UnlimitSubSiteTour}
         durationInFrames={UNLIMITSUB_SITE_TOUR_DURATION}
         fps={UNLIMITSUB_SITE_TOUR_FPS}
         width={1920}
         height={1080}
+      />
+      <Composition
+        id="UnlimitSubSiteTourVertical"
+        component={UnlimitSubSiteTourVertical}
+        durationInFrames={UNLIMITSUB_SITE_TOUR_VERTICAL_DURATION}
+        fps={UNLIMITSUB_SITE_TOUR_VERTICAL_FPS}
+        width={1080}
+        height={1920}
       />
       <Composition
         id="UnlimitSubSpotlightProduct"
@@ -133,6 +155,14 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
       />
       <Composition
+        id="UnlimitSubSpotlightProductVertical"
+        component={UnlimitSubSpotlightProductVertical}
+        durationInFrames={UNLIMITSUB_SPOTLIGHT_PRODUCT_VERTICAL_DURATION}
+        fps={UNLIMITSUB_SPOTLIGHT_PRODUCT_VERTICAL_FPS}
+        width={1080}
+        height={1920}
+      />
+      <Composition
         id="UnlimitSubCardStack"
         component={UnlimitSubCardStack}
         durationInFrames={UNLIMITSUB_CARD_STACK_DURATION}
@@ -141,12 +171,28 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
       />
       <Composition
+        id="UnlimitSubCardStackVertical"
+        component={UnlimitSubCardStackVertical}
+        durationInFrames={UNLIMITSUB_CARD_STACK_VERTICAL_DURATION}
+        fps={30}
+        width={1080}
+        height={1920}
+      />
+      <Composition
         id="UnlimitSubSupportTypewriter"
         component={UnlimitSubSupportTypewriter}
         durationInFrames={UNLIMITSUB_SUPPORT_TYPEWRITER_DURATION}
         fps={30}
         width={1920}
         height={1080}
+      />
+      <Composition
+        id="UnlimitSubSupportTypewriterVertical"
+        component={UnlimitSubSupportTypewriterVertical}
+        durationInFrames={UNLIMITSUB_SUPPORT_TYPEWRITER_VERTICAL_DURATION}
+        fps={30}
+        width={1080}
+        height={1920}
       />
       <Composition
         id="FlyingWordsOriginal"
