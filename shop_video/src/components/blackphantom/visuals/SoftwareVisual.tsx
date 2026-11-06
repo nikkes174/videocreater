@@ -1,0 +1,17 @@
+import React from "react";
+import { interpolate, useCurrentFrame } from "remotion";
+import { BLACKPHANTOM_COLORS as C } from "../../../config/blackphantom";
+const cl={extrapolateLeft:"clamp" as const,extrapolateRight:"clamp" as const};
+export const SoftwareVisual:React.FC=()=>{const f=useCurrentFrame();const p=(a:number,b:number)=>interpolate(f,[a,b],[0,1],{...cl,easing:(x)=>1-Math.pow(1-x,3)});const modules=[{x:34,y:55,w:326,h:265,label:"CODE / SERVICES"},{x:447,y:46,w:315,h:196,label:"API GATEWAY"},{x:480,y:310,w:280,h:180,label:"DATA / POSTGRES"},{x:114,y:418,w:330,h:200,label:"SAAS / DASHBOARD"}];
+return <div style={{position:"absolute",right:70,top:135,width:850,height:770,perspective:1500}}>
+ <div style={{position:"absolute",inset:70,background:"radial-gradient(ellipse,rgba(200,166,106,.14),transparent 65%)",filter:"blur(42px)"}}/>
+ <svg viewBox="0 0 800 690" style={{position:"absolute",inset:10,width:"96%",height:"96%"}}>{[[360,180,447,140],[260,320,290,418],[610,242,610,310],[444,520,480,400],[360,180,480,400]].map(([x1,y1,x2,y2],i)=><g key={i}><path d={`M${x1} ${y1} L${x2} ${y2}`} stroke="rgba(200,166,106,.5)" strokeWidth="1.5" strokeDasharray="4 8" strokeDashoffset={-f*1.4}/><circle cx={x1+(x2-x1)*((f%60)/60)} cy={y1+(y2-y1)*((f%60)/60)} r="4" fill={C.gold} opacity={p(18+i*4,42+i*3)}/></g>)}</svg>
+ {modules.map((m,i)=>{const q=p(8+i*6,31+i*6);return <div key={m.label} style={{position:"absolute",left:m.x,top:m.y,width:m.w,height:m.h,background:"linear-gradient(145deg,rgba(28,33,40,.97),rgba(12,15,19,.97))",border:"1px solid rgba(182,190,200,.25)",boxShadow:"0 30px 65px rgba(0,0,0,.48),inset 0 1px rgba(255,255,255,.07)",transform:`translateY(${(1-q)*30}px) rotateY(${i%2?5:-5}deg)`,opacity:q}}>
+  <div style={{height:34,padding:"0 14px",display:"flex",alignItems:"center",borderBottom:"1px solid rgba(255,255,255,.08)",color:C.gold,fontSize:10,letterSpacing:2}}>{m.label}</div>
+  {i===0&&<div style={{padding:18,fontFamily:"monospace",fontSize:13,lineHeight:1.9,color:C.silver}}><span style={{color:C.gold}}>export</span> const platform = {'{'}<br/>　services: <span style={{color:C.platinum}}>['auth', 'billing']</span>,<br/>　scale: <span style={{color:C.platinum}}>"elastic"</span><br/>{'}'};</div>}
+  {i===1&&<div style={{padding:18,display:"flex",gap:8,alignItems:"center"}}>{["REST","AUTH","QUEUE"].map(t=><span key={t} style={{padding:"9px 10px",border:"1px solid rgba(200,166,106,.3)",color:C.silver,fontSize:10}}>{t}</span>)}</div>}
+  {i===2&&<div style={{padding:20,display:"flex",alignItems:"center",gap:12}}><div style={{width:54,height:66,border:"1px solid rgba(200,166,106,.5)",borderRadius:"50% / 12%",background:"linear-gradient(90deg,rgba(200,166,106,.12),transparent)"}}/><div style={{color:C.silver,fontSize:12,lineHeight:1.8}}>users　 18.4k<br/>events　 204k<br/>uptime　 99.98%</div></div>}
+  {i===3&&<div style={{padding:"18px 16px",display:"flex",alignItems:"end",gap:9,height:140}}>{[42,63,54,86,72,112,95,124].map((v,n)=><div key={n} style={{flex:1,height:v,background:`linear-gradient(180deg,rgba(200,166,106,${.75-n*.035}),rgba(200,166,106,.08))`}}/>)}</div>}
+ </div>})}
+ <div style={{position:"absolute",left:390,top:326,width:70,height:70,borderRadius:"50%",display:"grid",placeItems:"center",background:"radial-gradient(circle,rgba(200,166,106,.3),rgba(17,21,27,.95) 70%)",border:"1px solid rgba(200,166,106,.48)",color:C.platinum,fontSize:12,letterSpacing:1,opacity:p(28,46)}}>CORE</div>
+</div>};

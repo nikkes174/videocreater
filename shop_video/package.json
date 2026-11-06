@@ -92,7 +92,8 @@
     "verify:test": "npm run verify:logo",
     "verify:logo": "node scripts/verify-output.mjs output/logo_reveal_preview.mp4 105 3.5",
     "typecheck": "tsc --noEmit",
-    "render:blackphantom:intro": "remotion render --config remotion.config.ts src/index.tsx BlackPhantomIntro output/blackphantom_intro.mp4 --codec=h264 --pixel-format=yuv420p --concurrency=2"
+    "render:blackphantom:intro": "remotion render --config remotion.config.ts src/index.tsx BlackPhantomIntro output/blackphantom_intro.mp4 --codec=h264 --pixel-format=yuv420p --concurrency=2",
+    "render:blackphantom:services": "remotion render --config remotion.config.ts src/index.tsx BlackPhantomServices output/blackphantom_services.mp4 --codec=h264 --pixel-format=yuv420p --concurrency=2"
   },
   "dependencies": {
     "react": "19.2.3",
