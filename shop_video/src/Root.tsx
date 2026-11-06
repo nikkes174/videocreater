@@ -33,12 +33,22 @@ import {
 } from "./config/finalMontage";
 import { BASIC_3D_SCENE_DURATION, Basic3DScene } from "./vendor/videoShotcraft/demos/camera/basic-3d-scene/Basic3DScene";
 import { BARN_DOOR_SPLIT_DURATION, BarnDoorSplit } from "./vendor/videoShotcraft/demos/transition/page-turn-transitions/BarnDoorSplit";
+import { BlackPhantomIntro } from "./scenes/BlackPhantomIntro";
+import { BLACKPHANTOM_INTRO } from "./config/blackphantom";
 
 const TEST_DURATION_SECONDS = 3.5;
 
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+      <Composition
+        id="BlackPhantomIntro"
+        component={BlackPhantomIntro}
+        durationInFrames={BLACKPHANTOM_INTRO.durationInFrames}
+        fps={BLACKPHANTOM_INTRO.fps}
+        width={BLACKPHANTOM_INTRO.width}
+        height={BLACKPHANTOM_INTRO.height}
+      />
       <Composition
         id="UnlimitSubTest"
         component={UnlimitSubTest}

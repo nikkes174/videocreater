@@ -4,3 +4,5 @@ npm-debug.log*
 /public/assets/final-montage/
 /output/final-montage-contact-frames/
 /output/final_montage_previews/transition-review-frames/
+
+/output/

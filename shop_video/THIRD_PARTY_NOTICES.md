@@ -65,3 +65,11 @@ The local port changes only fixture import paths and the exported component name
 The Manrope 500 and 800 WOFF2 subsets in `public/assets/fonts/` are from Google Fonts and are licensed under the SIL Open Font License 1.1. The license text is included at `public/assets/fonts/OFL-Manrope.txt`.
 
 The Unbounded 700 WOFF2 subsets in `public/assets/fonts/` are from Google Fonts and are licensed under the SIL Open Font License 1.1. The license text is included at `public/assets/fonts/OFL-Unbounded.txt`.
+
+## video-shotcraft — logo-shrink-wordmark-lockup motion mechanics
+
+shop_video/src/components/blackphantom/LogoShrinkLockup.tsx adapts the shrink, decelerating rotation, scale trails, impact wave, mark handoff, and staggered wordmark entrance from the original Remotion scene. Brand assets, timing, and styling are original to this project.
+
+- Original component: <https://github.com/Vincentwei1021/video-shotcraft/blob/main/demos/outro/logo-shrink-wordmark-lockup/LogoShrinkWordmarkLockup.tsx>
+- License: Apache License 2.0, included at src/vendor/videoShotcraft/LICENSE.
+
