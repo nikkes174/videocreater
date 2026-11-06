@@ -1,3 +1,6 @@
 node_modules/
 npm-debug.log*
 .remotion/
+/public/assets/final-montage/
+/output/final-montage-contact-frames/
+/output/final_montage_previews/transition-review-frames/

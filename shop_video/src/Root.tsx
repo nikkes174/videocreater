@@ -22,6 +22,15 @@ import { UNLIMITSUB_SUPPORT_TYPEWRITER_VERTICAL_DURATION, UnlimitSubSupportTypew
 import { UNLIMITSUB_PAGE_TURN_DURATION, UnlimitSubPageTurnIntro } from "./scenes/UnlimitSubPageTurnIntro";
 import { UNLIMITSUB_PAGE_TURN_VERTICAL_DURATION, UnlimitSubPageTurnIntroVertical } from "./scenes/UnlimitSubPageTurnIntroVertical";
 import { UNLIMITSUB_FULL_PROMO_DURATION, UNLIMITSUB_FULL_PROMO_FPS, UnlimitSubFullPromoVertical } from "./scenes/UnlimitSubFullPromoVertical";
+import { UnlimitSubFinalMontage, UnlimitSubTransitionPreview } from "./scenes/UnlimitSubFinalMontage";
+import {
+  FINAL_MONTAGE_DURATION_IN_FRAMES,
+  FINAL_MONTAGE_FPS,
+  FINAL_MONTAGE_HEIGHT,
+  FINAL_MONTAGE_TRANSITIONS,
+  FINAL_MONTAGE_WIDTH,
+  getTransitionPreviewDuration,
+} from "./config/finalMontage";
 import { BASIC_3D_SCENE_DURATION, Basic3DScene } from "./vendor/videoShotcraft/demos/camera/basic-3d-scene/Basic3DScene";
 import { BARN_DOOR_SPLIT_DURATION, BarnDoorSplit } from "./vendor/videoShotcraft/demos/transition/page-turn-transitions/BarnDoorSplit";
 
@@ -104,6 +113,26 @@ export const RemotionRoot: React.FC = () => {
         width={1080}
         height={1920}
       />
+      <Composition
+        id="UnlimitSubFinalMontage"
+        component={UnlimitSubFinalMontage}
+        durationInFrames={FINAL_MONTAGE_DURATION_IN_FRAMES}
+        fps={FINAL_MONTAGE_FPS}
+        width={FINAL_MONTAGE_WIDTH}
+        height={FINAL_MONTAGE_HEIGHT}
+      />
+      {FINAL_MONTAGE_TRANSITIONS.map((transition, transitionIndex) => (
+        <Composition
+          key={`UnlimitSubFinalMontageTransition${transitionIndex + 1}`}
+          id={`UnlimitSubFinalMontageTransition${transitionIndex + 1}`}
+          component={UnlimitSubTransitionPreview}
+          durationInFrames={getTransitionPreviewDuration(transitionIndex)}
+          fps={FINAL_MONTAGE_FPS}
+          width={FINAL_MONTAGE_WIDTH}
+          height={FINAL_MONTAGE_HEIGHT}
+          defaultProps={{ transitionIndex }}
+        />
+      ))}
       <Composition
         id="ShotcraftBasic3DOriginal"
         component={Basic3DScene}
