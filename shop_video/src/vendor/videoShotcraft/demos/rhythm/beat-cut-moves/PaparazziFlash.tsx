@@ -161,13 +161,59 @@ export const PaparazziFlash: React.FC = () => {
         : <Still view={STILLS[seg]} f={FLASHES[seg]} live={false} />}
     </div>
 
-    {/* Fixed screen-space service copy stays readable through the detail hold. */}
-    <div style={{ position: "absolute", left: 16, bottom: 32, width: 280, color: COLORS.platinum, fontFamily: "Manrope, sans-serif", textShadow: "0 2px 12px rgba(0,0,0,.85)" }}>
+    {/* Fixed screen-space service copy */}
+    <div
+      style={{
+        position: "absolute",
+        left: 1440,
+        bottom: 52,
+        width: 430,
+        color: COLORS.platinum,
+        fontFamily: "Manrope, sans-serif",
+        textShadow: "0 3px 18px rgba(0,0,0,.9)",
+      }}
+    >
       <div style={{ opacity: serviceTitleIn, transform: `translateY(${(1-serviceTitleIn)*10}px)` }}>
-        <div style={{ color: GOLD, fontSize: 13, fontWeight: 800, letterSpacing: 1.6, marginBottom: 6 }}>BLACKPHANTOM</div>
-        <div style={{ fontSize: 34, lineHeight: 1.08, fontWeight: 800, letterSpacing: -0.8 }}>Веб-разработка</div>
+        <div
+          style={{
+            color: GOLD,
+            fontSize: 17,
+            fontWeight: 800,
+            letterSpacing: 2,
+            marginBottom: 10,
+          }}
+        >
+          BLACKPHANTOM
+        </div>
+
+        <div
+          style={{
+            fontSize: 40,
+            lineHeight: 1.12,
+            fontWeight: 800,
+            letterSpacing: -0.8,
+          }}
+        >
+          Веб-разработка
+        </div>
       </div>
-      <div style={{ marginTop: 8, maxWidth: 280, color: COLORS.silver, fontSize: 17, lineHeight: 1.3, fontWeight: 500, opacity: serviceDescriptionIn, transform: `translateY(${(1-serviceDescriptionIn)*10}px)` }}>Создаём сайты и цифровые платформы, которые привлекают клиентов, автоматизируют процессы и усиливают бренд.</div>
+
+      <div
+        style={{
+          marginTop: 14,
+          maxWidth: 430,
+          color: COLORS.silver,
+          fontSize: 24,
+          lineHeight: 1.4,
+          fontWeight: 500,
+          opacity: serviceDescriptionIn,
+          transform: `translateY(${(1 - serviceDescriptionIn) * 10}px)`,
+        }}
+      >
+        Создаём сайты и цифровые платформы, которые
+        привлекают клиентов, автоматизируют процессы
+        и усиливают бренд.
+      </div>
     </div>
 
     <Vignette strength={[0.5,0.5,0.56,0.62][seg+1]} inner={0.42} color="#000000" />
