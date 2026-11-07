@@ -15,6 +15,7 @@ export const BlackPhantomAutomation: React.FC = () => (
     title="Мессенджеры и автоматизация"
     description="Разрабатываем мессенджер-платформы и AI-ассистентов, которые выстраивают воронки, обрабатывают заявки и усиливают клиентский сервис."
     brand="BLACKPHANTOM"
+    effectsBeforeCopy
     views={VIEWS}
     focusRect={FOCUS_RECT}
     Scene={AutomationScene}

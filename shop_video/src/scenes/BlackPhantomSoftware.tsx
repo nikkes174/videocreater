@@ -15,6 +15,7 @@ export const BlackPhantomSoftware: React.FC = () => (
     title="Разработка ПО"
     description="Создаём кастомные IT-решения и SaaS-платформы для автоматизации, масштабирования и цифровой трансформации бизнеса."
     brand="BLACKPHANTOM"
+    effectsBeforeCopy
     views={VIEWS}
     focusRect={FOCUS_RECT}
     Scene={SoftwareScene}

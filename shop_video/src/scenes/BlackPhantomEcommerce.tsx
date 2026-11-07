@@ -15,6 +15,7 @@ export const BlackPhantomEcommerce: React.FC = () => (
     title="Интернет-магазины"
     description="eCommerce-решения под ключ — от каталога и оплаты до автоматизации заказов и масштабирования продаж."
     brand="BLACKPHANTOM"
+    effectsBeforeCopy
     views={VIEWS}
     focusRect={FOCUS_RECT}
     Scene={EcommerceScene}

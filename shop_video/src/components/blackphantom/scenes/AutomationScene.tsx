@@ -3,6 +3,11 @@ import { EASE, ramp } from "../../../vendor/videoShotcraft/demos/_fixtures/Polis
 import { COLORS } from "../PaparazziCamera";
 import { ManropeFontFaces } from "./ManropeFontFaces";
 
+const CHAT = {
+  x: 250,
+  width: 450,
+} as const;
+
 export const AutomationScene: React.FC<{ f: number; live: boolean }> = ({ f, live }) => {
   const clientIn = ramp(f, 10, 12, EASE.out);
   const assistantIn = ramp(f, 23, 12, EASE.out);
@@ -44,21 +49,23 @@ export const AutomationScene: React.FC<{ f: number; live: boolean }> = ({ f, liv
         <div style={{ width: 38, height: 38, borderRadius: "50%", display: "grid", placeItems: "center", color: COLORS.gold, background: "rgba(200,166,106,.14)", fontSize: 18, fontWeight: 800 }}>К</div>
       </div>
 
-      <div style={{ position: "absolute", left: 250, top: 252, width: 440, padding: "15px 18px 17px", borderRadius: "5px 18px 18px 18px", background: "rgba(241,242,244,.085)", opacity: clientIn, transform: `translateY(${(1-clientIn)*12}px)` }}>
-        <div style={{ marginBottom: 7, color: COLORS.silver, fontSize: 15, fontWeight: 700 }}>Клиент</div>
-        <div style={{ fontSize: 20, lineHeight: 1.42 }}>Здравствуйте! Хочу узнать стоимость.</div>
-      </div>
+      <div style={{ position: "absolute", left: CHAT.x, top: 242, width: CHAT.width, display: "flex", flexDirection: "column", gap: 12 }}>
+        <div style={{ width: "100%", boxSizing: "border-box", padding: "15px 18px 17px", borderRadius: "5px 18px 18px 18px", background: "rgba(241,242,244,.085)", opacity: clientIn, transform: `translateY(${(1-clientIn)*12}px)` }}>
+          <div style={{ marginBottom: 7, color: COLORS.silver, fontSize: 15, fontWeight: 700 }}>Клиент</div>
+          <div style={{ fontSize: 20, lineHeight: 1.42 }}>Здравствуйте! Хочу узнать стоимость.</div>
+        </div>
 
-      <div style={{ position: "absolute", left: 284, top: 350, width: 420, padding: "16px 18px 18px", borderRadius: "18px 5px 18px 18px", background: "linear-gradient(135deg,rgba(200,166,106,.2),rgba(200,166,106,.09))", border: "1px solid rgba(200,166,106,.42)", opacity: assistantIn, transform: `translateY(${(1-assistantIn)*12}px)` }}>
-        <div style={{ marginBottom: 7, color: COLORS.gold, fontSize: 15, fontWeight: 800 }}>Ассистент</div>
-        <div style={{ fontSize: 20, lineHeight: 1.42 }}>Здравствуйте! Подберём решение под вашу задачу.</div>
-      </div>
+        <div style={{ width: "100%", boxSizing: "border-box", padding: "16px 18px 18px", borderRadius: "18px 5px 18px 18px", background: "linear-gradient(135deg,rgba(200,166,106,.2),rgba(200,166,106,.09))", border: "1px solid rgba(200,166,106,.42)", opacity: assistantIn, transform: `translateY(${(1-assistantIn)*12}px)` }}>
+          <div style={{ marginBottom: 7, color: COLORS.gold, fontSize: 15, fontWeight: 800 }}>Ассистент</div>
+          <div style={{ fontSize: 20, lineHeight: 1.42 }}>Здравствуйте! Подберём решение под вашу задачу.</div>
+        </div>
 
-      <div style={{ position: "absolute", left: 258, top: 476, width: 416, minHeight: 98, padding: "18px 20px", display: "flex", alignItems: "center", gap: 16, borderRadius: 14, background: "linear-gradient(120deg,rgba(200,166,106,.16),rgba(241,242,244,.045))", border: "1px solid rgba(200,166,106,.3)", opacity: resultIn, transform: `translateY(${(1-resultIn)*10}px)` }}>
-        <div style={{ width: 42, height: 42, flex: "0 0 auto", borderRadius: "50%", display: "grid", placeItems: "center", color: "#11151B", background: COLORS.gold, fontSize: 22, fontWeight: 900 }}>✓</div>
-        <div>
-          <div style={{ fontSize: 20, fontWeight: 800 }}>Заявка обработана</div>
-          <div style={{ marginTop: 5, color: COLORS.silver, fontSize: 15 }}>Передана специалисту</div>
+        <div style={{ width: "100%", boxSizing: "border-box", minHeight: 98, padding: "18px 20px", display: "flex", alignItems: "center", gap: 16, borderRadius: 14, background: "linear-gradient(120deg,rgba(200,166,106,.16),rgba(241,242,244,.045))", border: "1px solid rgba(200,166,106,.3)", opacity: resultIn, transform: `translateY(${(1-resultIn)*10}px)` }}>
+          <div style={{ width: 42, height: 42, flex: "0 0 auto", borderRadius: "50%", display: "grid", placeItems: "center", color: "#11151B", background: COLORS.gold, fontSize: 22, fontWeight: 900 }}>✓</div>
+          <div>
+            <div style={{ fontSize: 20, fontWeight: 800 }}>Заявка обработана</div>
+            <div style={{ marginTop: 5, color: COLORS.silver, fontSize: 15 }}>Передана специалисту</div>
+          </div>
         </div>
       </div>
 

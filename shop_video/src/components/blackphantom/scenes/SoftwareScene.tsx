@@ -47,7 +47,7 @@ export const SoftwareScene: React.FC<{ f: number; live: boolean }> = ({ f, live 
       </div>
 
       <div style={{ position: "absolute", left: 536, top: 278, width: 168, height: 258, padding: "18px 15px", boxSizing: "border-box", borderRadius: 14, background: "linear-gradient(155deg,rgba(200,166,106,.15),rgba(241,242,244,.035))", border: "1px solid rgba(200,166,106,.25)", opacity: panelsIn }}>
-        <div style={{ color: COLORS.gold, fontSize: 15, lineHeight: 1.25, fontWeight: 800 }}>АВТОМАТИЗАЦИЯ</div>
+        <div style={{ color: COLORS.gold, fontSize: 15, fontWeight: 800, lineHeight: 1.25 }}>Автоматизация</div>
         <div style={{ marginTop: 20, width: 34, height: 34, borderRadius: "50%", display: "grid", placeItems: "center", background: "rgba(200,166,106,.2)", color: COLORS.gold, fontSize: 18 }}>✓</div>
         <div style={{ marginTop: 13, fontSize: 18, lineHeight: 1.2, fontWeight: 800 }}>Счёт отправлен</div>
         <div style={{ marginTop: 8, color: COLORS.silver, fontSize: 14, lineHeight: 1.3 }}>Заказ обработан без задержки</div>

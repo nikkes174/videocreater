@@ -7,6 +7,7 @@ export const EcommerceScene: React.FC<{ f: number; live: boolean }> = ({ f, live
   const productIn = ramp(f, 8, 16, EASE.out);
   const assortmentIn = ramp(f, 24, 16, EASE.out);
   const orderIn = ramp(f, 64, 6, EASE.out);
+  const cartCount = f >= 52 ? 1 : 0;
   const light = live ? 0.2 + 0.03 * ramp(f, 0, 30, EASE.smooth) : 0.23;
 
   return <div style={{ position: "absolute", inset: 0, overflow: "hidden", color: COLORS.platinum, fontFamily: "Manrope, sans-serif", background: "radial-gradient(ellipse 66% 75% at 48% 28%,#202831 0%,#11161c 58%,#07090c 100%)" }}>
@@ -17,7 +18,7 @@ export const EcommerceScene: React.FC<{ f: number; live: boolean }> = ({ f, live
       <div style={{ position: "absolute", inset: "0 0 auto", height: 64, display: "flex", alignItems: "center", gap: 10, padding: "0 28px", background: "rgba(241,242,244,.055)", borderBottom: "1px solid rgba(241,242,244,.09)" }}>
         {[0,1,2].map((i) => <span key={i} style={{ width: 9, height: 9, borderRadius: "50%", background: i === 0 ? COLORS.gold : "rgba(182,190,200,.42)" }} />)}
         <div style={{ marginLeft: 18, fontSize: 17, fontWeight: 800, letterSpacing: 1.4 }}>ВИТРИНА</div>
-        <div style={{ marginLeft: "auto", padding: "8px 15px", borderRadius: 18, background: "rgba(200,166,106,.15)", color: COLORS.platinum, fontSize: 16 }}>Корзина <b style={{ color: COLORS.gold }}>1</b></div>
+        <div style={{ marginLeft: "auto", padding: "8px 15px", borderRadius: 18, background: "rgba(200,166,106,.15)", color: COLORS.platinum, fontSize: 16 }}>Корзина <b style={{ color: COLORS.gold }}>{cartCount}</b></div>
       </div>
 
       <div style={{ position: "absolute", left: 42, right: 42, top: 86, height: 56, display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid rgba(182,190,200,.14)" }}>
@@ -55,7 +56,7 @@ export const EcommerceScene: React.FC<{ f: number; live: boolean }> = ({ f, live
 
       {orderIn > 0.01 && <>
         <div style={{ position: "absolute", inset: 0, background: "rgba(4,6,8,.72)", opacity: orderIn }} />
-        <div style={{ position: "absolute", left: 100, top: 174, width: 430, height: 376, padding: "34px 34px 30px", boxSizing: "border-box", borderRadius: 22, textAlign: "center", background: "linear-gradient(155deg,#202831,#11171d)", border: "1px solid rgba(200,166,106,.52)", boxShadow: "0 36px 90px rgba(0,0,0,.6)", opacity: orderIn, transform: `translateY(${(1-orderIn)*16}px)` }}>
+        <div style={{ position: "absolute", left: 100, top: 174, width: 430, height: 350, padding: "34px 34px 30px", boxSizing: "border-box", borderRadius: 22, textAlign: "center", background: "linear-gradient(155deg,#202831,#11171d)", border: "1px solid rgba(200,166,106,.52)", boxShadow: "0 36px 90px rgba(0,0,0,.6)", opacity: orderIn, transform: `translateY(${(1-orderIn)*16}px)` }}>
           <div style={{ width: 72, height: 72, margin: "0 auto", borderRadius: "50%", display: "grid", placeItems: "center", color: "#11151B", background: "linear-gradient(145deg,#e8d6ad,#c8a66a)", fontSize: 37, fontWeight: 900 }}>✓</div>
           <div style={{ marginTop: 21, fontSize: 27, lineHeight: 1.15, fontWeight: 800 }}>Заказ оформлен</div>
           <div style={{ marginTop: 11, color: COLORS.silver, fontSize: 18, lineHeight: 1.4 }}>Мы получили ваш заказ.</div>

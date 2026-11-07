@@ -29,6 +29,7 @@ export type PaparazziSceneProps = {
   title: string;
   description: string;
   brand: string;
+  effectsBeforeCopy?: boolean;
   views: readonly [CameraView, CameraView, CameraView];
   focusRect: FocusRect;
   Scene: React.ComponentType<{
@@ -125,6 +126,7 @@ export const PaparazziCamera: React.FC<PaparazziSceneProps> = ({
   title,
   description,
   brand,
+  effectsBeforeCopy = false,
   views,
   focusRect,
   Scene,
@@ -172,6 +174,21 @@ export const PaparazziCamera: React.FC<PaparazziSceneProps> = ({
 
   const serviceTitleIn = ramp(frame, 8, 14, EASE.out);
   const serviceDescriptionIn = ramp(frame, 20, 16, EASE.out);
+  const serviceCopy = <div style={COPY_STYLE}>
+    <div style={{ opacity: serviceTitleIn, transform: `translateY(${(1-serviceTitleIn)*10}px)` }}>
+      <div style={{ color: GOLD, fontSize: FONT_SIZES.brand, fontWeight: 800, letterSpacing: 2, marginBottom: 10 }}>{brand}</div>
+      <div style={{ fontSize: FONT_SIZES.title, lineHeight: 1.12, fontWeight: 800, letterSpacing: -0.8 }}>{title}</div>
+    </div>
+
+    <div style={{ marginTop: 14, maxWidth: 430, color: COLORS.silver, fontSize: FONT_SIZES.description, lineHeight: DESCRIPTION_LINE_HEIGHT, fontWeight: 500, opacity: serviceDescriptionIn, transform: `translateY(${(1 - serviceDescriptionIn) * 10}px)` }}>
+      {description}
+    </div>
+  </div>;
+  const cinematicEffects = <>
+    <Vignette strength={[0.5,0.5,0.56,0.62][seg+1]} inner={0.42} color="#000000" />
+    <Grain opacity={0.07} blend="soft-light" />
+  </>;
+
   return <AbsoluteFill style={{ background: COLORS.background, overflow: "hidden" }}>
     <div style={{ position: "absolute", inset: 0, transformOrigin: "960px 540px", transform: `translate(${jx.toFixed(2)}px,${(jy+settleY).toFixed(2)}px) scale(${(settleScale*holdPush*1.012).toFixed(5)})`, filter: seg >= 0 ? `brightness(${(1+0.22*bloom).toFixed(3)}) contrast(${(1.06-0.14*bloom).toFixed(3)}) saturate(${(0.82-0.2*bloom).toFixed(3)})` : undefined }}>
       {seg === -1
@@ -179,19 +196,9 @@ export const PaparazziCamera: React.FC<PaparazziSceneProps> = ({
         : <Still view={views[seg]} f={FLASHES[seg]} Scene={Scene} />}
     </div>
 
-    <div style={COPY_STYLE}>
-      <div style={{ opacity: serviceTitleIn, transform: `translateY(${(1-serviceTitleIn)*10}px)` }}>
-        <div style={{ color: GOLD, fontSize: FONT_SIZES.brand, fontWeight: 800, letterSpacing: 2, marginBottom: 10 }}>{brand}</div>
-        <div style={{ fontSize: FONT_SIZES.title, lineHeight: 1.12, fontWeight: 800, letterSpacing: -0.8 }}>{title}</div>
-      </div>
-
-      <div style={{ marginTop: 14, maxWidth: 430, color: COLORS.silver, fontSize: FONT_SIZES.description, lineHeight: DESCRIPTION_LINE_HEIGHT, fontWeight: 500, opacity: serviceDescriptionIn, transform: `translateY(${(1 - serviceDescriptionIn) * 10}px)` }}>
-        {description}
-      </div>
-    </div>
-
-    <Vignette strength={[0.5,0.5,0.56,0.62][seg+1]} inner={0.42} color="#000000" />
-    <Grain opacity={0.07} blend="soft-light" />
+    {effectsBeforeCopy && cinematicEffects}
+    {serviceCopy}
+    {!effectsBeforeCopy && cinematicEffects}
     <svg width={1920} height={1080} style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>{af}</svg>
     {flash > 0.004 && <AbsoluteFill style={{ opacity: flash, pointerEvents: "none", background: "radial-gradient(ellipse 80% 90% at 50% 45%, #ffffff 0%, #ffffff 45%, rgba(250,250,255,0.86) 100%)" }} />}
   </AbsoluteFill>;
