@@ -13,13 +13,12 @@ export const ServiceTypography: React.FC<{ service: BlackPhantomService }> = ({ 
     <div style={{ display: "flex", alignItems: "center", gap: 20, opacity: number, transform: `translateY(${(1-number)*14}px)` }}>
       <span style={{ fontFamily: "Unbounded, sans-serif", fontSize: 22, fontWeight: 700, letterSpacing: 2, color: C.gold }}>{service.number} / 04</span>
       <span style={{ width: 62, height: 1, background: C.gold, opacity: 0.7 }} />
-      <span style={{ fontSize: 20, fontWeight: 700, letterSpacing: 4, color: C.silver }}>{service.eyebrow}</span>
     </div>
     <h1 style={{ fontFamily: "Manrope, sans-serif", fontSize: service.id === "automation" ? 65 : 76, lineHeight: 1.08, letterSpacing: -2.5, fontWeight: 800, maxWidth: 790, margin: "32px 0 24px", opacity: title, textShadow: "0 4px 34px rgba(0,0,0,.28)" }}>{service.title}</h1>
     <p style={{ maxWidth: 735, margin: 0, color: C.silver, fontSize: 31, lineHeight: 1.45, fontWeight: 500, opacity: desc, transform: `translateY(${(1-desc)*14}px)` }}>{service.description}</p>
     <div style={{ position: "absolute", left: 0, bottom: 82, width: 720, opacity: reveal(28, 44) }}>
       <div style={{ height: 1, background: "linear-gradient(90deg, rgba(200,166,106,.75), rgba(200,166,106,0))" }} />
-      <div style={{ marginTop: 16, display: "flex", justifyContent: "space-between", color: "rgba(182,190,200,.58)", fontSize: 14, letterSpacing: 3, fontWeight: 700 }}><span>BLACKPHANTOM</span><span>DIGITAL SYSTEMS</span></div>
+      <div style={{ marginTop: 16, color: "rgba(182,190,200,.58)", fontSize: 14, letterSpacing: 3, fontWeight: 700 }}>BLACKPHANTOM</div>
     </div>
   </div>;
 };
