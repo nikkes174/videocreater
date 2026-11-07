@@ -36,12 +36,22 @@ import { BARN_DOOR_SPLIT_DURATION, BarnDoorSplit } from "./vendor/videoShotcraft
 import { BlackPhantomIntro } from "./scenes/BlackPhantomIntro";
 import { BLACKPHANTOM_INTRO } from "./config/blackphantom";
 import { BlackPhantomServices } from "./scenes/BlackPhantomServices";
+import { BlackPhantomWebDevelopment } from "./scenes/BlackPhantomWebDevelopment";
+import { PAPARAZZI_FLASH_DURATION } from "./vendor/videoShotcraft/demos/rhythm/beat-cut-moves/PaparazziFlash";
 
 const TEST_DURATION_SECONDS = 3.5;
 
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+      <Composition
+        id="BlackPhantomWebDevelopment"
+        component={BlackPhantomWebDevelopment}
+        durationInFrames={PAPARAZZI_FLASH_DURATION}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
       <Composition
         id="BlackPhantomServices"
         component={BlackPhantomServices}

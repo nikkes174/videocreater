@@ -78,5 +78,7 @@ shop_video/src/components/blackphantom/LogoShrinkLockup.tsx adapts the shrink, d
 
 `src/components/blackphantom/BeatCutTransition.tsx` adapts the hard-cut exposure flash, six-frame camera settle, shutter decay, discrete shot changes, and smooth hold pullback from PaparazziFlash for the BLACKPHANTOM service sequence. All service illustrations and content are original to this project.
 
+`src/vendor/videoShotcraft/demos/rhythm/beat-cut-moves/PaparazziFlash.tsx` adapts the original three-view hard cuts, exposure flash, focus bracket projection, six-frame camera settle, deterministic shutter shake, bloom decay, and hold push for the BLACKPHANTOM web-development scene. It reuses the project's existing `Polish.tsx` and `Look.tsx` fixtures. The website composition and brand copy are original to this project.
+
 - Original component: <https://github.com/Vincentwei1021/video-shotcraft/blob/main/demos/rhythm/beat-cut-moves/PaparazziFlash.tsx>
 - License: Apache License 2.0, included at `src/vendor/videoShotcraft/LICENSE`.
