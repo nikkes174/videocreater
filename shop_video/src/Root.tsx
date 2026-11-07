@@ -37,6 +37,9 @@ import { BlackPhantomIntro } from "./scenes/BlackPhantomIntro";
 import { BLACKPHANTOM_INTRO } from "./config/blackphantom";
 import { BlackPhantomServices } from "./scenes/BlackPhantomServices";
 import { BlackPhantomWebDevelopment } from "./scenes/BlackPhantomWebDevelopment";
+import { BlackPhantomAutomation } from "./scenes/BlackPhantomAutomation";
+import { BlackPhantomEcommerce } from "./scenes/BlackPhantomEcommerce";
+import { BlackPhantomSoftware } from "./scenes/BlackPhantomSoftware";
 import { PAPARAZZI_FLASH_DURATION } from "./vendor/videoShotcraft/demos/rhythm/beat-cut-moves/PaparazziFlash";
 
 const TEST_DURATION_SECONDS = 3.5;
@@ -48,6 +51,30 @@ export const RemotionRoot: React.FC = () => {
         id="BlackPhantomWebDevelopment"
         component={BlackPhantomWebDevelopment}
         durationInFrames={PAPARAZZI_FLASH_DURATION}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="BlackPhantomAutomation"
+        component={BlackPhantomAutomation}
+        durationInFrames={150}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="BlackPhantomEcommerce"
+        component={BlackPhantomEcommerce}
+        durationInFrames={150}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="BlackPhantomSoftware"
+        component={BlackPhantomSoftware}
+        durationInFrames={150}
         fps={30}
         width={1920}
         height={1080}
