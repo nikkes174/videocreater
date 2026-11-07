@@ -76,7 +76,7 @@ shop_video/src/components/blackphantom/LogoShrinkLockup.tsx adapts the shrink, d
 
 ## video-shotcraft — beat-cut-moves motion principles
 
-`src/components/blackphantom/BeatCutTransition.tsx` adapts deterministic hard-cut flash, camera settle, shutter decay, micro-shake, focus brackets, and bloom timing from PaparazziFlash for the BLACKPHANTOM service transitions. All service artwork and content are original to this project.
+`src/components/blackphantom/BeatCutTransition.tsx` adapts the hard-cut exposure flash, six-frame camera settle, shutter decay, discrete shot changes, and smooth hold pullback from PaparazziFlash for the BLACKPHANTOM service sequence. All service illustrations and content are original to this project.
 
 - Original component: <https://github.com/Vincentwei1021/video-shotcraft/blob/main/demos/rhythm/beat-cut-moves/PaparazziFlash.tsx>
 - License: Apache License 2.0, included at `src/vendor/videoShotcraft/LICENSE`.
