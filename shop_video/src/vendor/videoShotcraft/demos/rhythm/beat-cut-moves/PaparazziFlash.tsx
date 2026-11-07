@@ -33,10 +33,11 @@ const hash = (i: number) => {
 };
 
 type View = { scale: number; cx: number; cy: number };
-const VIEW_WIDE: View = { scale: 1.0, cx: 960, cy: 540 };
-const VIEW_CARD: View = { scale: 1.6, cx: 960, cy: 466 };
-const VIEW_DETAIL: View = { scale: 2.8, cx: 1161, cy: 517 };
+const VIEW_WIDE: View = { scale: 1, cx: 960, cy: 540 };
+const VIEW_CARD: View = { scale: 1.6, cx: 960, cy: 560 };
+const VIEW_DETAIL: View = { scale: 2.8, cx: 820, cy: 440 };
 const STILLS = [VIEW_WIDE, VIEW_CARD, VIEW_DETAIL];
+const WEBSITE_CARD = { x: 590, y: 176, w: 740, h: 780 };
 
 const project = (r: { x: number; y: number; w: number; h: number }, v: View) => ({
   x: (r.x - v.cx) * v.scale + 960,
@@ -69,39 +70,34 @@ const WebsiteScene: React.FC<{ f: number; live: boolean }> = ({ f, live }) => {
     <div style={{ position: "absolute", left: 245, top: 116, width: 1430, height: 850, border: "1px solid rgba(182,190,200,.08)", transform: `scale(${live ? (1.01 + 0.015 * ramp(f, 0, F1, EASE.smooth)) : 1})`, transformOrigin: "center", opacity: 0.6 }} />
 
     {/* Main website window: same scene at three camera crops. */}
-    <div style={{ position: "absolute", left: 590, top: 176, width: 740, height: 780, borderRadius: 28, overflow: "hidden", background: "linear-gradient(160deg,#202831 0%,#151B22 54%,#10151A 100%)", boxShadow: "inset 0 0 0 1.5px rgba(241,242,244,.16), inset 0 2px 0 rgba(255,255,255,.12), 0 60px 120px -40px rgba(0,0,0,.92)" }}>
+    <div style={{ position: "absolute", left: WEBSITE_CARD.x, top: WEBSITE_CARD.y, width: WEBSITE_CARD.w, height: WEBSITE_CARD.h, borderRadius: 28, overflow: "hidden", background: "linear-gradient(160deg,#202831 0%,#151B22 54%,#10151A 100%)", boxShadow: "inset 0 0 0 1.5px rgba(241,242,244,.16), inset 0 2px 0 rgba(255,255,255,.12), 0 60px 120px -40px rgba(0,0,0,.92)" }}>
       <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 78% 42% at 24% 0%,rgba(241,242,244,.09),transparent 72%)" }} />
       <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: 64, display: "flex", alignItems: "center", gap: 10, padding: "0 28px", background: "rgba(241,242,244,.055)", borderBottom: "1px solid rgba(241,242,244,.09)" }}>
         {[0,1,2].map((i) => <span key={i} style={{ width: 9, height: 9, borderRadius: "50%", background: i === 0 ? GOLD : "rgba(182,190,200,.42)" }} />)}
         <div style={{ marginLeft: 24, width: 300, height: 22, borderRadius: 12, background: "rgba(7,9,12,.42)", border: "1px solid rgba(182,190,200,.08)" }} />
       </div>
       <div style={{ position: "absolute", left: 46, right: 46, top: 94, height: 52, display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid rgba(182,190,200,.14)" }}>
-        <strong style={{ fontSize: 20, letterSpacing: 2 }}>BLACKPHANTOM</strong>
-        <span style={{ fontSize: 15, letterSpacing: 1.5, color: COLORS.silver }}>РЕШЕНИЯ　　О КОМПАНИИ</span>
-        <span style={{ color: GOLD, fontSize: 20 }}>↗</span>
+        <strong style={{ fontSize: 22, letterSpacing: 1.6 }}>BLACKPHANTOM</strong>
       </div>
 
-      <div style={{ position: "absolute", left: 22, top: 188, width: 630, height: 330 }}>
-        <div style={{ position: "absolute", left: 0, top: 8, width: 190, opacity: contentReveal, transform: `translateY(${(1-contentReveal)*16}px)` }}>
-          <div style={{ fontSize: 13, color: GOLD, letterSpacing: 3, fontWeight: 700 }}>ЦИФРОВАЯ СРЕДА БИЗНЕСА</div>
-          <div style={{ marginTop: 24, fontSize: 35, lineHeight: 1.14, fontWeight: 800, letterSpacing: -1.1 }}>Ваш бизнес<br/>онлайн</div>
-          <div style={{ marginTop: 16, width: 190, fontSize: 17, lineHeight: 1.55, color: COLORS.silver }}>Платформа, которая помогает бренду расти.</div>
-          <div style={{ marginTop: 22, width: 166, height: 42, display: "grid", placeItems: "center", borderRadius: 6, background: GOLD, color: "#11151B", fontSize: 15, fontWeight: 800 }}>Подробнее　↗</div>
+      <div style={{ position: "absolute", left: 22, top: 164, width: 630, height: 330 }}>
+        <div style={{ position: "absolute", left: 0, top: 8, width: 320, opacity: contentReveal, transform: `translateY(${(1-contentReveal)*16}px)` }}>
+          <div style={{ fontSize: 52, lineHeight: 1.02, fontWeight: 800, letterSpacing: -1.8 }}>Ваш бизнес<br/>онлайн</div>
+          <div style={{ marginTop: 18, width: 320, fontSize: 20, lineHeight: 1.45, color: COLORS.silver }}>Платформа, которая помогает бренду расти.</div>
+          <div style={{ marginTop: 20, width: 188, height: 48, display: "grid", placeItems: "center", borderRadius: 6, background: GOLD, color: "#11151B", fontSize: 18, fontWeight: 800 }}>Подробнее</div>
         </div>
-        <div style={{ position: "absolute", right: -50, top: 0, width: 276, height: 306, opacity: imageReveal, transform: `translateY(${(1-imageReveal)*20}px) scale(${.96+.04*imageReveal})` }}>
-          <div style={{ position: "absolute", inset: 12, border: "1px solid rgba(200,166,106,.35)", transform: "rotate(30deg)", boxShadow: "0 0 55px rgba(200,166,106,.1)" }} />
-          <div style={{ position: "absolute", inset: 45, border: "1px solid rgba(241,242,244,.28)", transform: "rotate(30deg)" }} />
-          <div style={{ position: "absolute", left: 89, top: 78, width: 112, height: 144, clipPath: "polygon(50% 0,100% 28%,82% 100%,18% 100%,0 28%)", background: "linear-gradient(145deg,#e3cf9e,#9d804d 64%,#55472e)", filter: "drop-shadow(0 24px 28px rgba(0,0,0,.52))" }} />
-          <div style={{ position: "absolute", left: 48, right: 48, bottom: 20, height: 1, background: "linear-gradient(90deg,transparent,rgba(200,166,106,.72),transparent)" }} />
+        <div style={{ position: "absolute", left: 566, top: 6, width: 140, height: 286, opacity: imageReveal, transform: `translateY(${(1-imageReveal)*20}px) scale(${.96+.04*imageReveal})` }}>
+          <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 72% 65% at 50% 48%,rgba(200,166,106,.25),transparent 74%)" }} />
+          <div style={{ position: "absolute", left: 18, top: 43, width: 104, height: 184, clipPath: "polygon(50% 0,100% 23%,84% 100%,16% 100%,0 23%)", background: "linear-gradient(145deg,#f0dfb6 0%,#c8a66a 36%,#8d6e3d 72%,#443821 100%)", filter: "drop-shadow(0 28px 32px rgba(0,0,0,.58))" }} />
+          <div style={{ position: "absolute", left: 28, top: 240, width: 84, height: 2, background: "linear-gradient(90deg,transparent,rgba(200,166,106,.9),transparent)" }} />
         </div>
       </div>
 
       <div style={{ position: "absolute", left: 54, right: 54, top: 560, height: 1, background: "rgba(241,242,244,.14)" }} />
       <div style={{ position: "absolute", left: 54, top: 592, display: "flex", gap: 16 }}>
-        {[0,1,2].map((i) => <div key={i} style={{ width: 180, height: 132, padding: 14, borderRadius: 10, background: "rgba(241,242,244,.045)", border: "1px solid rgba(182,190,200,.15)", opacity: ramp(f, 18+i*5, 15, EASE.out), transform: `translateY(${(1-ramp(f,18+i*5,15,EASE.out))*18}px)` }}>
-          <div style={{ height: 62, borderRadius: 6, background: i === 1 ? "linear-gradient(135deg,rgba(200,166,106,.36),rgba(200,166,106,.06))" : "linear-gradient(135deg,rgba(182,190,200,.18),rgba(182,190,200,.04))" }} />
-          <div style={{ width: 96, height: 6, marginTop: 13, borderRadius: 4, background: "rgba(241,242,244,.5)" }} />
-          <div style={{ width: 138, height: 4, marginTop: 8, borderRadius: 3, background: "rgba(182,190,200,.25)" }} />
+        {["Привлекать клиентов", "Ускорять процессы", "Усиливать бренд"].map((label, i) => <div key={label} style={{ width: 180, height: 132, padding: 16, borderRadius: 10, background: "rgba(241,242,244,.045)", border: "1px solid rgba(182,190,200,.15)", display: "flex", flexDirection: "column", justifyContent: "space-between", opacity: ramp(f, 18+i*5, 15, EASE.out), transform: `translateY(${(1-ramp(f,18+i*5,15,EASE.out))*18}px)` }}>
+          <div style={{ width: 34, height: 3, borderRadius: 3, background: i === 1 ? GOLD : "rgba(182,190,200,.58)" }} />
+          <div style={{ color: COLORS.platinum, fontSize: 18, lineHeight: 1.2, fontWeight: 700 }}>{label}</div>
         </div>)}
       </div>
     </div>
@@ -143,7 +139,9 @@ export const PaparazziFlash: React.FC = () => {
     const fNext = FLASHES[nextIdx];
     const start = nextIdx === 0 ? F1 - 9 : fNext - AF;
     if (frame >= start && frame < fNext) {
-      const target = nextIdx === 0 ? { x: 610 - 30, y: 176 - 30, w: 760, h: 840 } : viewRect(STILLS[nextIdx]);
+      const target = nextIdx === 0
+        ? { x: WEBSITE_CARD.x - 30, y: WEBSITE_CARD.y - 30, w: WEBSITE_CARD.w + 60, h: WEBSITE_CARD.h + 60 }
+        : viewRect(STILLS[nextIdx]);
       const r = project(target, curView);
       const q = ramp(frame, start, 6, EASE.snappy);
       const k = mix(1.3, 1, q);
@@ -154,7 +152,8 @@ export const PaparazziFlash: React.FC = () => {
     }
   }
 
-  const serviceCopyIn = ramp(frame, F3 + DECAY, 8, EASE.out);
+  const serviceTitleIn = ramp(frame, 8, 14, EASE.out);
+  const serviceDescriptionIn = ramp(frame, 20, 16, EASE.out);
   return <AbsoluteFill style={{ background: COLORS.background, overflow: "hidden" }}>
     <div style={{ position: "absolute", inset: 0, transformOrigin: "960px 540px", transform: `translate(${jx.toFixed(2)}px,${(jy+settleY).toFixed(2)}px) scale(${(settleScale*holdPush*1.012).toFixed(5)})`, filter: seg >= 0 ? `brightness(${(1+0.22*bloom).toFixed(3)}) contrast(${(1.06-0.14*bloom).toFixed(3)}) saturate(${(0.82-0.2*bloom).toFixed(3)})` : undefined }}>
       {seg === -1
@@ -163,10 +162,12 @@ export const PaparazziFlash: React.FC = () => {
     </div>
 
     {/* Fixed screen-space service copy stays readable through the detail hold. */}
-    <div style={{ position: "absolute", left: 112, bottom: 108, width: 480, opacity: serviceCopyIn, transform: `translateY(${(1-serviceCopyIn)*10}px)`, color: COLORS.platinum, fontFamily: "Manrope, sans-serif", textShadow: "0 2px 12px rgba(0,0,0,.85)" }}>
-      <div style={{ color: GOLD, fontSize: 18, fontWeight: 800, letterSpacing: 4, marginBottom: 12 }}>BLACKPHANTOM</div>
-      <div style={{ fontSize: 54, lineHeight: 1.08, fontWeight: 800, letterSpacing: -1.5 }}>Веб-разработка</div>
-      <div style={{ marginTop: 14, maxWidth: 460, color: COLORS.silver, fontSize: 23, lineHeight: 1.4, fontWeight: 500 }}>Создаём сайты и цифровые платформы, которые привлекают клиентов, автоматизируют процессы и усиливают бренд.</div>
+    <div style={{ position: "absolute", left: 16, bottom: 32, width: 280, color: COLORS.platinum, fontFamily: "Manrope, sans-serif", textShadow: "0 2px 12px rgba(0,0,0,.85)" }}>
+      <div style={{ opacity: serviceTitleIn, transform: `translateY(${(1-serviceTitleIn)*10}px)` }}>
+        <div style={{ color: GOLD, fontSize: 13, fontWeight: 800, letterSpacing: 1.6, marginBottom: 6 }}>BLACKPHANTOM</div>
+        <div style={{ fontSize: 34, lineHeight: 1.08, fontWeight: 800, letterSpacing: -0.8 }}>Веб-разработка</div>
+      </div>
+      <div style={{ marginTop: 8, maxWidth: 280, color: COLORS.silver, fontSize: 17, lineHeight: 1.3, fontWeight: 500, opacity: serviceDescriptionIn, transform: `translateY(${(1-serviceDescriptionIn)*10}px)` }}>Создаём сайты и цифровые платформы, которые привлекают клиентов, автоматизируют процессы и усиливают бренд.</div>
     </div>
 
     <Vignette strength={[0.5,0.5,0.56,0.62][seg+1]} inner={0.42} color="#000000" />
