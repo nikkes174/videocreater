@@ -3,7 +3,12 @@
 // Modified for BLACKPHANTOM: card data, palette, 60-frame beats, 36-frame dwell, and captions.
 // The original CSS 3D ring, dual faces, highlight push, depth shading, reflection, and rolling caption mechanics are retained.
 import React from "react";
-import { AbsoluteFill, useCurrentFrame } from "remotion";
+import {
+  AbsoluteFill,
+  Img,
+  staticFile,
+  useCurrentFrame,
+} from "remotion";
 import { EASE } from "../../vendor/videoShotcraft/demos/_fixtures/Polish";
 import { CAROUSEL_CARDS, CAROUSEL_CONFIG, type CarouselCard } from "../../config/blackphantomCarousel";
 import { ManropeFontFaces } from "./scenes/ManropeFontFaces";
@@ -394,7 +399,7 @@ export const Carousel3D: React.FC = () => {
           position: "absolute",
           left: 0,
           right: 0,
-          top: 42,
+          top: 36,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -403,16 +408,37 @@ export const Carousel3D: React.FC = () => {
       >
         <div
           style={{
-            fontFamily: "Manrope, sans-serif",
-            fontSize: 38,
-            fontWeight: 800,
-            letterSpacing: 2,
-            color: "#F1F2F4",
-            textAlign: "center",
-            textShadow: "0 2px 14px rgba(0,0,0,.45)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 16,
           }}
         >
-          BLACKPHANTOM
+          <Img
+            src={staticFile("assets/blackphantom/logo.png")}
+            style={{
+              width: 54,
+              height: 54,
+              objectFit: "contain",
+              display: "block",
+              flexShrink: 0,
+            }}
+          />
+
+          <div
+            style={{
+              fontFamily: "Manrope, sans-serif",
+              fontSize: 38,
+              fontWeight: 800,
+              letterSpacing: 2,
+              color: "#F1F2F4",
+              textAlign: "center",
+              whiteSpace: "nowrap",
+              textShadow: "0 2px 14px rgba(0,0,0,.45)",
+            }}
+          >
+            BLACKPHANTOM
+          </div>
         </div>
       </div>
 
