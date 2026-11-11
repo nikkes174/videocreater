@@ -40,6 +40,8 @@ import { BlackPhantomWebDevelopment } from "./scenes/BlackPhantomWebDevelopment"
 import { BlackPhantomAutomation } from "./scenes/BlackPhantomAutomation";
 import { BlackPhantomEcommerce } from "./scenes/BlackPhantomEcommerce";
 import { BlackPhantomSoftware } from "./scenes/BlackPhantomSoftware";
+import { BlackPhantomCarousel3D } from "./scenes/BlackPhantomCarousel3D";
+import { CAROUSEL_DURATION } from "./config/blackphantomCarousel";
 import { PAPARAZZI_FLASH_DURATION } from "./vendor/videoShotcraft/demos/rhythm/beat-cut-moves/PaparazziFlash";
 
 const TEST_DURATION_SECONDS = 3.5;
@@ -75,6 +77,14 @@ export const RemotionRoot: React.FC = () => {
         id="BlackPhantomSoftware"
         component={BlackPhantomSoftware}
         durationInFrames={150}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="BlackPhantomCarousel3D"
+        component={BlackPhantomCarousel3D}
+        durationInFrames={CAROUSEL_DURATION}
         fps={30}
         width={1920}
         height={1080}
