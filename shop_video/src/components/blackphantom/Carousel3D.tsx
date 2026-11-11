@@ -28,10 +28,8 @@ const DWELL = CAROUSEL_CONFIG.dwellFrames;
 const RING_Y = 470;
 const FLOOR = CH / 2 + 10;
 const CAPTION = {
-  top: 824,
+  top: 846,
   height: 180,
-  titleSize: 58,
-  descriptionSize: 25,
 } as const;
 
 export const CAROUSEL_3D_DURATION = N * BEAT;
@@ -68,8 +66,8 @@ const CardFace: React.FC<CardFaceProps> = ({ card, highlighted }) => (
     style={{
       position: "absolute",
       inset: 0,
+      padding: "34px 28px 30px",
       boxSizing: "border-box",
-      padding: 28,
       display: "flex",
       flexDirection: "column",
       color: COLORS.platinum,
@@ -78,56 +76,33 @@ const CardFace: React.FC<CardFaceProps> = ({ card, highlighted }) => (
   >
     <div
       style={{
+        flex: 1,
+        minHeight: 0,
         display: "flex",
-        justifyContent: "space-between",
-        gap: 10,
-        fontSize: 17,
-        fontWeight: 800,
-        lineHeight: 1.2,
-        color: COLORS.gold,
+        justifyContent: "center",
+        alignItems: "center",
+        opacity: 0.55 + highlighted * 0.45,
       }}
     >
-      <span>{card.number} / 08</span>
-      <span style={{ textAlign: "right" }}>{card.category}</span>
+      <ServiceIcon name={card.icon} size={126} color={COLORS.gold} highlighted={highlighted} />
     </div>
 
     <div
       style={{
-        position: "relative",
-        flex: 1,
-        display: "grid",
-        placeItems: "center",
-        opacity: 0.55 + highlighted * 0.45,
+        width: "100%",
+        height: 1,
+        flexShrink: 0,
+        marginBottom: 18,
+        background: "rgba(200,166,106,.22)",
       }}
-    >
-      <div
-        style={{
-          position: "absolute",
-          width: 190,
-          height: 190,
-          borderRadius: "50%",
-          background: `radial-gradient(circle, ${COLORS.goldGlow} 0%, rgba(200,166,106,0) 72%)`,
-          opacity: 0.25 + highlighted * 0.55,
-        }}
-      />
-      <ServiceIcon name={card.icon} size={126} color={COLORS.gold} highlighted={highlighted} />
-      <div
-        style={{
-          position: "absolute",
-          bottom: 12,
-          width: 108,
-          height: 1,
-          background: `linear-gradient(90deg, transparent, rgba(200,166,106,${0.18 + highlighted * 0.46}), transparent)`,
-        }}
-      />
-    </div>
+    />
 
     <div
       style={{
         fontSize: 28,
         fontWeight: 800,
         lineHeight: 1.12,
-        overflowWrap: "anywhere",
+        overflowWrap: "break-word",
       }}
     >
       {card.title}
@@ -139,7 +114,6 @@ const CardFace: React.FC<CardFaceProps> = ({ card, highlighted }) => (
         fontSize: 19,
         lineHeight: 1.35,
         color: COLORS.silver,
-        overflowWrap: "break-word",
       }}
     >
       {card.description}
@@ -418,19 +392,27 @@ export const Carousel3D: React.FC = () => {
       <div
         style={{
           position: "absolute",
-          left: 120,
-          top: 96,
+          left: 0,
+          right: 0,
+          top: 42,
           display: "flex",
-          alignItems: "baseline",
-          gap: 18,
-          fontFamily: "Manrope, sans-serif",
+          justifyContent: "center",
+          alignItems: "center",
+          pointerEvents: "none",
         }}
       >
-        <div style={{ color: COLORS.platinum, fontSize: 24, fontWeight: 800, letterSpacing: 2.4 }}>
+        <div
+          style={{
+            fontFamily: "Manrope, sans-serif",
+            fontSize: 38,
+            fontWeight: 800,
+            letterSpacing: 2,
+            color: "#F1F2F4",
+            textAlign: "center",
+            textShadow: "0 2px 14px rgba(0,0,0,.45)",
+          }}
+        >
           BLACKPHANTOM
-        </div>
-        <div style={{ color: COLORS.silver, fontSize: 15, fontWeight: 600, letterSpacing: 1.4 }}>
-          IT-КОМПАНИЯ
         </div>
       </div>
 
@@ -441,17 +423,19 @@ export const Carousel3D: React.FC = () => {
           right: 0,
           top: CAPTION.top,
           height: CAPTION.height,
+          padding: "0 140px",
+          boxSizing: "border-box",
           overflow: "hidden",
           fontFamily: "Manrope, sans-serif",
           textAlign: "center",
         }}
       >
         {[0, 1].map((slot) => {
-          const card = CAROUSEL_CARDS[(k + slot) % N];
+          const activeCard = CAROUSEL_CARDS[(k + slot) % N];
           const y = (slot - roll) * CAPTION.height;
           return (
             <div
-              key={`${card.id}-${slot}`}
+              key={`${activeCard.id}-${slot}`}
               style={{
                 position: "absolute",
                 inset: 0,
@@ -465,41 +449,27 @@ export const Carousel3D: React.FC = () => {
             >
               <div
                 style={{
-                  display: "flex",
-                  alignItems: "baseline",
-                  justifyContent: "center",
-                  gap: 22,
-                  maxWidth: 1500,
-                  padding: "0 30px",
+                  fontFamily: "Manrope, sans-serif",
+                  fontSize: 62,
+                  fontWeight: 800,
+                  lineHeight: 1.08,
+                  color: "#F1F2F4",
                 }}
               >
-                <span style={{ color: COLORS.gold, fontSize: 22, fontWeight: 700, letterSpacing: 1.5 }}>
-                  {card.number} / 08
-                </span>
-                <span
-                  style={{
-                    color: COLORS.platinum,
-                    fontSize: CAPTION.titleSize,
-                    fontWeight: 800,
-                    lineHeight: 1.08,
-                    letterSpacing: -1.2,
-                  }}
-                >
-                  {card.title}
-                </span>
+                {activeCard.title}
               </div>
               <div
                 style={{
-                  marginTop: 12,
-                  maxWidth: 1240,
-                  padding: "0 24px",
-                  color: COLORS.silver,
-                  fontSize: CAPTION.descriptionSize,
-                  lineHeight: 1.3,
+                  maxWidth: 980,
+                  marginTop: 14,
+                  fontFamily: "Manrope, sans-serif",
+                  fontSize: 24,
                   fontWeight: 500,
+                  lineHeight: 1.35,
+                  color: "#B6BEC8",
                 }}
               >
-                {card.description}
+                {activeCard.description}
               </div>
             </div>
           );
