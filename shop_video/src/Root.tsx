@@ -43,6 +43,8 @@ import { BlackPhantomSoftware } from "./scenes/BlackPhantomSoftware";
 import { BlackPhantomCarousel3D } from "./scenes/BlackPhantomCarousel3D";
 import { CAROUSEL_DURATION } from "./config/blackphantomCarousel";
 import { PAPARAZZI_FLASH_DURATION } from "./vendor/videoShotcraft/demos/rhythm/beat-cut-moves/PaparazziFlash";
+import { BlackPhantomDataLandscape } from "./scenes/BlackPhantomDataLandscape";
+import { DATA_LANDSCAPE } from "./config/blackphantomDataLandscape";
 
 const TEST_DURATION_SECONDS = 3.5;
 
@@ -56,6 +58,14 @@ export const RemotionRoot: React.FC = () => {
         fps={30}
         width={1920}
         height={1080}
+      />
+      <Composition
+        id="BlackPhantomDataLandscape"
+        component={BlackPhantomDataLandscape}
+        durationInFrames={DATA_LANDSCAPE.durationInFrames}
+        fps={DATA_LANDSCAPE.fps}
+        width={DATA_LANDSCAPE.width}
+        height={DATA_LANDSCAPE.height}
       />
       <Composition
         id="BlackPhantomAutomation"
