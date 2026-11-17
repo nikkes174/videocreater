@@ -3,6 +3,7 @@ import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { EASE, Grain, Vignette, mix, ramp } from "../../vendor/videoShotcraft/demos/_fixtures/Polish";
 
 export const PAPARAZZI_FLASH_DURATION = 150;
+export const PAPARAZZI_CAMERA_DURATION = 150;
 
 export const COLORS = {
   background: "#07090C",
@@ -32,6 +33,7 @@ export type PaparazziSceneProps = {
   effectsBeforeCopy?: boolean;
   views: readonly [CameraView, CameraView, CameraView];
   focusRect: FocusRect;
+  stageHeight?: number;
   Scene: React.ComponentType<{
     f: number;
     live: boolean;
@@ -62,8 +64,7 @@ const F2 = 52;
 const F3 = 70;
 const FLASHES = [F1, F2, F3] as const;
 const SETTLE = 6;
-const DECAY = 4;
-const BLOOM = 7;
+const SHAKE_DURATION = 4;
 const AF = 8;
 
 const hash = (i: number) => {
@@ -129,25 +130,23 @@ export const PaparazziCamera: React.FC<PaparazziSceneProps> = ({
   effectsBeforeCopy = false,
   views,
   focusRect,
+  stageHeight = 1080,
   Scene,
 }) => {
   const frame = useCurrentFrame();
+  const contentOffsetY = (stageHeight - 1080) / 2;
   let seg = -1;
   for (let i = 0; i < FLASHES.length; i++) if (frame >= FLASHES[i]) seg = i;
   let settleScale = 1;
   let settleY = 0;
-  let bloom = 0;
   if (seg >= 0) {
     const t = 1 - ramp(frame, FLASHES[seg], SETTLE, EASE.out);
     settleScale = 1 + 0.03 * t;
     settleY = -16 * t;
-    bloom = 1 - ramp(frame, FLASHES[seg], BLOOM, EASE.out);
   }
-  let flash = 0;
-  for (const f of FLASHES) if (frame >= f && frame <= f + DECAY) flash = Math.max(flash, 0.95 * (1 - ramp(frame, f, DECAY, EASE.out)));
-  const inFlash = FLASHES.some((f) => frame >= f && frame < f + DECAY);
-  const jx = inFlash ? 2 * (hash(frame * 7 + 1) * 2 - 1) : 0;
-  const jy = inFlash ? 2 * (hash(frame * 13 + 5) * 2 - 1) : 0;
+  const inShake = FLASHES.some((f) => frame >= f && frame < f + SHAKE_DURATION);
+  const jx = inShake ? 2 * (hash(frame * 7 + 1) * 2 - 1) : 0;
+  const jy = inShake ? 2 * (hash(frame * 13 + 5) * 2 - 1) : 0;
   const liveP = ramp(frame, 0, F1, EASE.smooth);
   const liveScale = mix(1.04, 1.1, liveP);
   const holdPush = seg === 2 ? mix(1, 1.015, ramp(frame, F3 + SETTLE, 64, EASE.smooth)) : 1;
@@ -166,7 +165,7 @@ export const PaparazziCamera: React.FC<PaparazziSceneProps> = ({
       const q = ramp(frame, start, 6, EASE.snappy);
       const k = mix(1.3, 1, q);
       const cx = r.x + r.w / 2;
-      const cy = r.y + r.h / 2;
+      const cy = r.y + r.h / 2 + contentOffsetY;
       const locked = frame >= fNext - 3;
       af = <Brackets x={cx-(r.w*k)/2} y={cy-(r.h*k)/2} w={r.w*k} h={r.h*k} color={locked ? GOLD : COLORS.platinum} width={locked ? 4 : 3} opacity={locked ? 1 : 0.85} arm={60} />;
     }
@@ -190,7 +189,7 @@ export const PaparazziCamera: React.FC<PaparazziSceneProps> = ({
   </>;
 
   return <AbsoluteFill style={{ background: COLORS.background, overflow: "hidden" }}>
-    <div style={{ position: "absolute", inset: 0, transformOrigin: "960px 540px", transform: `translate(${jx.toFixed(2)}px,${(jy+settleY).toFixed(2)}px) scale(${(settleScale*holdPush*1.012).toFixed(5)})`, filter: seg >= 0 ? `brightness(${(1+0.22*bloom).toFixed(3)}) contrast(${(1.06-0.14*bloom).toFixed(3)}) saturate(${(0.82-0.2*bloom).toFixed(3)})` : undefined }}>
+    <div style={{ position: "absolute", left: 0, top: contentOffsetY, width: 1920, height: 1080, transformOrigin: "960px 540px", transform: `translate(${jx.toFixed(2)}px,${(jy+settleY).toFixed(2)}px) scale(${(settleScale*holdPush*1.012).toFixed(5)})` }}>
       {seg === -1
         ? <div style={{ position: "absolute", inset: 0, transformOrigin: "960px 540px", transform: `scale(${liveScale.toFixed(5)})` }}><Scene f={frame} live /></div>
         : <Still view={views[seg]} f={FLASHES[seg]} Scene={Scene} />}
@@ -199,7 +198,6 @@ export const PaparazziCamera: React.FC<PaparazziSceneProps> = ({
     {effectsBeforeCopy && cinematicEffects}
     {serviceCopy}
     {!effectsBeforeCopy && cinematicEffects}
-    <svg width={1920} height={1080} style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>{af}</svg>
-    {flash > 0.004 && <AbsoluteFill style={{ opacity: flash, pointerEvents: "none", background: "radial-gradient(ellipse 80% 90% at 50% 45%, #ffffff 0%, #ffffff 45%, rgba(250,250,255,0.86) 100%)" }} />}
+    <svg width={1920} height={stageHeight} style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>{af}</svg>
   </AbsoluteFill>;
 };

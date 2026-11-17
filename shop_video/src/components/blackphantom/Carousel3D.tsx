@@ -25,17 +25,14 @@ const COLORS = {
 } as const;
 
 const N = CAROUSEL_CONFIG.count;
-const RADIUS = CAROUSEL_CONFIG.radius;
-const CW = CAROUSEL_CONFIG.cardWidth;
-const CH = CAROUSEL_CONFIG.cardHeight;
+const BASE_RADIUS = CAROUSEL_CONFIG.radius;
+const BASE_CW = CAROUSEL_CONFIG.cardWidth;
+const BASE_CH = CAROUSEL_CONFIG.cardHeight;
 const BEAT = CAROUSEL_CONFIG.framesPerCard;
 const DWELL = CAROUSEL_CONFIG.dwellFrames;
-const RING_Y = 470;
-const FLOOR = CH / 2 + 10;
-const CAPTION = {
-  top: 846,
-  height: 180,
-} as const;
+const ORIGINAL_RING_Y = 470;
+const ORIGINAL_CAPTION_TOP = 846;
+const ORIGINAL_CAPTION_HEIGHT = 180;
 
 export const CAROUSEL_3D_DURATION = N * BEAT;
 
@@ -64,14 +61,15 @@ const highlightAt = (angle: number) =>
 type CardFaceProps = {
   card: CarouselCard;
   highlighted: number;
+  stories?: boolean;
 };
 
-const CardFace: React.FC<CardFaceProps> = ({ card, highlighted }) => (
+const CardFace: React.FC<CardFaceProps> = ({ card, highlighted, stories = false }) => (
   <div
     style={{
       position: "absolute",
       inset: 0,
-      padding: "34px 28px 30px",
+      padding: stories ? "34px 32px 32px" : "34px 28px 30px",
       boxSizing: "border-box",
       display: "flex",
       flexDirection: "column",
@@ -89,7 +87,7 @@ const CardFace: React.FC<CardFaceProps> = ({ card, highlighted }) => (
         opacity: 0.55 + highlighted * 0.45,
       }}
     >
-      <ServiceIcon name={card.icon} size={126} color={COLORS.gold} highlighted={highlighted} />
+      <ServiceIcon name={card.icon} size={stories ? 164 : 126} color={COLORS.gold} highlighted={highlighted} />
     </div>
 
     <div
@@ -104,7 +102,7 @@ const CardFace: React.FC<CardFaceProps> = ({ card, highlighted }) => (
 
     <div
       style={{
-        fontSize: 28,
+        fontSize: stories ? 42 : 28,
         fontWeight: 800,
         lineHeight: 1.12,
         overflowWrap: "break-word",
@@ -115,9 +113,9 @@ const CardFace: React.FC<CardFaceProps> = ({ card, highlighted }) => (
 
     <div
       style={{
-        marginTop: 14,
-        fontSize: 19,
-        lineHeight: 1.35,
+        marginTop: stories ? 17 : 14,
+        fontSize: stories ? 27 : 19,
+        lineHeight: stories ? 1.34 : 1.35,
         color: COLORS.silver,
       }}
     >
@@ -212,8 +210,18 @@ const ServiceIcon: React.FC<ServiceIconProps> = ({ name, size, color, highlighte
   );
 };
 
-export const Carousel3D: React.FC = () => {
+export const Carousel3D: React.FC<{ stageHeight?: number; layout?: "wide" | "stories" }> = ({ stageHeight = 1080, layout = "wide" }) => {
   const frame = useCurrentFrame();
+  const stories = layout === "stories";
+  const centerX = stories ? 540 : 960;
+  const verticalOffset = stories ? 0 : (stageHeight - 1080) / 2;
+  const radius = stories ? 380 : BASE_RADIUS;
+  const cardWidth = stories ? 520 : BASE_CW;
+  const cardHeight = stories ? 660 : BASE_CH;
+  const captionHeight = stories ? 320 : ORIGINAL_CAPTION_HEIGHT;
+  const ringY = stories ? 810 : ORIGINAL_RING_Y + verticalOffset;
+  const floorY = stories ? 260 : cardHeight / 2 + 10;
+  const captionTop = stories ? 1400 : ORIGINAL_CAPTION_TOP + stageHeight - 1080;
   const spin = turnAt(frame) * 360;
   const azimuth = (i: number) => ((((i * 360) / N - spin) % 360) + 540) % 360 - 180;
   const depthOf = (i: number) => (1 - Math.cos((azimuth(i) * Math.PI) / 180)) / 2;
@@ -254,7 +262,7 @@ export const Carousel3D: React.FC = () => {
     const card = CAROUSEL_CARDS[i];
     const cardContent = (
       <>
-        <CardFace card={card} highlighted={highlight} />
+          <CardFace card={card} highlighted={highlight} stories={stories} />
         <div
           style={{
             position: "absolute",
@@ -272,12 +280,12 @@ export const Carousel3D: React.FC = () => {
         key={`${reflected ? "reflection" : "card"}-${i}`}
         style={{
           position: "absolute",
-          left: -CW / 2,
-          top: -CH / 2,
-          width: CW,
-          height: CH,
+          left: -cardWidth / 2,
+          top: -cardHeight / 2,
+          width: cardWidth,
+          height: cardHeight,
           transformStyle: "preserve-3d",
-          transform: `rotateY(${i * 360 / N}deg) translateZ(${(RADIUS + 44 * highlightOf(i)).toFixed(2)}px)`,
+          transform: `rotateY(${i * 360 / N}deg) translateZ(${(radius + 44 * highlightOf(i)).toFixed(2)}px)`,
         }}
       >
         <div style={planeStyle}>{cardContent}</div>
@@ -300,10 +308,10 @@ export const Carousel3D: React.FC = () => {
       <div
         style={{
           position: "absolute",
-          left: 960 - 520,
-          top: RING_Y + 120,
-          width: 1040,
-          height: 420,
+          left: centerX - (stories ? 390 : 520),
+          top: ringY + 120,
+          width: stories ? 780 : 1040,
+          height: stories ? 360 : 420,
           borderRadius: "50%",
           background: `radial-gradient(ellipse at 50% 40%, rgba(200,166,106,.16) 0%, rgba(200,166,106,0) 65%)`,
         }}
@@ -314,27 +322,27 @@ export const Carousel3D: React.FC = () => {
           position: "absolute",
           inset: 0,
           perspective: "2200px",
-          perspectiveOrigin: `50% ${RING_Y - 60}px`,
+          perspectiveOrigin: `50% ${ringY - (stories ? 80 : 60)}px`,
         }}
       >
         <div
           style={{
             position: "absolute",
-            left: 960,
-            top: RING_Y,
+            left: centerX,
+            top: ringY,
             width: 0,
             height: 0,
             transformStyle: "preserve-3d",
-            transform: `translateZ(${-RADIUS}px) rotateX(-9deg)`,
+            transform: `translateZ(${-radius}px) rotateX(-9deg)`,
           }}
         >
           <div
             style={{
               position: "absolute",
-              left: -RADIUS * 1.35,
-              top: FLOOR - RADIUS * 1.35,
-              width: RADIUS * 2.7,
-              height: RADIUS * 2.7,
+              left: -radius * 1.35,
+              top: floorY - radius * 1.35,
+              width: radius * 2.7,
+              height: radius * 2.7,
               borderRadius: "50%",
               transform: "rotateX(90deg)",
               background: "radial-gradient(circle, rgba(200,166,106,.10) 0%, rgba(200,166,106,.025) 45%, transparent 66%)",
@@ -342,29 +350,29 @@ export const Carousel3D: React.FC = () => {
           />
 
           <svg
-            width={RADIUS * 2.4}
-            height={RADIUS * 2.4}
-            viewBox={`${-RADIUS * 1.2} ${-RADIUS * 1.2} ${RADIUS * 2.4} ${RADIUS * 2.4}`}
+            width={radius * 2.4}
+            height={radius * 2.4}
+            viewBox={`${-radius * 1.2} ${-radius * 1.2} ${radius * 2.4} ${radius * 2.4}`}
             style={{
               position: "absolute",
-              left: -RADIUS * 1.2,
-              top: FLOOR - RADIUS * 1.2,
+              left: -radius * 1.2,
+              top: floorY - radius * 1.2,
               transform: `rotateX(90deg) rotateZ(${spin}deg)`,
               overflow: "visible",
             }}
           >
-            <circle r={RADIUS * 1.08} fill="none" stroke="rgba(241,242,244,.08)" strokeWidth={2} />
+            <circle r={radius * 1.08} fill="none" stroke="rgba(241,242,244,.08)" strokeWidth={2} />
             {Array.from({ length: 96 }, (_, index) => {
               const angle = (index / 96) * Math.PI * 2;
-              const r0 = RADIUS * (index % 12 === 0 ? 1.02 : 1.05);
+              const r0 = radius * (index % 12 === 0 ? 1.02 : 1.05);
               const major = index % 12 === 0;
               return (
                 <line
                   key={index}
                   x1={r0 * Math.cos(angle)}
                   y1={r0 * Math.sin(angle)}
-                  x2={RADIUS * 1.08 * Math.cos(angle)}
-                  y2={RADIUS * 1.08 * Math.sin(angle)}
+                  x2={radius * 1.08 * Math.cos(angle)}
+                  y2={radius * 1.08 * Math.sin(angle)}
                   stroke={major ? "rgba(200,166,106,.38)" : "rgba(241,242,244,.09)"}
                   strokeWidth={major ? 3 : 2}
                 />
@@ -376,7 +384,7 @@ export const Carousel3D: React.FC = () => {
             style={{
               position: "absolute",
               transformStyle: "preserve-3d",
-              transform: `translateY(${FLOOR * 2}px) scaleY(-1) rotateY(${-spin}deg)`,
+              transform: `translateY(${floorY * 2}px) scaleY(-1) rotateY(${-spin}deg)`,
             }}
           >
             {Array.from({ length: N }, (_, i) => renderCard(i, true))}
@@ -399,7 +407,7 @@ export const Carousel3D: React.FC = () => {
           position: "absolute",
           left: 0,
           right: 0,
-          top: 36,
+          top: stories ? 96 : 36,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -417,8 +425,8 @@ export const Carousel3D: React.FC = () => {
           <Img
             src={staticFile("assets/blackphantom/logo.png")}
             style={{
-              width: 54,
-              height: 54,
+              width: stories ? 66 : 54,
+              height: stories ? 66 : 54,
               objectFit: "contain",
               display: "block",
               flexShrink: 0,
@@ -428,7 +436,7 @@ export const Carousel3D: React.FC = () => {
           <div
             style={{
               fontFamily: "Manrope, sans-serif",
-              fontSize: 38,
+              fontSize: stories ? 42 : 38,
               fontWeight: 800,
               letterSpacing: 2,
               color: "#F1F2F4",
@@ -447,9 +455,9 @@ export const Carousel3D: React.FC = () => {
           position: "absolute",
           left: 0,
           right: 0,
-          top: CAPTION.top,
-          height: CAPTION.height,
-          padding: "0 140px",
+          top: captionTop,
+          height: captionHeight,
+          padding: stories ? "0 76px" : "0 140px",
           boxSizing: "border-box",
           overflow: "hidden",
           fontFamily: "Manrope, sans-serif",
@@ -458,7 +466,7 @@ export const Carousel3D: React.FC = () => {
       >
         {[0, 1].map((slot) => {
           const activeCard = CAROUSEL_CARDS[(k + slot) % N];
-          const y = (slot - roll) * CAPTION.height;
+          const y = (slot - roll) * captionHeight;
           return (
             <div
               key={`${activeCard.id}-${slot}`}
@@ -476,7 +484,7 @@ export const Carousel3D: React.FC = () => {
               <div
                 style={{
                   fontFamily: "Manrope, sans-serif",
-                  fontSize: 62,
+                  fontSize: stories ? 52 : 62,
                   fontWeight: 800,
                   lineHeight: 1.08,
                   color: "#F1F2F4",
@@ -486,10 +494,10 @@ export const Carousel3D: React.FC = () => {
               </div>
               <div
                 style={{
-                  maxWidth: 980,
-                  marginTop: 14,
+                  maxWidth: stories ? 920 : 980,
+                  marginTop: stories ? 16 : 14,
                   fontFamily: "Manrope, sans-serif",
-                  fontSize: 24,
+                  fontSize: stories ? 28 : 24,
                   fontWeight: 500,
                   lineHeight: 1.35,
                   color: "#B6BEC8",

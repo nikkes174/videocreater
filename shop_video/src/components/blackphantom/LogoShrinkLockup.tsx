@@ -23,9 +23,15 @@ const Arcs: React.FC<{ rotation: number; opacity: number; width: number; blur?: 
   </svg>
 );
 
-export const LogoShrinkLockup: React.FC<{ logoSrc: string }> = ({ logoSrc }) => {
+export const LogoShrinkLockup: React.FC<{
+  logoSrc: string;
+  designWidth?: number;
+  designHeight?: number;
+}> = ({ logoSrc, designWidth, designHeight }) => {
   const frame = useCurrentFrame();
-  const { width, height } = useVideoConfig();
+  const videoConfig = useVideoConfig();
+  const width = designWidth ?? videoConfig.width;
+  const height = designHeight ?? videoConfig.height;
   const t = frame / 89;
   const DT = 1 / 89;
   const designScale = Math.min(width / 480, height / 270);

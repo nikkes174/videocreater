@@ -26,11 +26,21 @@ const L: Look = {
   shadow: "#000000",
 };
 
-const HY = 420;
+const WIDE_HORIZON_Y = 420;
 const F = 1100;
-const CAM_H = 220;
+const WIDE_CAM_H = 220;
 const SLOPE = 0.29;
-const VPX = 960 + F * SLOPE;
+
+type ProjectionViewport = {
+  width: number;
+  height: number;
+  centerX: number;
+  horizonY: number;
+  focalX: number;
+  focalY: number;
+  cameraHeight: number;
+  stories: boolean;
+};
 
 const camPath = bezier(0.3, 0.3, 0.55, 1);
 const CAM_DIST = 950;
@@ -43,9 +53,13 @@ const camAt = (frame: number) => {
 
 type P3 = { x: number; z: number };
 type Camera = { x: number; z: number };
-const project = (p: P3, cam: Camera) => {
+const project = (p: P3, cam: Camera, viewport: ProjectionViewport) => {
   const zr = p.z - cam.z;
-  return { sx: 960 + (F * (p.x - cam.x)) / zr, sy: HY + (F * CAM_H) / zr, zr };
+  return {
+    sx: viewport.centerX + (viewport.focalX * (p.x - cam.x)) / zr,
+    sy: viewport.horizonY + (viewport.focalY * viewport.cameraHeight) / zr,
+    zr,
+  };
 };
 
 const trunkX = (z: number) => SLOPE * z - 160 + 150 * Math.sin(z / 950);
@@ -126,6 +140,7 @@ const emitLine = (
   opts: { w: number; color: string; base: number; ramp?: boolean; pulse: (u: number) => number },
   sharp: Seg[],
   near: Seg[],
+  viewport: ProjectionViewport,
 ) => {
   const n = pts.length - 1;
   const reach = g * n;
@@ -136,9 +151,9 @@ const emitLine = (
     const f = Math.min(1, reach - k);
     const b = f < 1 ? { x: mix(a.x, b0.x, f), z: mix(a.z, b0.z, f) } : b0;
     if (a.z - cam.z < 70 || b.z - cam.z < 70) continue;
-    const pa = project(a, cam);
-    const pb = project(b, cam);
-    if ((pa.sx < -200 && pb.sx < -200) || (pa.sx > 2120 && pb.sx > 2120) || (pa.sy > 1300 && pb.sy > 1300)) continue;
+    const pa = project(a, cam, viewport);
+    const pb = project(b, cam, viewport);
+    if ((pa.sx < -200 && pb.sx < -200) || (pa.sx > viewport.width + 200 && pb.sx > viewport.width + 200) || (pa.sy > viewport.height + 220 && pb.sy > viewport.height + 220)) continue;
     const zr = (pa.zr + pb.zr) / 2;
     const u = (k + 0.5 * f) / n;
     const fog = 1 - smooth01(2600, 11000, zr);
@@ -146,7 +161,7 @@ const emitLine = (
     const pv = opts.pulse(u);
     const o = opts.base * fog * lift * mix(1, pv, smooth01(500, 1400, zr));
     if (o < 0.01) continue;
-    const w = Math.max(0.9, Math.min(46, (opts.w * F) / zr));
+    const w = Math.max(0.9, Math.min(viewport.stories ? 34 : 46, (opts.w * viewport.focalX) / zr));
     const nearW = 1 - smooth01(420, 1050, zr);
     const joinGlow = opts.ramp ? smooth01(0.78, 1, u) * 0.72 : 0;
     const seg = {
@@ -164,7 +179,7 @@ const emitLine = (
     const k = Math.min(n - 1, Math.floor(reach));
     const f = reach - k;
     const tip = { x: mix(pts[k].x, pts[k + 1].x, f), z: mix(pts[k].z, pts[k + 1].z, f) };
-    if (tip.z - cam.z > 70) return project(tip, cam);
+    if (tip.z - cam.z > 70) return project(tip, cam, viewport);
   }
   return null;
 };
@@ -191,8 +206,8 @@ const labelStyle: React.CSSProperties = {
   whiteSpace: "nowrap",
 };
 
-const Label: React.FC<{ spec: LabelSpec; at: P3; frame: number; cam: Camera }> = ({ spec, at, frame, cam }) => {
-  const pr = project(at, cam);
+const Label: React.FC<{ spec: LabelSpec; at: P3; frame: number; cam: Camera; viewport: ProjectionViewport }> = ({ spec, at, frame, cam, viewport }) => {
+  const pr = project(at, cam, viewport);
   if (pr.zr < 200) return null;
   const k = Math.min(1.7, Math.max(0.7, 1500 / pr.zr));
   const fog = 1 - smooth01(3600, 8000, pr.zr);
@@ -201,7 +216,9 @@ const Label: React.FC<{ spec: LabelSpec; at: P3; frame: number; cam: Camera }> =
   const stem = ramp(frame, spec.appear + 2, 12, EASE.snappy);
   const tag = ramp(frame, spec.appear + 6, 14, EASE.snappy);
   const stemH = 44 * k;
-  const fs = 25 * k;
+  const fs = (viewport.stories ? 22 : 25) * k;
+  const estimatedWidth = spec.text.length * fs * 0.62 + 34 * k;
+  const tagLeft = Math.min(Math.max(pr.sx - 2 * k, 14), viewport.width - estimatedWidth - 14);
   return (
     <div style={{ position: "absolute", left: 0, top: 0, opacity: fog }}>
       <div
@@ -231,7 +248,7 @@ const Label: React.FC<{ spec: LabelSpec; at: P3; frame: number; cam: Camera }> =
       <div
         style={{
           position: "absolute",
-          left: pr.sx - 2 * k,
+          left: tagLeft,
           top: pr.sy - 8 * k - stemH - 46 * k + (1 - tag) * 14 * k,
           height: 46 * k,
           padding: `0 ${14 * k}px 0 ${12 * k}px`,
@@ -271,8 +288,38 @@ const SUBTITLE_STYLE: React.CSSProperties = {
   maxWidth: 1150,
 };
 
-export const DataLandscape: React.FC = () => {
+const STORIES_HEADLINE_STYLE: React.CSSProperties = {
+  ...HEADLINE_STYLE,
+  fontSize: 62,
+  lineHeight: 1.08,
+  letterSpacing: -1.7,
+};
+
+const STORIES_SUBTITLE_STYLE: React.CSSProperties = {
+  ...SUBTITLE_STYLE,
+  fontSize: 23,
+  lineHeight: 1.34,
+  maxWidth: 968,
+};
+
+export const DataLandscape: React.FC<{ verticalOffset?: number; layout?: "wide" | "stories" }> = ({ verticalOffset = 0, layout = "wide" }) => {
   const frame = useCurrentFrame();
+  const stories = layout === "stories";
+  const stageWidth = stories ? 1080 : 1920;
+  const stageHeight = stories ? 1920 : 1080 + verticalOffset * 2;
+  const horizonY = stories ? 820 : WIDE_HORIZON_Y + verticalOffset;
+  const viewport: ProjectionViewport = {
+    width: stageWidth,
+    height: stageHeight,
+    centerX: stageWidth / 2,
+    horizonY,
+    focalX: stories ? 640 : F,
+    focalY: F,
+    cameraHeight: stories ? 350 : WIDE_CAM_H,
+    stories,
+  };
+  const VPX = viewport.centerX + viewport.focalX * SLOPE;
+  const svgHeight = stageHeight;
   const cam = camAt(frame);
   const fadeUp = ramp(frame, 0, 12, EASE.out);
 
@@ -300,6 +347,7 @@ export const DataLandscape: React.FC = () => {
       { w: t.w, color: COLORS.silver, base: 0.62, ramp: true, pulse: pulseFn(t.grow + 34, 2.2, 0.018, i * 0.37) },
       sharp,
       near,
+      viewport,
     );
     if (tip) tips.push({ ...tip, trunk: false });
   });
@@ -310,6 +358,7 @@ export const DataLandscape: React.FC = () => {
     { w: 11, color: COLORS.gold, base: 0.95, pulse: pulseFn(36, 4, 0.022, 0) },
     sharp,
     near,
+    viewport,
   );
   if (tTip) tips.push({ ...tTip, trunk: true });
   const trunkSegs = sharp.filter((s) => s.c === COLORS.gold);
@@ -319,11 +368,11 @@ export const DataLandscape: React.FC = () => {
   const zStart = Math.ceil((cam.z + 300) / STEP) * STEP;
   for (let z = zStart; z < cam.z + 9000; z += STEP) {
     for (let x = Math.floor((cam.x - 5200) / STEP) * STEP; x < cam.x + 5200; x += STEP) {
-      const pr = project({ x, z }, cam);
-      if (pr.sx < -20 || pr.sx > 1940 || pr.sy > 1100) continue;
+      const pr = project({ x, z }, cam, viewport);
+      if (pr.sx < -20 || pr.sx > stageWidth + 20 || pr.sy > stageHeight + 20) continue;
       const o = 0.28 * (1 - smooth01(2000, 9000, pr.zr)) * smooth01(300, 900, pr.zr);
       if (o < 0.01) continue;
-      dots.push({ x: pr.sx, y: pr.sy, r: Math.max(0.8, Math.min(3.2, 2400 / pr.zr)), o });
+      dots.push({ x: pr.sx, y: pr.sy, r: Math.max(0.8, Math.min(stories ? 2.8 : 3.2, (stories ? 1700 : 2400) / pr.zr)), o });
     }
   }
 
@@ -340,8 +389,8 @@ export const DataLandscape: React.FC = () => {
     <AbsoluteFill style={{ background: L.bg[2], overflow: "hidden" }}>
       <ManropeFontFaces />
       <AbsoluteFill style={{ opacity: 0.35 + 0.65 * fadeUp }}>
-        <Stage look={L} keyLight={{ x: VPX / 1920, y: HY / 1080 }} fill={{ x: 0.12, y: 0.95 }} horizon={HY / 1080} intensity={0.55} grain={0.1} vignette={0.6}>
-          <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: HY, overflow: "hidden" }}>
+        <Stage look={L} keyLight={{ x: VPX / stageWidth, y: horizonY / stageHeight }} fill={{ x: 0.12, y: 0.95 }} horizon={horizonY / stageHeight} intensity={0.55} grain={0.1} vignette={0.6}>
+          <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: horizonY, overflow: "hidden" }}>
             <Dust look={L} count={26} seed={7} drift={0.12} opacity={0.35} color={L.ink2} />
           </div>
           <div
@@ -349,7 +398,7 @@ export const DataLandscape: React.FC = () => {
               position: "absolute",
               left: 0,
               right: 0,
-              top: HY,
+              top: horizonY,
               bottom: 0,
               background: `linear-gradient(180deg, ${alpha("#252A30", 0.55)} 0%, ${alpha("#12161B", 0.3)} 30%, ${alpha("#050604", 0)} 100%)`,
             }}
@@ -359,14 +408,14 @@ export const DataLandscape: React.FC = () => {
               position: "absolute",
               left: 0,
               right: 0,
-              top: HY - 0.5,
+              top: horizonY - 0.5,
               height: 1,
               background: `linear-gradient(90deg, ${alpha(L.ink, 0)} 0%, ${alpha(L.ink, 0.16)} 40%, ${alpha(L.accent, 0.35)} 66%, ${alpha(L.ink, 0.12)} 85%, ${alpha(L.ink, 0)} 100%)`,
             }}
           />
         </Stage>
 
-        <svg width={1920} height={1080} style={{ position: "absolute", inset: 0 }}>
+        <svg width={stageWidth} height={svgHeight} viewBox={`0 0 ${stageWidth} ${svgHeight}`} style={{ position: "absolute", inset: 0 }}>
           <defs>
             <filter id="bp-landscape-near" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="11" /></filter>
             <filter id="bp-landscape-glow" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="7" /></filter>
@@ -395,10 +444,10 @@ export const DataLandscape: React.FC = () => {
         <div
           style={{
             position: "absolute",
-            left: VPX - 520,
-            top: HY - 260,
-            width: 1040,
-            height: 520,
+            left: VPX - (stories ? 370 : 520),
+            top: horizonY - (stories ? 220 : 260),
+            width: stories ? 740 : 1040,
+            height: stories ? 440 : 520,
             pointerEvents: "none",
             background: `radial-gradient(50% 50% at 50% 50%, ${alpha("#F2E2C6", 0.55)} 0%, ${alpha(L.accent, 0.22)} 22%, ${alpha(L.accent, 0)} 70%)`,
             opacity: 0.25 + 0.75 * handoff,
@@ -408,10 +457,10 @@ export const DataLandscape: React.FC = () => {
         <div
           style={{
             position: "absolute",
-            left: VPX - 4,
-            top: HY - 4,
-            width: 8,
-            height: 8,
+            left: VPX - (stories ? 5 : 4),
+            top: horizonY - (stories ? 5 : 4),
+            width: stories ? 10 : 8,
+            height: stories ? 10 : 8,
             borderRadius: 4,
             background: "#F6EAD5",
             boxShadow: `0 0 18px 6px ${alpha(L.accent, 0.6)}`,
@@ -421,18 +470,18 @@ export const DataLandscape: React.FC = () => {
 
         {LABELS.map((l, i) => ({ l, p: LABEL_PTS[i].p }))
           .sort((a, b) => b.p.z - a.p.z)
-          .map(({ l, p }) => (frame >= l.appear ? <Label key={l.text} spec={l} at={p} frame={frame} cam={cam} /> : null))}
+          .map(({ l, p }) => (frame >= l.appear ? <Label key={l.text} spec={l} at={p} frame={frame} cam={cam} viewport={viewport} /> : null))}
 
-        <svg width={1920} height={1080} style={{ position: "absolute", inset: 0 }}>
+        <svg width={stageWidth} height={svgHeight} viewBox={`0 0 ${stageWidth} ${svgHeight}`} style={{ position: "absolute", inset: 0 }}>
           <g filter="url(#bp-landscape-near)">{near.map(lineRender)}</g>
         </svg>
       </AbsoluteFill>
 
-      <div style={{ position: "absolute", left: 120, top: 83 }}>
+      <div style={{ position: "absolute", left: stories ? 56 : 120, right: stories ? 56 : undefined, top: stories ? 196 : 83 }}>
         <div
           style={{
             fontFamily: "Manrope, sans-serif",
-            fontSize: 28,
+            fontSize: stories ? 24 : 28,
             fontWeight: 800,
             color: COLORS.gold,
             letterSpacing: "0.12em",
@@ -442,16 +491,16 @@ export const DataLandscape: React.FC = () => {
         >
           {DATA_LANDSCAPE.brand}
         </div>
-        <div style={{ ...HEADLINE_STYLE, marginTop: 26, opacity: headline1In }}>
-          <TextReveal text={DATA_LANDSCAPE.headline[0]} by="word" variant="rise" start={110} each={20} gap={5} ease={EASE.out} style={HEADLINE_STYLE} />
+        <div style={{ ...HEADLINE_STYLE, ...(stories ? STORIES_HEADLINE_STYLE : {}), marginTop: stories ? 20 : 26, opacity: headline1In }}>
+          <TextReveal text={DATA_LANDSCAPE.headline[0]} by="word" variant="rise" start={110} each={20} gap={5} ease={EASE.out} style={stories ? STORIES_HEADLINE_STYLE : HEADLINE_STYLE} />
         </div>
-        <div style={{ ...HEADLINE_STYLE, marginTop: 4, opacity: headline2In }}>
-          <TextReveal text={DATA_LANDSCAPE.headline[1]} by="word" variant="rise" start={121} each={20} gap={5} ease={EASE.out} style={HEADLINE_STYLE} />
+        <div style={{ ...HEADLINE_STYLE, ...(stories ? STORIES_HEADLINE_STYLE : {}), marginTop: 4, opacity: headline2In }}>
+          <TextReveal text={DATA_LANDSCAPE.headline[1]} by="word" variant="rise" start={121} each={20} gap={5} ease={EASE.out} style={stories ? STORIES_HEADLINE_STYLE : HEADLINE_STYLE} />
         </div>
         <div
           style={{
-            ...SUBTITLE_STYLE,
-            marginTop: 26,
+            ...(stories ? STORIES_SUBTITLE_STYLE : SUBTITLE_STYLE),
+            marginTop: stories ? 18 : 26,
             opacity: subtitleIn,
             transform: `translateY(${(1 - subtitleIn) * 10}px)`,
           }}

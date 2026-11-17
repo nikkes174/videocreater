@@ -10,7 +10,7 @@ const VIEWS: readonly [CameraView, CameraView, CameraView] = [
 
 const FOCUS_RECT: FocusRect = { x: 590, y: 176, w: 740, h: 780 };
 
-export const BlackPhantomEcommerce: React.FC = () => (
+export const BlackPhantomEcommerce: React.FC<{ threeByTwo?: boolean }> = ({ threeByTwo = false }) => (
   <PaparazziCamera
     title="Интернет-магазины"
     description="eCommerce-решения под ключ — от каталога и оплаты до автоматизации заказов и масштабирования продаж."
@@ -18,6 +18,7 @@ export const BlackPhantomEcommerce: React.FC = () => (
     effectsBeforeCopy
     views={VIEWS}
     focusRect={FOCUS_RECT}
+    stageHeight={threeByTwo ? 1280 : 1080}
     Scene={EcommerceScene}
   />
 );

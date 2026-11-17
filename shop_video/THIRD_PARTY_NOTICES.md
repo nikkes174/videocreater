@@ -82,3 +82,19 @@ shop_video/src/components/blackphantom/LogoShrinkLockup.tsx adapts the shrink, d
 
 - Original component: <https://github.com/Vincentwei1021/video-shotcraft/blob/main/demos/rhythm/beat-cut-moves/PaparazziFlash.tsx>
 - License: Apache License 2.0, included at `src/vendor/videoShotcraft/LICENSE`.
+
+## video-shotcraft — M.A.C advertising scenes
+
+`src/scenes/mac/MacAuroraIntro.tsx` adapts the layered rising bloom, independent color drift, compressed background flip, word-by-word blur transitions, vignette, and soft grain from `AuroraBloomBgFlip.tsx`.
+`src/scenes/mac/MacTeamStatement.tsx` adapts the masked left-to-right gradient fill, expanded halo mask, trailing glow, deterministic electric accents, and slow push from `GradientWordSweep.tsx`.
+`src/scenes/mac/MacServicesConverge.tsx` adapts the four-source cubic Bezier routing, drawn-on strokes, moving light packets, converging nodes, merge ripple, and centered final title from `BezierSourceConvergeMerge.tsx`.
+`src/components/mac/MacPaperTitleCard.tsx` adapts the staggered word letterpress, scale-and-blur settle, single italic accent word, animated underline, and soft card fade from `PaperTitleCard.tsx`.
+
+The original components and their visual references are available at:
+
+- <https://github.com/Vincentwei1021/video-shotcraft/blob/main/demos/effects/aurora-bloom-bg-flip/AuroraBloomBgFlip.tsx>
+- <https://github.com/Vincentwei1021/video-shotcraft/blob/main/demos/typography/gradient-word-sweep/GradientWordSweep.tsx>
+- <https://github.com/Vincentwei1021/video-shotcraft/blob/main/demos/ui-entrance/bezier-source-converge-merge/BezierSourceConvergeMerge.tsx>
+- <https://github.com/Vincentwei1021/video-shotcraft/blob/main/demos/typography/paper-title-card/PaperTitleCard.tsx>
+
+The four scene files above are adaptations with M.A.C-specific copy, geometry, and golden-purple styling. The upstream license is Apache License 2.0 and is included at `src/vendor/videoShotcraft/LICENSE`.

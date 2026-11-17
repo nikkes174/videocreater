@@ -3,8 +3,8 @@ import { AbsoluteFill } from "remotion";
 
 import { DataLandscape } from "../components/blackphantom/DataLandscape";
 
-export const BlackPhantomDataLandscape: React.FC = () => (
+export const BlackPhantomDataLandscape: React.FC<{ threeByTwo?: boolean }> = ({ threeByTwo = false }) => (
   <AbsoluteFill>
-    <DataLandscape />
+    <DataLandscape verticalOffset={threeByTwo ? 100 : 0} />
   </AbsoluteFill>
 );

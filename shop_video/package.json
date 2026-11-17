@@ -93,7 +93,13 @@
     "verify:logo": "node scripts/verify-output.mjs output/logo_reveal_preview.mp4 105 3.5",
     "typecheck": "tsc --noEmit",
     "render:blackphantom:intro": "remotion render --config remotion.config.ts src/index.tsx BlackPhantomIntro output/blackphantom_intro.mp4 --codec=h264 --pixel-format=yuv420p --concurrency=2",
-    "render:blackphantom:services": "remotion render --config remotion.config.ts src/index.tsx BlackPhantomServices output/blackphantom_services.mp4 --codec=h264 --pixel-format=yuv420p --concurrency=2"
+    "render:blackphantom:services": "remotion render --config remotion.config.ts src/index.tsx BlackPhantomServices output/blackphantom_services.mp4 --codec=h264 --pixel-format=yuv420p --concurrency=2",
+    "render:mac:intro": "remotion render --config remotion.config.ts src/index.tsx MacAuroraIntro output/mac_fragment_01_intro.mp4 --codec=h264 --pixel-format=yuv420p --crf=16 --concurrency=2",
+    "render:mac:statement": "remotion render --config remotion.config.ts src/index.tsx MacTeamStatement output/mac_fragment_02_statement.mp4 --codec=h264 --pixel-format=yuv420p --crf=16 --concurrency=2",
+    "render:mac:services": "remotion render --config remotion.config.ts src/index.tsx MacServicesConverge output/mac_fragment_03_services.mp4 --codec=h264 --pixel-format=yuv420p --crf=16 --concurrency=2",
+    "render:mac:advantages": "remotion render --config remotion.config.ts src/index.tsx MacAdvantagesCards output/mac_fragment_04_advantages.mp4 --codec=h264 --pixel-format=yuv420p --crf=16 --concurrency=2",
+    "render:mac:qr": "remotion render --config remotion.config.ts src/index.tsx MacQrOutro output/mac_fragment_05_qr.mp4 --codec=h264 --pixel-format=yuv420p --crf=16 --concurrency=2",
+    "render:mac:final": "remotion render --config remotion.config.ts src/index.tsx MacFinalMontage output/mac_final_fullhd_1920x1080.mp4 --codec=h264 --pixel-format=yuv420p --crf=16 --concurrency=2"
   },
   "dependencies": {
     "react": "19.2.3",

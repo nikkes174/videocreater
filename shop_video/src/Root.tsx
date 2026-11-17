@@ -45,6 +45,20 @@ import { CAROUSEL_DURATION } from "./config/blackphantomCarousel";
 import { PAPARAZZI_FLASH_DURATION } from "./vendor/videoShotcraft/demos/rhythm/beat-cut-moves/PaparazziFlash";
 import { BlackPhantomDataLandscape } from "./scenes/BlackPhantomDataLandscape";
 import { DATA_LANDSCAPE } from "./config/blackphantomDataLandscape";
+import { BlackPhantomFinalOutro } from "./scenes/BlackPhantomFinalOutro";
+import { BLACKPHANTOM_FINAL_DURATION } from "./components/blackphantom/FinalSmokeOutro";
+import { BlackPhantomMontage3x2, MONTAGE_DURATION } from "./scenes/BlackPhantomMontage3x2";
+import { BlackPhantomMontageFullHD } from "./scenes/BlackPhantomMontageFullHD";
+import { BLACKPHANTOM_QR_DURATION, BlackPhantomQRFinal } from "./scenes/BlackPhantomQRFinal";
+import { BLACKPHANTOM_MONTAGE } from "./config/blackphantomMontage";
+import { BLACKPHANTOM_STORIES } from "./config/blackphantomStories";
+import { BlackPhantomMontageStories, STORIES_DURATION } from "./scenes/BlackPhantomMontageStories";
+import { MacAuroraIntro } from "./scenes/mac/MacAuroraIntro";
+import { MacTeamStatement } from "./scenes/mac/MacTeamStatement";
+import { MacServicesConverge } from "./scenes/mac/MacServicesConverge";
+import { MacAdvantagesCards } from "./scenes/mac/MacAdvantagesCards";
+import { MacQrOutro } from "./scenes/mac/MacQrOutro";
+import { MacFinalMontage, MAC_FINAL_DURATION } from "./scenes/mac/MacFinalMontage";
 
 const TEST_DURATION_SECONDS = 3.5;
 
@@ -66,6 +80,46 @@ export const RemotionRoot: React.FC = () => {
         fps={DATA_LANDSCAPE.fps}
         width={DATA_LANDSCAPE.width}
         height={DATA_LANDSCAPE.height}
+      />
+      <Composition
+        id="BlackPhantomFinalOutro"
+        component={BlackPhantomFinalOutro}
+        durationInFrames={BLACKPHANTOM_FINAL_DURATION}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="BlackPhantomMontage3x2"
+        component={BlackPhantomMontage3x2}
+        durationInFrames={MONTAGE_DURATION}
+        fps={BLACKPHANTOM_MONTAGE.fps}
+        width={BLACKPHANTOM_MONTAGE.width}
+        height={BLACKPHANTOM_MONTAGE.height}
+      />
+      <Composition
+        id="BlackPhantomMontageFullHD"
+        component={BlackPhantomMontageFullHD}
+        durationInFrames={MONTAGE_DURATION}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="BlackPhantomMontageStories"
+        component={BlackPhantomMontageStories}
+        durationInFrames={STORIES_DURATION}
+        fps={BLACKPHANTOM_STORIES.fps}
+        width={BLACKPHANTOM_STORIES.width}
+        height={BLACKPHANTOM_STORIES.height}
+      />
+      <Composition
+        id="BlackPhantomQRFinal"
+        component={BlackPhantomQRFinal}
+        durationInFrames={BLACKPHANTOM_QR_DURATION}
+        fps={30}
+        width={1920}
+        height={1080}
       />
       <Composition
         id="BlackPhantomAutomation"
@@ -358,6 +412,12 @@ export const RemotionRoot: React.FC = () => {
           defaultProps={{ layer: layer as BackgroundLayerName }}
         />
       ))}
+      <Composition id="MacAuroraIntro" component={MacAuroraIntro} durationInFrames={150} fps={30} width={1920} height={1080} />
+      <Composition id="MacTeamStatement" component={MacTeamStatement} durationInFrames={240} fps={30} width={1920} height={1080} />
+      <Composition id="MacServicesConverge" component={MacServicesConverge} durationInFrames={390} fps={30} width={1920} height={1080} />
+      <Composition id="MacAdvantagesCards" component={MacAdvantagesCards} durationInFrames={540} fps={30} width={1920} height={1080} />
+      <Composition id="MacQrOutro" component={MacQrOutro} durationInFrames={240} fps={30} width={1920} height={1080} />
+      <Composition id="MacFinalMontage" component={MacFinalMontage} durationInFrames={MAC_FINAL_DURATION} fps={30} width={1920} height={1080} />
     </>
   );
 };
