@@ -75,6 +75,23 @@ const transitionAfter = (index: number) =>
     ? STORIES_QR_CROSSFADE_FRAMES
     : STORIES_TRANSITION_FRAMES;
 
+let nextSceneFrom = 0;
+export const STORIES_SCENE_TIMELINE = SEGMENTS.map((segment, index) => {
+  const from = nextSceneFrom;
+  const fadeInFrames = index === 0 ? 0 : transitionAfter(index - 1);
+  const fadeOutFrames = index === SEGMENTS.length - 1 ? 0 : transitionAfter(index);
+  nextSceneFrom += segment.duration - fadeOutFrames;
+
+  return {
+    id: segment.id,
+    from,
+    duration: segment.duration,
+    sourceDuration: segment.sourceDuration,
+    fadeInFrames,
+    fadeOutFrames,
+  };
+});
+
 export const STORIES_DURATION =
   SEGMENTS.reduce((sum, segment) => sum + segment.duration, 0) -
   STORIES_ORDER.slice(0, -1).reduce((sum, _id, index) => sum + transitionAfter(index), 0);
@@ -130,23 +147,17 @@ const renderScene = (id: StoriesSceneId) => {
 };
 
 export const BlackPhantomMontageStories: React.FC = () => {
-  let cursor = 0;
-  const sequences = SEGMENTS.map((segment, index) => {
-    const start = cursor;
-    const fadeInFrames = index === 0 ? 0 : transitionAfter(index - 1);
-    const fadeOutFrames = index === SEGMENTS.length - 1 ? 0 : transitionAfter(index);
-    cursor += segment.duration - fadeOutFrames;
-
+  const sequences = STORIES_SCENE_TIMELINE.map((timing) => {
     return (
-      <Sequence key={segment.id} from={start} durationInFrames={segment.duration}>
+      <Sequence key={timing.id} from={timing.from} durationInFrames={timing.duration}>
         <TransitionOpacity
-          fadeInFrames={fadeInFrames}
-          fadeOutFrames={fadeOutFrames}
-          duration={segment.duration}
+          fadeInFrames={timing.fadeInFrames}
+          fadeOutFrames={timing.fadeOutFrames}
+          duration={timing.duration}
         >
           <MobileStage>
-            <HoldCompletedScene sourceDuration={segment.sourceDuration}>
-              {renderScene(segment.id)}
+            <HoldCompletedScene sourceDuration={timing.sourceDuration}>
+              {renderScene(timing.id)}
             </HoldCompletedScene>
           </MobileStage>
         </TransitionOpacity>
