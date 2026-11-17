@@ -148,18 +148,20 @@ export const BlackPhantomQRFinal: React.FC<BlackPhantomQRFinalProps> = ({
           />
         </div>
 
-        <div
-          style={{
-            marginTop: 30,
-            fontSize: sizes.captionFontSize,
-            lineHeight: 1.25,
-            fontWeight: 500,
-            color: "#B6BEC8",
-            textAlign: "center",
-          }}
-        >
-          Наведите камеру телефона
-        </div>
+        {layout !== "stories" && (
+          <div
+            style={{
+              marginTop: 30,
+              fontSize: sizes.captionFontSize,
+              lineHeight: 1.25,
+              fontWeight: 500,
+              color: "#B6BEC8",
+              textAlign: "center",
+            }}
+          >
+            Наведите камеру телефона
+          </div>
+        )}
       </div>
     </AbsoluteFill>
   );

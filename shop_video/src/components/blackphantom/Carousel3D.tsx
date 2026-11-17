@@ -69,7 +69,7 @@ const CardFace: React.FC<CardFaceProps> = ({ card, highlighted, stories = false 
     style={{
       position: "absolute",
       inset: 0,
-      padding: stories ? "34px 32px 32px" : "34px 28px 30px",
+      padding: stories ? "28px 26px 28px" : "34px 28px 30px",
       boxSizing: "border-box",
       display: "flex",
       flexDirection: "column",
@@ -87,7 +87,7 @@ const CardFace: React.FC<CardFaceProps> = ({ card, highlighted, stories = false 
         opacity: 0.55 + highlighted * 0.45,
       }}
     >
-      <ServiceIcon name={card.icon} size={stories ? 164 : 126} color={COLORS.gold} highlighted={highlighted} />
+      <ServiceIcon name={card.icon} size={stories ? 136 : 126} color={COLORS.gold} highlighted={highlighted} />
     </div>
 
     <div
@@ -102,7 +102,7 @@ const CardFace: React.FC<CardFaceProps> = ({ card, highlighted, stories = false 
 
     <div
       style={{
-        fontSize: stories ? 42 : 28,
+        fontSize: stories ? 34 : 28,
         fontWeight: 800,
         lineHeight: 1.12,
         overflowWrap: "break-word",
@@ -113,8 +113,8 @@ const CardFace: React.FC<CardFaceProps> = ({ card, highlighted, stories = false 
 
     <div
       style={{
-        marginTop: stories ? 17 : 14,
-        fontSize: stories ? 27 : 19,
+        marginTop: 14,
+        fontSize: stories ? 23 : 19,
         lineHeight: stories ? 1.34 : 1.35,
         color: COLORS.silver,
       }}
@@ -215,12 +215,12 @@ export const Carousel3D: React.FC<{ stageHeight?: number; layout?: "wide" | "sto
   const stories = layout === "stories";
   const centerX = stories ? 540 : 960;
   const verticalOffset = stories ? 0 : (stageHeight - 1080) / 2;
-  const radius = stories ? 380 : BASE_RADIUS;
-  const cardWidth = stories ? 520 : BASE_CW;
-  const cardHeight = stories ? 660 : BASE_CH;
+  const radius = stories ? 650 : BASE_RADIUS;
+  const cardWidth = stories ? 420 : BASE_CW;
+  const cardHeight = stories ? 620 : BASE_CH;
   const captionHeight = stories ? 320 : ORIGINAL_CAPTION_HEIGHT;
   const ringY = stories ? 810 : ORIGINAL_RING_Y + verticalOffset;
-  const floorY = stories ? 260 : cardHeight / 2 + 10;
+  const floorY = stories ? 320 : cardHeight / 2 + 10;
   const captionTop = stories ? 1400 : ORIGINAL_CAPTION_TOP + stageHeight - 1080;
   const spin = turnAt(frame) * 360;
   const azimuth = (i: number) => ((((i * 360) / N - spin) % 360) + 540) % 360 - 180;
